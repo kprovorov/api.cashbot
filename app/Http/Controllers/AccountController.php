@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
+use Illuminate\Database\Eloquent\Collection;
 
 class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
-    public function index()
+    public function index(): Collection
     {
-        //
+        return Account::all();
     }
 
     /**

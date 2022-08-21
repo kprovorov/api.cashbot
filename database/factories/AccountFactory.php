@@ -17,7 +17,9 @@ class AccountFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name'     => $this->faker->name,
+            'currency' => $this->faker->currencyCode,
+            'balance'  => $this->faker->numberBetween(0, 1000000),
         ];
     }
 }
