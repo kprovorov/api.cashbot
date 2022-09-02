@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class AccountFactory extends Factory
     {
         return [
             'name'     => $this->faker->name,
-            'currency' => $this->faker->currencyCode,
+            'currency' => $this->faker->randomElement(Currency::cases()),
             'balance'  => $this->faker->numberBetween(0, 1000000),
         ];
     }
