@@ -46,7 +46,7 @@ class TransferController extends Controller
         $paymentTo = Payment::create([
             'account_id' => $accountTo->id,
             'description' => "Transfer from {$accountFrom->name}",
-            'amount' => round($amount * $rate / 100),
+            'amount' => round($amount * $rate / 10000),
             'currency' => $accountTo->currency,
             'date' => $date,
         ]);

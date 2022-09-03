@@ -36,8 +36,8 @@ class CurrencyConverter
         return isset($this->rates[$from])
             ? $this->rates[$from][$to]
             : (isset($this->rates[$to]) ? [
-                'buy'  => round(1 / $this->rates[$to][$from]['buy'], 4),
-                'sell' => round(1 / $this->rates[$to][$from]['sell'], 4),
+                'buy'  => round(1 / $this->rates[$to][$from]['sell'], 4),
+                'sell' => round(1 / $this->rates[$to][$from]['buy'], 4),
             ] : throw new Exception('No such currency'));
     }
 }
