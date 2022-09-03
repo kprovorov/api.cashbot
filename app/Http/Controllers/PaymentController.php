@@ -60,6 +60,13 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
-        return $payment->delete();
+        $transfer = $payment->from_transfer ?? $payment->to_transfer;
+        if ($transfer) {
+            $transfer->payment_from->delete();
+            $transfer->payment_to->delete();
+            $transfer->delete();
+        } else {
+            $payment->delete();
+        }
     }
 }

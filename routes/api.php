@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\TransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('accounts', AccountController::class);
 Route::apiResource('payments', PaymentController::class);
+Route::apiResource('transfers', TransferController::class);
 
 Route::get('/accounts/{account}/payments', [AccountController::class, 'payments']);
 Route::post('/accounts/{account}/payments', [AccountController::class, 'createPayment']);
