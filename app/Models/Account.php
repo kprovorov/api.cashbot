@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $currency
  * @property int $balance
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Payment[] $payments
- * @property-read int|null $payments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Jar[] $jars
+ * @property-read int|null $jars_count
  * @method static \Database\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
@@ -36,8 +36,8 @@ class Account extends Model
     /**
      * @return HasMany
      */
-    public function payments(): HasMany
+    public function jars(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Jar::class);
     }
 }

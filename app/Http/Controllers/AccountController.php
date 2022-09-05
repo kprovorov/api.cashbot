@@ -21,65 +21,26 @@ class AccountController extends Controller
      */
     public function index(): Collection
     {
-        return Account::all();
+        return Account::with([
+            'jars',
+        ])->get();
     }
 
     public function payments(Account $account)
     {
         $selectBalance = DB::raw(
-            'sum(amount) over (order by date rows between unbounded preceding and current row) as balance'
+            'sum(amount) over (order by date, amount rows between unbounded preceding and current row) as balance'
         );
 
         return Payment::select()
                       ->addSelect($selectBalance)
-                      ->where('account_id', $account->id)
+                      ->whereIn('jar_id', $account->jars->pluck('id'))
+                      ->with([
+                          'jar',
+                      ])
                       ->orderBy('date')
+                      ->orderBy('amount')
                       ->get();
-    }
-
-    public function createPayment(Account $account, StorePaymentRequest $request): void
-    {
-        $repeat = $request->input('repeat', 'none');
-
-        if ($repeat === 'monthly') {
-            for ($i = 0; $i < 12; $i++) {
-                $date = Carbon::parse($request->input('date'));
-
-                Payment::create([
-                    ...$request->only([
-                        'description',
-                        'amount',
-                    ]),
-                    'date'       => $date->addMonths($i),
-                    'account_id' => $account->id,
-                    'currency'   => $account->currency,
-                ]);
-            }
-        } elseif ($repeat === 'weekly') {
-            for ($i = 0; $i < 52; $i++) {
-                $date = Carbon::parse($request->input('date'));
-
-                Payment::create([
-                    ...$request->only([
-                        'description',
-                        'amount',
-                    ]),
-                    'date'       => $date->addWeeks($i),
-                    'account_id' => $account->id,
-                    'currency'   => $account->currency,
-                ]);
-            }
-        } else {
-            Payment::create([
-                ...$request->only([
-                    'description',
-                    'amount',
-                    'date',
-                ]),
-                'account_id' => $account->id,
-                'currency'   => $account->currency,
-            ]);
-        }
     }
 
     /**

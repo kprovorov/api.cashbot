@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\JarController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\TransferController;
@@ -27,6 +28,6 @@ Route::apiResource('payments', PaymentController::class);
 Route::apiResource('transfers', TransferController::class);
 
 Route::get('/accounts/{account}/payments', [AccountController::class, 'payments']);
-Route::post('/accounts/{account}/payments', [AccountController::class, 'createPayment']);
+Route::post('/jars/{jar}/payments', [JarController::class, 'createPayment']);
 
 Route::get('rates', RateController::class);

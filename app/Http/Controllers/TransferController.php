@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Account;
+use App\Models\Jar;
 use App\Models\Payment;
 use App\Models\Transfer;
+use Illuminate\Database\Eloquent\Model;
 
 class TransferController extends Controller
 {
@@ -23,32 +25,32 @@ class TransferController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StoreTransferRequest $request
-     * @return \Illuminate\Http\Response
+     * @param StoreTransferRequest $request
+     * @return Transfer
      */
-    public function store(StoreTransferRequest $request)
+    public function store(StoreTransferRequest $request): Transfer
     {
         $date = $request->input('date');
         $amount = $request->input('amount');
         $rate = $request->input('rate');
 
-        $accountFrom = Account::findOrFail($request->input('account_from_id'));
-        $accountTo = Account::findOrFail($request->input('account_to_id'));
+        $jarFrom = Jar::with('account')->findOrFail($request->input('jar_from_id'));
+        $jarTo = Jar::with('account')->findOrFail($request->input('jar_to_id'));
 
         $paymentFrom = Payment::create([
-            'account_id' => $accountFrom->id,
-            'description' => "Transfer to {$accountTo->name}",
-            'amount' => -$amount,
-            'currency' => $accountFrom->currency,
-            'date' => $date,
+            'jar_id'      => $jarFrom->id,
+            'description' => "Transfer to {$jarTo->account->name} ({$jarTo->name})",
+            'amount'      => -$amount,
+            'currency'    => $jarFrom->account->currency,
+            'date'        => $date,
         ]);
 
         $paymentTo = Payment::create([
-            'account_id' => $accountTo->id,
-            'description' => "Transfer from {$accountFrom->name}",
-            'amount' => round($amount * $rate / 10000),
-            'currency' => $accountTo->currency,
-            'date' => $date,
+            'jar_id'      => $jarTo->id,
+            'description' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name})",
+            'amount'      => round($amount * $rate / 10000),
+            'currency'    => $jarTo->account->currency,
+            'date'        => $date,
         ]);
 
         return Transfer::create([
