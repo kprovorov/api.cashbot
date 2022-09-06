@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 
 class AccountController extends Controller
 {
@@ -36,10 +37,22 @@ class AccountController extends Controller
             'sum(amount) over (partition by jar_id order by date, amount rows between unbounded preceding and current row) as jar_balance'
         );
 
-        return Payment::select()
+        $selectJarSavingsBalance = DB::raw(
+            'if(isnull(jars.id), null, sum(amount) over (partition by isnull(jars.id) order by date, amount rows between unbounded preceding and current row)) as jar_savings_balance'
+        );
+
+        $defaultJar = DB::raw('isnull(jars.id) as default_jar');
+
+        return Payment::select('payments.*')
+                      ->addSelect($defaultJar)
                       ->addSelect($selectBalance)
                       ->addSelect($selectJarBalance)
+                      ->addSelect($selectJarSavingsBalance)
                       ->whereIn('jar_id', $account->jars->pluck('id'))
+                      ->leftJoin('jars', function (JoinClause $join) {
+                          $join->on('payments.jar_id', '=', 'jars.id')
+                               ->where('jars.default', false);
+                      })
                       ->with([
                           'jar',
                       ])

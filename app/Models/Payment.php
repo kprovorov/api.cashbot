@@ -45,6 +45,12 @@ class Payment extends Model
         'date',
     ];
 
+    protected $casts = [
+        'balance'             => 'integer',
+        'jar_balance'         => 'integer',
+        'jar_savings_balance' => 'integer',
+    ];
+
     public function from_transfer()
     {
         return $this->hasOne(Transfer::class, 'to_payment_id');
