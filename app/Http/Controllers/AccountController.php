@@ -32,8 +32,13 @@ class AccountController extends Controller
             'sum(amount) over (order by date, amount rows between unbounded preceding and current row) as balance'
         );
 
+        $selectJarBalance = DB::raw(
+            'sum(amount) over (partition by jar_id order by date, amount rows between unbounded preceding and current row) as jar_balance'
+        );
+
         return Payment::select()
                       ->addSelect($selectBalance)
+                      ->addSelect($selectJarBalance)
                       ->whereIn('jar_id', $account->jars->pluck('id'))
                       ->with([
                           'jar',
