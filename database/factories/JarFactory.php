@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Jar>
@@ -17,7 +18,8 @@ class JarFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word()
+            'name'    => Str::title($this->faker->word()),
+            'default' => false,
         ];
     }
 }

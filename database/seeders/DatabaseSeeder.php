@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
                    'name'    => 'Default',
                    'default' => true,
                ])
+               ->hasJars(2)
                ->create();
 
         $this->call(PaymentSeeder::class);
