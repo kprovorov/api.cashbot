@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAccountRequest;
-use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
-use App\Models\Payment;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\JoinClause;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class AccountController extends Controller
 {
@@ -24,41 +20,30 @@ class AccountController extends Controller
     {
         return Account::with([
             'jars',
-        ])->get();
-    }
+            'payments' => function (HasManyThrough $query) {
+                $selectBalance = DB::raw(
+                    'sum(payments.amount) over (partition by jars.account_id order by payments.date, payments.amount rows between unbounded preceding and current row) as balance'
+                );
 
-    public function payments(Account $account)
-    {
-        $selectBalance = DB::raw(
-            'sum(amount) over (order by date, amount rows between unbounded preceding and current row) as balance'
-        );
+                $selectJarBalance = DB::raw(
+                    'sum(payments.amount) over (partition by payments.jar_id order by payments.date, payments.amount rows between unbounded preceding and current row) as jar_balance'
+                );
 
-        $selectJarBalance = DB::raw(
-            'sum(amount) over (partition by jar_id order by date, amount rows between unbounded preceding and current row) as jar_balance'
-        );
+                $selectJarSavingsBalance = DB::raw(
+                    'if(jars.default, null, sum(payments.amount) over (partition by jars.default order by payments.date, payments.amount rows between unbounded preceding and current row)) as jar_savings_balance'
+                );
 
-        $selectJarSavingsBalance = DB::raw(
-            'if(isnull(jars.id), null, sum(amount) over (partition by isnull(jars.id) order by date, amount rows between unbounded preceding and current row)) as jar_savings_balance'
-        );
-
-        $defaultJar = DB::raw('isnull(jars.id) as default_jar');
-
-        return Payment::select('payments.*')
-                      ->addSelect($defaultJar)
+                $query->select('payments.*')
                       ->addSelect($selectBalance)
                       ->addSelect($selectJarBalance)
                       ->addSelect($selectJarSavingsBalance)
-                      ->whereIn('jar_id', $account->jars->pluck('id'))
-                      ->leftJoin('jars', function (JoinClause $join) {
-                          $join->on('payments.jar_id', '=', 'jars.id')
-                               ->where('jars.default', false);
-                      })
+                      ->orderBy('payments.date')
+                      ->orderBy('payments.amount')
                       ->with([
-                          'jar',
-                      ])
-                      ->orderBy('date')
-                      ->orderBy('amount')
-                      ->get();
+                          'jar.account.jars',
+                      ]);
+            },
+        ])->get();
     }
 
     /**
