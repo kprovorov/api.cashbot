@@ -27,6 +27,4 @@ Route::apiResource('accounts', AccountController::class);
 Route::apiResource('payments', PaymentController::class);
 Route::apiResource('transfers', TransferController::class);
 
-Route::post('/jars/{jar}/payments', [JarController::class, 'createPayment']);
-
 Route::get('rates', RateController::class);

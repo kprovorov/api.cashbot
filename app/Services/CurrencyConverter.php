@@ -31,8 +31,6 @@ class CurrencyConverter
      */
     public function getRate(string $from, string $to): array
     {
-        dump($this->rates);
-
         return isset($this->rates[$from])
             ? $this->rates[$from][$to]
             : (isset($this->rates[$to]) ? [
