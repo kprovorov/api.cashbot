@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        $this->call(AccountSeeder::class);
-
         Account::factory()
                ->count(3)
                ->hasJars(1, [
