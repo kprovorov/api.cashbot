@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Payment
@@ -38,6 +40,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'group_id',
         'jar_id',
         'description',
         'amount',
@@ -51,18 +54,35 @@ class Payment extends Model
         'jar_savings_balance' => 'integer',
     ];
 
-    public function from_transfer()
+    /**
+     * @return HasOne
+     */
+    public function from_transfer(): HasOne
     {
         return $this->hasOne(Transfer::class, 'to_payment_id');
     }
 
-    public function to_transfer()
+    /**
+     * @return HasOne
+     */
+    public function to_transfer(): HasOne
     {
         return $this->hasOne(Transfer::class, 'from_payment_id');
     }
 
-    public function jar()
+    /**
+     * @return BelongsTo
+     */
+    public function jar(): BelongsTo
     {
         return $this->belongsTo(Jar::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 }

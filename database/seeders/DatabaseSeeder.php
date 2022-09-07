@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Account;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,7 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(AccountSeeder::class);
-//        $this->call(PaymentSeeder::class);
+//        $this->call(AccountSeeder::class);
+
+        Account::factory()
+               ->count(3)
+               ->hasJars(1, [
+                   'name'    => 'Default',
+                   'default' => true,
+               ])
+               ->create();
+
+        $this->call(PaymentSeeder::class);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\JarController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\TransferController;
@@ -26,5 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('accounts', AccountController::class);
 Route::apiResource('payments', PaymentController::class);
 Route::apiResource('transfers', TransferController::class);
+Route::apiResource('groups', GroupController::class);
 
 Route::get('rates', RateController::class);

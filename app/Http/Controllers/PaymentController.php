@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
+use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -32,6 +33,10 @@ class PaymentController extends Controller
         $repeat = $request->input('repeat', 'none');
 
         if ($repeat === 'monthly') {
+            $group = Group::create([
+                'name' => $request->input('description'),
+            ]);
+
             for ($i = 0; $i < 12; $i++) {
                 $date = Carbon::parse($request->input('date'));
 
@@ -40,12 +45,17 @@ class PaymentController extends Controller
                         'description',
                         'amount',
                     ]),
+                    'group_id' => $group->id,
                     'date'     => $date->addMonths($i),
                     'jar_id'   => $jar->id,
                     'currency' => $jar->account->currency,
                 ]);
             }
         } elseif ($repeat === 'weekly') {
+            $group = Group::create([
+                'name' => $request->input('description'),
+            ]);
+
             for ($i = 0; $i < 52; $i++) {
                 $date = Carbon::parse($request->input('date'));
 
@@ -54,6 +64,7 @@ class PaymentController extends Controller
                         'description',
                         'amount',
                     ]),
+                    'group_id' => $group->id,
                     'date'     => $date->addWeeks($i),
                     'jar_id'   => $jar->id,
                     'currency' => $jar->account->currency,
