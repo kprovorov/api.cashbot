@@ -103,7 +103,13 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        //
+        $payment->update(
+            $request->only([
+                'description',
+                'amount',
+                'date',
+            ])
+        );
     }
 
     /**
