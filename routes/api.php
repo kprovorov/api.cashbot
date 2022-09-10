@@ -23,9 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('accounts', AccountController::class);
-Route::apiResource('payments', PaymentController::class);
-Route::apiResource('transfers', TransferController::class);
-Route::apiResource('groups', GroupController::class);
+Route::apiResource('accounts', AccountController::class)->middleware('auth:sanctum');
+Route::apiResource('payments', PaymentController::class)->middleware('auth:sanctum');
+Route::apiResource('transfers', TransferController::class)->middleware('auth:sanctum');
+Route::apiResource('groups', GroupController::class)->middleware('auth:sanctum');
 
-Route::get('rates', RateController::class);
+Route::get('rates', RateController::class)->middleware('auth:sanctum');
