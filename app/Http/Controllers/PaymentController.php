@@ -106,6 +106,7 @@ class PaymentController extends Controller
         $payment->update(
             $request->only([
                 'description',
+                'jar_id',
                 'amount',
                 'date',
             ])
