@@ -79,7 +79,12 @@ class AccountController extends Controller
      */
     public function update(UpdateAccountRequest $request, Account $account)
     {
-        //
+        $account->update(
+            $request->only([
+                'name',
+                'balance',
+            ])
+        );
     }
 
     /**
