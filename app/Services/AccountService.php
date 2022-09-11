@@ -13,6 +13,21 @@ class AccountService
     }
 
     /**
+     * Update balances for all accounts
+     *
+     * @return void
+     * @throws UnknownProperties
+     */
+    public function updateAccountBalances(): void
+    {
+        $accounts = Account::whereNotNull('external_id')->get();
+
+        $accounts->each(function (Account $account) {
+            $this->updateAccountBalance($account);
+        });
+    }
+
+    /**
      * @param Account $account
      * @return void
      * @throws UnknownProperties
@@ -20,10 +35,24 @@ class AccountService
     public function updateAccountBalance(Account $account): void
     {
         if ($account->external_id) {
-            $balance = $this->fetchMonobankAccountData($account)->balance * 100;
+            $balance = $this->fetchAccountBalance($account);
 
             $account->update(['balance' => $balance]);
         }
+    }
+
+    /**
+     * @param Account $account
+     * @return int
+     * @throws UnknownProperties
+     */
+    public function fetchAccountBalance(Account $account): int
+    {
+        if ($account->provider === 'monobank') {
+            return $this->fetchMonobankAccountData($account)->balance * 100;
+        }
+
+        return $account->balance;
     }
 
     /**
