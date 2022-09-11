@@ -27,7 +27,7 @@ class AccountController extends Controller
     {
         // Refresh balances
         $this->accountService->updateAccountBalances();
-        
+
         return Account::with([
             'jars',
             'payments' => function (HasManyThrough $query) {
