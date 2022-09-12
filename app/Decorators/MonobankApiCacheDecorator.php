@@ -11,7 +11,6 @@ class MonobankApiCacheDecorator extends MonobankApi
 
     public function getRawClientInfo(): array
     {
-        dump('cache works');
         $cached = Cache::get(self::MONOBANK_CLIENT_INFO);
 
         if ($cached) {
