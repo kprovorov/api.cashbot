@@ -23,9 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('accounts', AccountController::class)->middleware('auth:sanctum');
-Route::apiResource('payments', PaymentController::class)->middleware('auth:sanctum');
-Route::apiResource('transfers', TransferController::class)->middleware('auth:sanctum');
-Route::apiResource('groups', GroupController::class)->middleware('auth:sanctum');
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('accounts', AccountController::class);
+    Route::apiResource('payments', PaymentController::class);
+    Route::apiResource('transfers', TransferController::class);
+    Route::apiResource('groups', GroupController::class);
 
-Route::get('rates', RateController::class)->middleware('auth:sanctum');
+    Route::post('accounts/update-balances', [AccountController::class, 'updateBalances']);
+
+    Route::get('rates', RateController::class);
+});
