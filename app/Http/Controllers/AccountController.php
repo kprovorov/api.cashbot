@@ -26,7 +26,7 @@ class AccountController extends Controller
     public function index(): Collection
     {
         // Refresh balances
-//        $this->accountService->updateAccountBalances();
+        $this->accountService->updateAccountBalances();
 
         return Account::with([
             'jars',
