@@ -59,15 +59,6 @@ class AccountController extends Controller
     }
 
     /**
-     * @return void
-     * @throws UnknownProperties
-     */
-    public function updateBalances(): void
-    {
-        $this->accountService->updateAccountBalances();
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\StoreAccountRequest $request

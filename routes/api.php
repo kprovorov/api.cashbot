@@ -29,7 +29,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('transfers', TransferController::class);
     Route::apiResource('groups', GroupController::class);
 
-    Route::post('accounts/update-balances', [AccountController::class, 'updateBalances']);
-
     Route::get('rates', RateController::class);
 });
