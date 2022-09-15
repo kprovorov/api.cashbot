@@ -53,6 +53,8 @@ class AccountController extends Controller
                       ->orderBy('payments.amount')
                       ->with([
                           'jar.account.jars',
+                          'from_transfer.payment_from.jar',
+                          'to_transfer.payment_to.jar',
                       ]);
             },
         ])->get();
