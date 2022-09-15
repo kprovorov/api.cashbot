@@ -50,7 +50,7 @@ class TransferController extends Controller
                 $paymentFrom = Payment::create([
                     'jar_id'      => $jarFrom->id,
                     'group_id'    => $group->id,
-                    'description' => "Transfer to {$jarTo->account->name} ({$jarTo->name})",
+                    'description' => $request->input('description', "Transfer to {$jarTo->account->name} ({$jarTo->name})"),
                     'amount'      => -$amount,
                     'currency'    => $jarFrom->account->currency,
                     'date'        => $date->clone()->addMonths($i),
@@ -59,7 +59,7 @@ class TransferController extends Controller
                 $paymentTo = Payment::create([
                     'jar_id'      => $jarTo->id,
                     'group_id'    => $group->id,
-                    'description' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name})",
+                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
                     'amount'      => round($amount * $rate / 10000),
                     'currency'    => $jarTo->account->currency,
                     'date'        => $date->clone()->addMonths($i),
@@ -79,7 +79,7 @@ class TransferController extends Controller
                 $paymentFrom = Payment::create([
                     'jar_id'      => $jarFrom->id,
                     'group_id'    => $group->id,
-                    'description' => "Transfer to {$jarTo->account->name} ({$jarTo->name})",
+                    'description' => $request->input('description',"Transfer to {$jarTo->account->name} ({$jarTo->name})"),
                     'amount'      => -$amount,
                     'currency'    => $jarFrom->account->currency,
                     'date'        => $date->clone()->addWeeks($i),
@@ -88,7 +88,7 @@ class TransferController extends Controller
                 $paymentTo = Payment::create([
                     'jar_id'      => $jarTo->id,
                     'group_id'    => $group->id,
-                    'description' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name})",
+                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
                     'amount'      => round($amount * $rate / 10000),
                     'currency'    => $jarTo->account->currency,
                     'date'        => $date->clone()->addWeeks($i),
@@ -102,7 +102,7 @@ class TransferController extends Controller
         } else {
             $paymentFrom = Payment::create([
                 'jar_id'      => $jarFrom->id,
-                'description' => "Transfer to {$jarTo->account->name} ({$jarTo->name})",
+                'description' => $request->input('description',"Transfer to {$jarTo->account->name} ({$jarTo->name})"),
                 'amount'      => -$amount,
                 'currency'    => $jarFrom->account->currency,
                 'date'        => $date,
@@ -110,7 +110,7 @@ class TransferController extends Controller
 
             $paymentTo = Payment::create([
                 'jar_id'      => $jarTo->id,
-                'description' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name})",
+                'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
                 'amount'      => round($amount * $rate / 10000),
                 'currency'    => $jarTo->account->currency,
                 'date'        => $date,
