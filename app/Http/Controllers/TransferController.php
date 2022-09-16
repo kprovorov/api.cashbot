@@ -41,7 +41,36 @@ class TransferController extends Controller
         $jarFrom = Jar::with('account')->findOrFail($request->input('jar_from_id'));
         $jarTo = Jar::with('account')->findOrFail($request->input('jar_to_id'));
 
-        if ($repeat === 'monthly') {
+        if ($repeat === 'quarterly') {
+            $group = Group::create([
+                'name' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name}) to {$jarTo->account->name} ({$jarTo->name})",
+            ]);
+
+            for ($i = 0; $i < 4; $i++) {
+                $paymentFrom = Payment::create([
+                    'jar_id'      => $jarFrom->id,
+                    'group_id'    => $group->id,
+                    'description' => $request->input('description', "Transfer to {$jarTo->account->name} ({$jarTo->name})"),
+                    'amount'      => -$amount,
+                    'currency'    => $jarFrom->account->currency,
+                    'date'        => $date->clone()->addMonths($i * 3),
+                ]);
+
+                $paymentTo = Payment::create([
+                    'jar_id'      => $jarTo->id,
+                    'group_id'    => $group->id,
+                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
+                    'amount'      => round($amount * $rate / 10000),
+                    'currency'    => $jarTo->account->currency,
+                    'date'        => $date->clone()->addMonths($i * 3),
+                ]);
+
+                Transfer::create([
+                    'from_payment_id' => $paymentFrom->id,
+                    'to_payment_id'   => $paymentTo->id,
+                ]);
+            }
+        } elseif ($repeat === 'monthly') {
             $group = Group::create([
                 'name' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name}) to {$jarTo->account->name} ({$jarTo->name})",
             ]);

@@ -32,7 +32,26 @@ class PaymentController extends Controller
         $jar = Jar::with(['account'])->findOrFail($request->input('jar_id'));
         $repeat = $request->input('repeat', 'none');
 
-        if ($repeat === 'monthly') {
+        if ($repeat === 'quarterly') {
+            $group = Group::create([
+                'name' => $request->input('description'),
+            ]);
+
+            for ($i = 0; $i < 4; $i++) {
+                $date = Carbon::parse($request->input('date'));
+
+                Payment::create([
+                    ...$request->only([
+                        'description',
+                        'amount',
+                    ]),
+                    'group_id' => $group->id,
+                    'date'     => $date->addMonths($i * 3),
+                    'jar_id'   => $jar->id,
+                    'currency' => $jar->account->currency,
+                ]);
+            }
+        } elseif ($repeat === 'monthly') {
             $group = Group::create([
                 'name' => $request->input('description'),
             ]);
