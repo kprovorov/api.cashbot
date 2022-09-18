@@ -37,7 +37,11 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+        return $group->load([
+            'payments.jar.account.jars',
+            'payments.from_transfer.payment_from.jar',
+            'payments.to_transfer.payment_to.jar',
+        ]);
     }
 
     /**

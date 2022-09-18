@@ -8,13 +8,14 @@ use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Payment;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 
 class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,7 +26,7 @@ class PaymentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\StorePaymentRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StorePaymentRequest $request)
     {
@@ -105,12 +106,19 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Payment $payment
-     * @return \Illuminate\Http\Response
+     * @param Payment $payment
+     * @return Response|Payment
      */
-    public function show(Payment $payment)
+    public function show(Payment $payment): Response|Payment
     {
-        //
+        $payment->load([
+            'jar.account.jars',
+            'from_transfer.payment_from.jar',
+            'to_transfer.payment_to.jar',
+            'group.payments',
+        ]);
+
+        return $payment;
     }
 
     /**
@@ -118,7 +126,7 @@ class PaymentController extends Controller
      *
      * @param \App\Http\Requests\UpdatePaymentRequest $request
      * @param \App\Models\Payment $payment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
@@ -136,7 +144,7 @@ class PaymentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Payment $payment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Payment $payment)
     {
