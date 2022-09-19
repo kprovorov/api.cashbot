@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\CreatePaymentData;
+use App\DTO\UpdatePaymentData;
 use App\Jobs\UpdatePaymentCurrencyAmount;
 use App\Models\Jar;
 use App\Models\Payment;
@@ -36,6 +37,26 @@ class PaymentService
             'original_amount' => $data->amount,
             'currency'        => $data->currency,
             'group_id'        => $data->groupId,
+            'date'            => $data->date,
+            'jar_id'          => $data->jarId,
+        ]);
+    }
+
+    public function updatePayment(Payment|int $payment, UpdatePaymentData $data)
+    {
+        $paymentId = $payment instanceof Payment ? $payment->id : $payment;
+
+        $jar = Jar::with(['account'])->findOrFail($data->jarId);
+
+        $rate = $data->currency === $jar->account->currency
+            ? 1
+            : $this->currencyConverter->getRate($data->currency, $jar->account->currency)['sell'];
+
+        Payment::where('id', $paymentId)->update([
+            'description'     => $data->description,
+            'amount'          => round($data->amount * $rate, 4),
+            'original_amount' => $data->amount,
+            'currency'        => $data->currency,
             'date'            => $data->date,
             'jar_id'          => $data->jarId,
         ]);

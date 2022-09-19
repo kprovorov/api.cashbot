@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\CreatePaymentData;
+use App\DTO\UpdatePaymentData;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Group;
@@ -13,6 +14,7 @@ use App\Services\PaymentService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Response;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class PaymentController extends Controller
 {
@@ -53,46 +55,54 @@ class PaymentController extends Controller
 
         if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
-                $this->paymentService->createPayment(new CreatePaymentData(
-                    jarId: $request->input('jar_id'),
-                    groupId: $group->id,
-                    description: $request->input('description'),
-                    amount: (int)$request->input('amount'),
-                    currency: $request->input('currency'),
-                    date: $date->clone()->addMonthsNoOverflow($i * 3),
-                ));
+                $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $request->input('jar_id'),
+                        groupId: $group->id,
+                        description: $request->input('description'),
+                        amount: (int)$request->input('amount'),
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i * 3),
+                    )
+                );
             }
         } elseif ($repeat === 'monthly') {
             for ($i = 0; $i < 12; $i++) {
-                $this->paymentService->createPayment(new CreatePaymentData(
-                    jarId: $request->input('jar_id'),
-                    groupId: isset($group) ? $group->id : null,
-                    description: $request->input('description'),
-                    amount: (int)$request->input('amount'),
-                    currency: $request->input('currency'),
-                    date: $date->clone()->addMonthsNoOverflow($i),
-                ));
+                $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $request->input('jar_id'),
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input('description'),
+                        amount: (int)$request->input('amount'),
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i),
+                    )
+                );
             }
         } elseif ($repeat === 'weekly') {
             for ($i = 0; $i < 52; $i++) {
-                $this->paymentService->createPayment(new CreatePaymentData(
+                $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $request->input('jar_id'),
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input('description'),
+                        amount: (int)$request->input('amount'),
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addWeeks($i),
+                    )
+                );
+            }
+        } else {
+            $this->paymentService->createPayment(
+                new CreatePaymentData(
                     jarId: $request->input('jar_id'),
                     groupId: isset($group) ? $group->id : null,
                     description: $request->input('description'),
                     amount: (int)$request->input('amount'),
                     currency: $request->input('currency'),
-                    date: $date->clone()->addWeeks($i),
-                ));
-            }
-        } else {
-            $this->paymentService->createPayment(new CreatePaymentData(
-                jarId: $request->input('jar_id'),
-                groupId: isset($group) ? $group->id : null,
-                description: $request->input('description'),
-                amount: (int)$request->input('amount'),
-                currency: $request->input('currency'),
-                date: $date,
-            ));
+                    date: $date,
+                )
+            );
         }
     }
 
@@ -120,32 +130,48 @@ class PaymentController extends Controller
      * @param \App\Http\Requests\UpdatePaymentRequest $request
      * @param \App\Models\Payment $payment
      * @return Response
+     * @throws UnknownProperties
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        $jar = Jar::with(['account'])->findOrFail($request->input('jar_id'));
+        $amount = (int)$request->input('amount');
 
-        $paymentCurrency = $request->input('currency', $jar->account->currency);
-
-        $rate = $paymentCurrency === $jar->account->currency
-            ? 1
-            : $this->currencyConverter->getRate($paymentCurrency, $jar->account->currency)['sell'];
-
-        $originalAmount = (int)$request->input('amount');
-
-        $payment->update(
-            [
-                ...$request->only([
-                    'description',
-                    'jar_id',
-                    'amount',
-                    'date',
-                ]),
-                'currency'        => $paymentCurrency,
-                'amount'          => round($originalAmount * $rate, 4),
-                'original_amount' => $originalAmount,
-            ]
+        $this->paymentService->updatePayment(
+            $payment,
+            new UpdatePaymentData(
+                jarId: $request->input('jar_id'),
+                description: $request->input('description'),
+                amount: $amount,
+                currency: $request->input('currency'),
+                date: $request->input('date'),
+            )
         );
+
+        if ($payment->from_transfer) {
+            $this->paymentService->updatePayment(
+                $payment->from_transfer->payment_from,
+                new UpdatePaymentData(
+                    jarId: $payment->from_transfer->payment_from->jar_id,
+                    description: $request->input('description'),
+                    amount: -$amount,
+                    currency: $request->input('currency'),
+                    date: $request->input('date'),
+                )
+            );
+        }
+
+        if ($payment->to_transfer) {
+            $this->paymentService->updatePayment(
+                $payment->to_transfer->payment_to,
+                new UpdatePaymentData(
+                    jarId: $payment->to_transfer->payment_to->jar_id,
+                    description: $request->input('description'),
+                    amount: -$amount,
+                    currency: $request->input('currency'),
+                    date: $request->input('date'),
+                )
+            );
+        }
     }
 
     /**
