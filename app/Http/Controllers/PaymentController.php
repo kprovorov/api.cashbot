@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\CreatePaymentData;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Payment;
 use App\Services\CurrencyConverter;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Response;
 
 class PaymentController extends Controller
 {
-    public function __construct(protected readonly CurrencyConverter $currencyConverter)
-    {
+    public function __construct(
+        protected readonly CurrencyConverter $currencyConverter,
+        protected readonly PaymentService $paymentService
+    ) {
     }
 
     /**
@@ -37,77 +41,58 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        $jar = Jar::with(['account'])->findOrFail($request->input('jar_id'));
         $repeat = $request->input('repeat', 'none');
-
-        $paymentCurrency = $request->input('currency', $jar->account->currency);
-
-        $rate = $paymentCurrency === $jar->account->currency
-            ? 1
-            : $this->currencyConverter->getRate($paymentCurrency, $jar->account->currency)['sell'];
 
         $date = Carbon::parse($request->input('date'));
 
-        $originalAmount = (int)$request->input('amount');
+        if ($repeat !== 'none') {
+            $group = Group::create([
+                'name' => $request->input('description'),
+            ]);
+        }
 
         if ($repeat === 'quarterly') {
-            $group = Group::create([
-                'name' => $request->input('description'),
-            ]);
-
             for ($i = 0; $i < 4; $i++) {
-                Payment::create([
-                    'description'     => $request->input('description'),
-                    'amount'          => round($originalAmount * $rate, 4),
-                    'original_amount' => $originalAmount,
-                    'currency'        => $paymentCurrency,
-                    'group_id'        => $group->id,
-                    'date'            => $date->clone()->addMonthsNoOverflow($i * 3),
-                    'jar_id'          => $jar->id,
-                ]);
+                $this->paymentService->createPayment(new CreatePaymentData(
+                    jarId: $request->input('jar_id'),
+                    groupId: $group->id,
+                    description: $request->input('description'),
+                    amount: (int)$request->input('amount'),
+                    currency: $request->input('currency'),
+                    date: $date->clone()->addMonthsNoOverflow($i * 3),
+                ));
             }
         } elseif ($repeat === 'monthly') {
-            $group = Group::create([
-                'name' => $request->input('description'),
-            ]);
-
             for ($i = 0; $i < 12; $i++) {
-                Payment::create([
-                    'description'     => $request->input('description'),
-                    'amount'          => round($originalAmount * $rate, 4),
-                    'original_amount' => $originalAmount,
-                    'currency'        => $paymentCurrency,
-                    'group_id'        => $group->id,
-                    'date'            => $date->clone()->addMonthsNoOverflow($i),
-                    'jar_id'          => $jar->id,
-                ]);
+                $this->paymentService->createPayment(new CreatePaymentData(
+                    jarId: $request->input('jar_id'),
+                    groupId: isset($group) ? $group->id : null,
+                    description: $request->input('description'),
+                    amount: (int)$request->input('amount'),
+                    currency: $request->input('currency'),
+                    date: $date->clone()->addMonthsNoOverflow($i),
+                ));
             }
         } elseif ($repeat === 'weekly') {
-            $group = Group::create([
-                'name' => $request->input('description'),
-            ]);
-
             for ($i = 0; $i < 52; $i++) {
-                Payment::create([
-                    'description'     => $request->input('description'),
-                    'amount'          => round($originalAmount * $rate, 4),
-                    'original_amount' => $originalAmount,
-                    'currency'        => $paymentCurrency,
-                    'group_id'        => $group->id,
-                    'date'            => $date->clone()->addWeeks($i),
-                    'jar_id'          => $jar->id,
-
-                ]);
+                $this->paymentService->createPayment(new CreatePaymentData(
+                    jarId: $request->input('jar_id'),
+                    groupId: isset($group) ? $group->id : null,
+                    description: $request->input('description'),
+                    amount: (int)$request->input('amount'),
+                    currency: $request->input('currency'),
+                    date: $date->clone()->addWeeks($i),
+                ));
             }
         } else {
-            Payment::create([
-                'description'     => $request->input('description'),
-                'amount'          => round($originalAmount * $rate, 4),
-                'original_amount' => $originalAmount,
-                'currency'        => $paymentCurrency,
-                'date'            => $date,
-                'jar_id'          => $jar->id,
-            ]);
+            $this->paymentService->createPayment(new CreatePaymentData(
+                jarId: $request->input('jar_id'),
+                groupId: isset($group) ? $group->id : null,
+                description: $request->input('description'),
+                amount: (int)$request->input('amount'),
+                currency: $request->input('currency'),
+                date: $date,
+            ));
         }
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\DTO\CreatePaymentData;
 use App\Jobs\UpdatePaymentCurrencyAmount;
+use App\Models\Jar;
 use App\Models\Payment;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,6 +13,32 @@ class PaymentService
 {
     public function __construct(protected readonly CurrencyConverter $currencyConverter)
     {
+    }
+
+    /**
+     * Create a Payment
+     *
+     * @param CreatePaymentData $data
+     * @return Payment
+     * @throws Exception
+     */
+    public function createPayment(CreatePaymentData $data): Payment
+    {
+        $jar = Jar::with(['account'])->findOrFail($data->jarId);
+
+        $rate = $data->currency === $jar->account->currency
+            ? 1
+            : $this->currencyConverter->getRate($data->currency, $jar->account->currency)['sell'];
+
+        return Payment::create([
+            'description'     => $data->description,
+            'amount'          => round($data->amount * $rate, 4),
+            'original_amount' => $data->amount,
+            'currency'        => $data->currency,
+            'group_id'        => $data->groupId,
+            'date'            => $data->date,
+            'jar_id'          => $data->jarId,
+        ]);
     }
 
     /**
