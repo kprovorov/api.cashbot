@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $jar_id
  * @property string $description
  * @property int $amount
+ * @property int $original_amount
  * @property string $currency
  * @property string $date
  * @property int|null $group_id
@@ -35,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereOriginalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -47,6 +49,7 @@ class Payment extends Model
         'jar_id',
         'description',
         'amount',
+        'original_amount',
         'currency',
         'date',
     ];

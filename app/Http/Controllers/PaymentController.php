@@ -7,11 +7,17 @@ use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Payment;
+use App\Services\CurrencyConverter;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Response;
 
 class PaymentController extends Controller
 {
+    public function __construct(protected readonly CurrencyConverter $currencyConverter)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,13 +31,24 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StorePaymentRequest $request
-     * @return Response
+     * @param StorePaymentRequest $request
+     * @return void
+     * @throws Exception
      */
     public function store(StorePaymentRequest $request)
     {
         $jar = Jar::with(['account'])->findOrFail($request->input('jar_id'));
         $repeat = $request->input('repeat', 'none');
+
+        $paymentCurrency = $request->input('currency', $jar->account->currency);
+
+        $rate = $paymentCurrency === $jar->account->currency
+            ? 1
+            : $this->currencyConverter->getRate($paymentCurrency, $jar->account->currency)['sell'];
+
+        $date = Carbon::parse($request->input('date'));
+
+        $originalAmount = (int)$request->input('amount');
 
         if ($repeat === 'quarterly') {
             $group = Group::create([
@@ -39,17 +56,14 @@ class PaymentController extends Controller
             ]);
 
             for ($i = 0; $i < 4; $i++) {
-                $date = Carbon::parse($request->input('date'));
-
                 Payment::create([
-                    ...$request->only([
-                        'description',
-                        'amount',
-                    ]),
-                    'group_id' => $group->id,
-                    'date'     => $date->addMonths($i * 3),
-                    'jar_id'   => $jar->id,
-                    'currency' => $jar->account->currency,
+                    'description'     => $request->input('description'),
+                    'amount'          => round($originalAmount * $rate, 4),
+                    'original_amount' => $originalAmount,
+                    'currency'        => $paymentCurrency,
+                    'group_id'        => $group->id,
+                    'date'            => $date->clone()->addMonthsNoOverflow($i * 3),
+                    'jar_id'          => $jar->id,
                 ]);
             }
         } elseif ($repeat === 'monthly') {
@@ -58,17 +72,14 @@ class PaymentController extends Controller
             ]);
 
             for ($i = 0; $i < 12; $i++) {
-                $date = Carbon::parse($request->input('date'));
-
                 Payment::create([
-                    ...$request->only([
-                        'description',
-                        'amount',
-                    ]),
-                    'group_id' => $group->id,
-                    'date'     => $date->addMonths($i),
-                    'jar_id'   => $jar->id,
-                    'currency' => $jar->account->currency,
+                    'description'     => $request->input('description'),
+                    'amount'          => round($originalAmount * $rate, 4),
+                    'original_amount' => $originalAmount,
+                    'currency'        => $paymentCurrency,
+                    'group_id'        => $group->id,
+                    'date'            => $date->clone()->addMonthsNoOverflow($i),
+                    'jar_id'          => $jar->id,
                 ]);
             }
         } elseif ($repeat === 'weekly') {
@@ -77,28 +88,25 @@ class PaymentController extends Controller
             ]);
 
             for ($i = 0; $i < 52; $i++) {
-                $date = Carbon::parse($request->input('date'));
-
                 Payment::create([
-                    ...$request->only([
-                        'description',
-                        'amount',
-                    ]),
-                    'group_id' => $group->id,
-                    'date'     => $date->addWeeks($i),
-                    'jar_id'   => $jar->id,
-                    'currency' => $jar->account->currency,
+                    'description'     => $request->input('description'),
+                    'amount'          => round($originalAmount * $rate, 4),
+                    'original_amount' => $originalAmount,
+                    'currency'        => $paymentCurrency,
+                    'group_id'        => $group->id,
+                    'date'            => $date->clone()->addWeeks($i),
+                    'jar_id'          => $jar->id,
+
                 ]);
             }
         } else {
             Payment::create([
-                ...$request->only([
-                    'description',
-                    'amount',
-                    'date',
-                ]),
-                'jar_id'   => $jar->id,
-                'currency' => $jar->account->currency,
+                'description'     => $request->input('description'),
+                'amount'          => round($originalAmount * $rate, 4),
+                'original_amount' => $originalAmount,
+                'currency'        => $paymentCurrency,
+                'date'            => $date,
+                'jar_id'          => $jar->id,
             ]);
         }
     }
@@ -130,13 +138,28 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
+        $jar = Jar::with(['account'])->findOrFail($request->input('jar_id'));
+
+        $paymentCurrency = $request->input('currency', $jar->account->currency);
+
+        $rate = $paymentCurrency === $jar->account->currency
+            ? 1
+            : $this->currencyConverter->getRate($paymentCurrency, $jar->account->currency)['sell'];
+
+        $originalAmount = (int)$request->input('amount');
+
         $payment->update(
-            $request->only([
-                'description',
-                'jar_id',
-                'amount',
-                'date',
-            ])
+            [
+                ...$request->only([
+                    'description',
+                    'jar_id',
+                    'amount',
+                    'date',
+                ]),
+                'currency'        => $paymentCurrency,
+                'amount'          => round($originalAmount * $rate, 4),
+                'original_amount' => $originalAmount,
+            ]
         );
     }
 
