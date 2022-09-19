@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\CreatePaymentData;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Account;
@@ -9,11 +10,18 @@ use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Payment;
 use App\Models\Transfer;
+use App\Services\CurrencyConverter;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class TransferController extends Controller
 {
+    public function __construct(protected readonly PaymentService $paymentService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +36,8 @@ class TransferController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTransferRequest $request
-     * @return Transfer
+     * @return void
+     * @throws UnknownProperties
      */
     public function store(StoreTransferRequest $request): void
     {
@@ -36,34 +45,45 @@ class TransferController extends Controller
 
         $date = Carbon::parse($request->input('date'));
         $amount = $request->input('amount');
-        $rate = $request->input('rate');
 
         $jarFrom = Jar::with('account')->findOrFail($request->input('jar_from_id'));
         $jarTo = Jar::with('account')->findOrFail($request->input('jar_to_id'));
 
-        if ($repeat === 'quarterly') {
+        if ($repeat !== 'none') {
             $group = Group::create([
                 'name' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name}) to {$jarTo->account->name} ({$jarTo->name})",
             ]);
+        }
 
+        if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
-                $paymentFrom = Payment::create([
-                    'jar_id'      => $jarFrom->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description', "Transfer to {$jarTo->account->name} ({$jarTo->name})"),
-                    'amount'      => -$amount,
-                    'currency'    => $jarFrom->account->currency,
-                    'date'        => $date->clone()->addMonths($i * 3),
-                ]);
+                $paymentFrom = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarFrom->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
+                        ),
+                        amount: -$amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i * 3),
+                    )
+                );
 
-                $paymentTo = Payment::create([
-                    'jar_id'      => $jarTo->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
-                    'amount'      => round($amount * $rate / 10000),
-                    'currency'    => $jarTo->account->currency,
-                    'date'        => $date->clone()->addMonths($i * 3),
-                ]);
+                $paymentTo = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarTo->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
+                        ),
+                        amount: $amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i * 3),
+                    )
+                );
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
@@ -71,28 +91,34 @@ class TransferController extends Controller
                 ]);
             }
         } elseif ($repeat === 'monthly') {
-            $group = Group::create([
-                'name' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name}) to {$jarTo->account->name} ({$jarTo->name})",
-            ]);
-
             for ($i = 0; $i < 12; $i++) {
-                $paymentFrom = Payment::create([
-                    'jar_id'      => $jarFrom->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description', "Transfer to {$jarTo->account->name} ({$jarTo->name})"),
-                    'amount'      => -$amount,
-                    'currency'    => $jarFrom->account->currency,
-                    'date'        => $date->clone()->addMonths($i),
-                ]);
+                $paymentFrom = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarFrom->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
+                        ),
+                        amount: -$amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i),
+                    )
+                );
 
-                $paymentTo = Payment::create([
-                    'jar_id'      => $jarTo->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
-                    'amount'      => round($amount * $rate / 10000),
-                    'currency'    => $jarTo->account->currency,
-                    'date'        => $date->clone()->addMonths($i),
-                ]);
+                $paymentTo = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarTo->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
+                        ),
+                        amount: $amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addMonthsNoOverflow($i),
+                    )
+                );
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
@@ -100,28 +126,34 @@ class TransferController extends Controller
                 ]);
             }
         } elseif ($repeat === 'weekly') {
-            $group = Group::create([
-                'name' => "Transfer from {$jarFrom->account->name} ({$jarFrom->name}) to {$jarTo->account->name} ({$jarTo->name})",
-            ]);
-
             for ($i = 0; $i < 52; $i++) {
-                $paymentFrom = Payment::create([
-                    'jar_id'      => $jarFrom->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description',"Transfer to {$jarTo->account->name} ({$jarTo->name})"),
-                    'amount'      => -$amount,
-                    'currency'    => $jarFrom->account->currency,
-                    'date'        => $date->clone()->addWeeks($i),
-                ]);
+                $paymentFrom = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarFrom->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
+                        ),
+                        amount: -$amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addWeeks($i),
+                    )
+                );
 
-                $paymentTo = Payment::create([
-                    'jar_id'      => $jarTo->id,
-                    'group_id'    => $group->id,
-                    'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
-                    'amount'      => round($amount * $rate / 10000),
-                    'currency'    => $jarTo->account->currency,
-                    'date'        => $date->clone()->addWeeks($i),
-                ]);
+                $paymentTo = $this->paymentService->createPayment(
+                    new CreatePaymentData(
+                        jarId: $jarTo->id,
+                        groupId: isset($group) ? $group->id : null,
+                        description: $request->input(
+                            'description',
+                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
+                        ),
+                        amount: $amount,
+                        currency: $request->input('currency'),
+                        date: $date->clone()->addWeeks($i),
+                    )
+                );
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
@@ -129,21 +161,33 @@ class TransferController extends Controller
                 ]);
             }
         } else {
-            $paymentFrom = Payment::create([
-                'jar_id'      => $jarFrom->id,
-                'description' => $request->input('description',"Transfer to {$jarTo->account->name} ({$jarTo->name})"),
-                'amount'      => -$amount,
-                'currency'    => $jarFrom->account->currency,
-                'date'        => $date,
-            ]);
+            $paymentFrom = $this->paymentService->createPayment(
+                new CreatePaymentData(
+                    jarId: $jarFrom->id,
+                    groupId: isset($group) ? $group->id : null,
+                    description: $request->input(
+                        'description',
+                        "Transfer to {$jarTo->account->name} ({$jarTo->name})"
+                    ),
+                    amount: -$amount,
+                    currency: $request->input('currency'),
+                    date: $date,
+                )
+            );
 
-            $paymentTo = Payment::create([
-                'jar_id'      => $jarTo->id,
-                'description' => $request->input('description',"Transfer from {$jarFrom->account->name} ({$jarFrom->name})"),
-                'amount'      => round($amount * $rate / 10000),
-                'currency'    => $jarTo->account->currency,
-                'date'        => $date,
-            ]);
+            $paymentTo = $this->paymentService->createPayment(
+                new CreatePaymentData(
+                    jarId: $jarTo->id,
+                    groupId: isset($group) ? $group->id : null,
+                    description: $request->input(
+                        'description',
+                        "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
+                    ),
+                    amount: $amount,
+                    currency: $request->input('currency'),
+                    date: $date,
+                )
+            );
 
             Transfer::create([
                 'from_payment_id' => $paymentFrom->id,
