@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\Currency;
+use App\Services\CurrencyConverter;
+use Exception;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -46,6 +50,11 @@ class Account extends Model
         'balance',
     ];
 
+    protected $casts = [
+        'balance' => 'int',
+        'uah_balance' => 'int',
+    ];
+
     /**
      * @return HasMany
      */
@@ -60,5 +69,23 @@ class Account extends Model
     public function payments(): HasManyThrough
     {
         return $this->hasManyThrough(Payment::class, Jar::class);
+    }
+
+    /**
+     * Calculate the balance of the account in the UAH currency.
+     *
+     * @return Attribute
+     * @throws Exception
+     */
+    protected function uahBalance(): Attribute
+    {
+        $rate = $this->currency ? app(CurrencyConverter::class)->getRate(
+            $this->currency,
+            Currency::UAH->value
+        )['sell'] : 1;
+
+        return Attribute::make(
+            get: fn() => round($this->balance * $rate),
+        );
     }
 }

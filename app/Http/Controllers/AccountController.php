@@ -56,10 +56,10 @@ class AccountController extends Controller
                           'jar.account.jars',
                           'from_transfer.payment_from.jar',
                           'to_transfer.payment_to.jar',
-                          'group.payments'
+                          'group.payments',
                       ]);
             },
-        ])->get();
+        ])->get()->each->append('uah_balance');
     }
 
     /**

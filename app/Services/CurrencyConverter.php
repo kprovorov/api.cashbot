@@ -36,6 +36,13 @@ class CurrencyConverter
      */
     public function getRate(string $from, string $to): array
     {
+        if ($from === $to) {
+            return [
+                'buy'  => 1,
+                'sell' => 1,
+            ];
+        }
+
         $rates = array_filter($this->getRates(), function (CurrencyRateData $rate) use ($to, $from) {
             return ($rate->currencyCodeA->name === $from
                     && $rate->currencyCodeB->name === $to)
