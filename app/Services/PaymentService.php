@@ -59,6 +59,7 @@ class PaymentService
             'currency'        => $data->currency,
             'date'            => $data->date,
             'jar_id'          => $data->jarId,
+            'hidden'          => $data->hidden,
         ]);
     }
 

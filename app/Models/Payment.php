@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $currency
  * @property string $date
  * @property int|null $group_id
+ * @property int $hidden
  * @property-read \App\Models\Transfer|null $from_transfer
  * @property-read \App\Models\Group|null $group
  * @property-read \App\Models\Jar|null $jar
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereOriginalAmount($value)
@@ -52,6 +54,7 @@ class Payment extends Model
         'original_amount',
         'currency',
         'date',
+        'hidden'
     ];
 
     protected $casts = [

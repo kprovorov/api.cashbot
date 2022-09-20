@@ -11,4 +11,5 @@ class UpdatePaymentData extends DataTransferObject
     public int $amount;
     public string $currency;
     public string $date;
+    public bool $hidden;
 }

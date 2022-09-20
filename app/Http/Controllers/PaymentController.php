@@ -144,6 +144,7 @@ class PaymentController extends Controller
                 amount: $amount,
                 currency: $request->input('currency'),
                 date: $request->input('date'),
+                hidden: $request->input('hidden'),
             )
         );
 
@@ -156,6 +157,7 @@ class PaymentController extends Controller
                     amount: -$amount,
                     currency: $request->input('currency'),
                     date: $request->input('date'),
+                    hidden: $request->input('hidden'),
                 )
             );
         }
@@ -169,6 +171,7 @@ class PaymentController extends Controller
                     amount: -$amount,
                     currency: $request->input('currency'),
                     date: $request->input('date'),
+                    hidden: $request->input('hidden'),
                 )
             );
         }
