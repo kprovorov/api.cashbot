@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Decorators\MonobankApiCacheDecorator;
+use App\Services\CurrencyConverter;
 use App\Services\MonobankApi;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
             MonobankApi::class,
             MonobankApiCacheDecorator::class
         );
+
+        $this->app->singleton(CurrencyConverter::class);
     }
 
     /**

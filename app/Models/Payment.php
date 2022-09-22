@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $description
  * @property int $amount
  * @property int $original_amount
- * @property string $currency
+ * @property Currency $currency
  * @property string $date
  * @property int|null $group_id
  * @property int $hidden
@@ -54,13 +55,14 @@ class Payment extends Model
         'original_amount',
         'currency',
         'date',
-        'hidden'
+        'hidden',
     ];
 
     protected $casts = [
         'balance'             => 'integer',
         'jar_balance'         => 'integer',
         'jar_savings_balance' => 'integer',
+        'currency'            => Currency::class,
     ];
 
     /**

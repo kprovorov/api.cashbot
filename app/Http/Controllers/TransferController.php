@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\CreatePaymentData;
+use App\Enums\Currency;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Account;
@@ -66,7 +67,7 @@ class TransferController extends Controller
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
                         ),
                         amount: -$amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
                     )
                 );
@@ -80,7 +81,7 @@ class TransferController extends Controller
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
                         ),
                         amount: $amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
                     )
                 );
@@ -101,7 +102,7 @@ class TransferController extends Controller
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
                         ),
                         amount: -$amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
                     )
                 );
@@ -115,7 +116,7 @@ class TransferController extends Controller
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
                         ),
                         amount: $amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
                     )
                 );
@@ -136,7 +137,7 @@ class TransferController extends Controller
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
                         ),
                         amount: -$amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
                     )
                 );
@@ -150,7 +151,7 @@ class TransferController extends Controller
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
                         ),
                         amount: $amount,
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
                     )
                 );
@@ -170,7 +171,7 @@ class TransferController extends Controller
                         "Transfer to {$jarTo->account->name} ({$jarTo->name})"
                     ),
                     amount: -$amount,
-                    currency: $request->input('currency'),
+                    currency: Currency::from($request->input('currency')),
                     date: $date,
                 )
             );
@@ -184,7 +185,7 @@ class TransferController extends Controller
                         "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
                     ),
                     amount: $amount,
-                    currency: $request->input('currency'),
+                    currency: Currency::from($request->input('currency')),
                     date: $date,
                 )
             );

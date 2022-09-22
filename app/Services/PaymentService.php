@@ -29,7 +29,7 @@ class PaymentService
 
         $rate = $data->currency === $jar->account->currency
             ? 1
-            : $this->currencyConverter->getRate($data->currency, $jar->account->currency)['sell'];
+            : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         return Payment::create([
             'description'     => $data->description,
@@ -50,7 +50,7 @@ class PaymentService
 
         $rate = $data->currency === $jar->account->currency
             ? 1
-            : $this->currencyConverter->getRate($data->currency, $jar->account->currency)['sell'];
+            : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         Payment::where('id', $paymentId)->update([
             'description'     => $data->description,
@@ -96,7 +96,7 @@ class PaymentService
         $payment->load('jar.account');
 
         if ($payment->currency !== $payment->jar->account->currency) {
-            $rate = $this->currencyConverter->getRate($payment->currency, $payment->jar->account->currency)['sell'];
+            $rate = $this->currencyConverter->getRate($payment->currency, $payment->jar->account->currency);
 
             $payment->amount = round($payment->original_amount * $rate, 4);
             $payment->save();

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
- * @property string $currency
+ * @property Currency $currency
  * @property int $balance
  * @property string|null $external_id
  * @property string|null $provider
@@ -51,8 +51,9 @@ class Account extends Model
     ];
 
     protected $casts = [
-        'balance' => 'int',
+        'balance'     => 'int',
         'uah_balance' => 'int',
+        'currency'    => Currency::class,
     ];
 
     /**
@@ -81,8 +82,8 @@ class Account extends Model
     {
         $rate = $this->currency ? app(CurrencyConverter::class)->getRate(
             $this->currency,
-            Currency::UAH->value
-        )['sell'] : 1;
+            Currency::UAH
+        ) : 1;
 
         return Attribute::make(
             get: fn() => round($this->balance * $rate),

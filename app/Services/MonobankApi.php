@@ -9,6 +9,16 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 class MonobankApi
 {
     /**
+     * Get currency exchange rates
+     *
+     * @return array
+     */
+    public function getRates(): array
+    {
+        return Http::get('https://api.monobank.ua/bank/currency')->json();
+    }
+
+    /**
      * @return array
      */
     public function getRawClientInfo(): array

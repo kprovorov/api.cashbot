@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\DTO\CreatePaymentData;
 use App\DTO\UpdatePaymentData;
+use App\Enums\Currency;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Group;
-use App\Models\Jar;
 use App\Models\Payment;
 use App\Services\CurrencyConverter;
 use App\Services\PaymentService;
@@ -61,7 +61,7 @@ class PaymentController extends Controller
                         groupId: $group->id,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
                     )
                 );
@@ -74,7 +74,7 @@ class PaymentController extends Controller
                         groupId: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
                     )
                 );
@@ -87,7 +87,7 @@ class PaymentController extends Controller
                         groupId: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
-                        currency: $request->input('currency'),
+                        currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
                     )
                 );
@@ -99,7 +99,7 @@ class PaymentController extends Controller
                     groupId: isset($group) ? $group->id : null,
                     description: $request->input('description'),
                     amount: (int)$request->input('amount'),
-                    currency: $request->input('currency'),
+                    currency: Currency::from($request->input('currency')),
                     date: $date,
                 )
             );
@@ -142,7 +142,7 @@ class PaymentController extends Controller
                 jarId: $request->input('jar_id'),
                 description: $request->input('description'),
                 amount: $amount,
-                currency: $request->input('currency'),
+                currency: Currency::from($request->input('currency')),
                 date: $request->input('date'),
                 hidden: $request->input('hidden'),
             )
@@ -155,7 +155,7 @@ class PaymentController extends Controller
                     jarId: $payment->from_transfer->payment_from->jar_id,
                     description: $request->input('description'),
                     amount: -$amount,
-                    currency: $request->input('currency'),
+                    currency: Currency::from($request->input('currency')),
                     date: $request->input('date'),
                     hidden: $request->input('hidden'),
                 )
@@ -169,7 +169,7 @@ class PaymentController extends Controller
                     jarId: $payment->to_transfer->payment_to->jar_id,
                     description: $request->input('description'),
                     amount: -$amount,
-                    currency: $request->input('currency'),
+                    currency: Currency::from($request->input('currency')),
                     date: $request->input('date'),
                     hidden: $request->input('hidden'),
                 )

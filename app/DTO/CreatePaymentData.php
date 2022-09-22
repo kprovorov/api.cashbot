@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use App\Enums\Currency;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class CreatePaymentData extends DataTransferObject
@@ -10,6 +11,6 @@ class CreatePaymentData extends DataTransferObject
     public ?int $groupId;
     public string $description;
     public int $amount;
-    public string $currency;
+    public Currency $currency;
     public string $date;
 }
