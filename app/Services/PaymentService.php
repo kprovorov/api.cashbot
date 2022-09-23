@@ -33,13 +33,9 @@ class PaymentService
             : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         return Payment::create([
-            'description'     => $data->description,
             'amount'          => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
-            'currency'        => $data->currency,
-            'group_id'        => $data->group_id,
-            'date'            => $data->date,
-            'jar_id'          => $data->jar_id,
+            ...$data->toArray(),
         ]);
     }
 
@@ -54,13 +50,9 @@ class PaymentService
             : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         Payment::where('id', $paymentId)->update([
-            'description'     => $data->description,
             'amount'          => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
-            'currency'        => $data->currency,
-            'date'            => $data->date,
-            'jar_id'          => $data->jar_id,
-            'hidden'          => $data->hidden,
+            ...$data->toArray(),
         ]);
     }
 
@@ -132,6 +124,7 @@ class PaymentService
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
                 'amount'   => $amount,
+                'ends_on'  => $payment->ends_on,
                 'date'     => today(),
             ])
         );

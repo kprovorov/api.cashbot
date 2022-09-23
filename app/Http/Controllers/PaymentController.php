@@ -45,7 +45,8 @@ class PaymentController extends Controller
     {
         $repeat = $request->input('repeat', 'none');
 
-        $date = Carbon::parse($request->input('date'));
+        $date = Carbon::parse(Carbon::parse($request->input('date')));
+        $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
         if ($repeat !== 'none') {
             $group = Group::create([
@@ -58,11 +59,12 @@ class PaymentController extends Controller
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        groupId: $group->id,
+                        group_id: $group->id,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
+                        ends_on: $endsOn?->clone()->addMonthsNoOverflow($i * 3),
                     )
                 );
             }
@@ -71,11 +73,12 @@ class PaymentController extends Controller
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        groupId: isset($group) ? $group->id : null,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
+                        ends_on: $endsOn?->clone()->addMonthsNoOverflow($i),
                     )
                 );
             }
@@ -84,11 +87,12 @@ class PaymentController extends Controller
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        groupId: isset($group) ? $group->id : null,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
+                        ends_on: $endsOn?->clone()->addWeeks($i * 3),
                     )
                 );
             }
@@ -96,11 +100,12 @@ class PaymentController extends Controller
             $this->paymentService->createPayment(
                 new CreatePaymentData(
                     jar_id: $request->input('jar_id'),
-                    groupId: isset($group) ? $group->id : null,
+                    group_id: isset($group) ? $group->id : null,
                     description: $request->input('description'),
                     amount: (int)$request->input('amount'),
                     currency: Currency::from($request->input('currency')),
                     date: $date,
+                    ends_on: $endsOn,
                 )
             );
         }
@@ -135,6 +140,7 @@ class PaymentController extends Controller
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
         $amount = (int)$request->input('amount');
+        $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
         $this->paymentService->updatePayment(
             $payment,
@@ -143,7 +149,8 @@ class PaymentController extends Controller
                 description: $request->input('description'),
                 amount: $amount,
                 currency: Currency::from($request->input('currency')),
-                date: $request->input('date'),
+                date: Carbon::parse($request->input('date')),
+                ends_on: $endsOn,
                 hidden: $request->input('hidden'),
             )
         );
@@ -156,7 +163,8 @@ class PaymentController extends Controller
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
-                    date: $request->input('date'),
+                    date: Carbon::parse($request->input('date')),
+                    ends_on: $endsOn,
                     hidden: $request->input('hidden'),
                 )
             );
@@ -170,7 +178,8 @@ class PaymentController extends Controller
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
-                    date: $request->input('date'),
+                    date: Carbon::parse($request->input('date')),
+                    ends_on: $endsOn,
                     hidden: $request->input('hidden'),
                 )
             );

@@ -60,6 +60,7 @@ class Payment extends Model
         'currency',
         'date',
         'hidden',
+        'ends_on',
     ];
 
     protected $casts = [
