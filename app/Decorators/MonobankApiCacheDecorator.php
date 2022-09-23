@@ -7,24 +7,14 @@ use Cache;
 
 class MonobankApiCacheDecorator extends MonobankApi
 {
-    const MONOBANK_CLIENT_INFO = 'MONOBANK_CLIENT_INFO';
-    const MONOBANK_RATES = 'MONOBANK_RATES';
+    const TTL = 60; // 60 minutes
 
     /**
      * @inheritDoc
      */
     public function getRawClientInfo(): array
     {
-        $cached = Cache::get(self::MONOBANK_CLIENT_INFO);
-
-        if ($cached) {
-            return $cached;
-        } else {
-            $clientInfo = parent::getRawClientInfo();
-            Cache::put(self::MONOBANK_CLIENT_INFO, $clientInfo, now()->addMinutes(5));
-
-            return $clientInfo;
-        }
+        return $this->getCached(__FUNCTION__, 5);
     }
 
     /**
@@ -32,15 +22,25 @@ class MonobankApiCacheDecorator extends MonobankApi
      */
     public function getRates(): array
     {
-        $cached = Cache::get(self::MONOBANK_RATES);
+        return $this->getCached(__FUNCTION__);
+    }
+
+    /**
+     * @param string $method
+     * @param int|null $ttl
+     * @return mixed
+     */
+    protected function getCached(string $method, ?int $ttl = null): mixed
+    {
+        $cached = Cache::get($method);
 
         if ($cached) {
-            return $cached;
+            return unserialize($cached);
         } else {
-            $rates = parent::getRates();
-            Cache::put(self::MONOBANK_RATES, $rates, now()->addMinutes(5));
+            $res = parent::$method();
+            Cache::put($method, serialize($res), now()->addMinutes($ttl ?? self::TTL));
 
-            return $rates;
+            return $res;
         }
     }
 }
