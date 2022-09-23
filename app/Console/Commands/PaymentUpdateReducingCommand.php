@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\UpdatePaymentCurrencyAmounts;
+use App\Jobs\UpdateReducingPaymentsJob;
 use Illuminate\Console\Command;
 
-class PaymentUpdateCurrencyAmounts extends Command
+class PaymentUpdateReducingCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'payment:update-currency-amounts';
+    protected $signature = 'payment:update-reducing-payments';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update amount for payments where currency is different from account currency';
+    protected $description = 'Update reducing payments';
 
     /**
      * Execute the console command.
@@ -28,6 +28,6 @@ class PaymentUpdateCurrencyAmounts extends Command
      */
     public function handle(): void
     {
-        dispatch(new UpdatePaymentCurrencyAmounts());
+        dispatch(new UpdateReducingPaymentsJob());
     }
 }

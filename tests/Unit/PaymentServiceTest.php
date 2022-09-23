@@ -23,29 +23,25 @@ class PaymentServiceTest extends TestCase
         $paymentCurrency = Currency::EUR;
 
         $account = Account::factory()->create([
-            'currency' => $accountCurrency->value,
+            'currency' => $accountCurrency,
         ]);
         $jar = Jar::factory()->create([
             'account_id' => $account->id,
         ]);
         $payment = Payment::factory()->create([
             'jar_id'          => $jar->id,
-            'currency'        => $paymentCurrency->value,
+            'currency'        => $paymentCurrency,
             'amount'          => 10,
             'original_amount' => 100,
         ]);
 
         $mock = $this->mock(CurrencyConverter::class);
-
         $mock->shouldReceive('getRate')
              ->once()
-             ->with($paymentCurrency->value, $accountCurrency->value)
-             ->andReturn([
-                 'buy'  => 1,
-                 'sell' => 2,
-             ]);
+             ->with($paymentCurrency, $accountCurrency)
+             ->andReturn(2);
 
-        $paymentService = app(PaymentService::class);
+        $paymentService = $this->app->make(PaymentService::class);
 
         $paymentService->updateCurrencyAmount($payment);
 
@@ -53,6 +49,49 @@ class PaymentServiceTest extends TestCase
             'id'              => $payment->id,
             'amount'          => 200,
             'original_amount' => 100,
+        ]);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_successfully_updates_reducing_payment(): void
+    {
+        $originalAmount = 100;
+        $daysLeft = 4;
+
+        /** @var Account $account */
+        $account = Account::factory()->create();
+
+        /** @var Jar $jar */
+        $jar = Jar::factory()->create([
+            'account_id' => $account->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'jar_id'          => $jar->id,
+            'original_amount' => $originalAmount,
+            'date'            => today()->subDay(),
+            'ends_on'         => today()->addDays($daysLeft),
+        ]);
+
+        $mock = $this->mock(CurrencyConverter::class);
+        $mock->shouldReceive('getRate')
+             ->once()
+             ->with($payment->currency, $account->currency)
+             ->andReturn(2);
+
+        $paymentService = $this->app->make(PaymentService::class);
+
+        $paymentService->updateReducingPayment($payment);
+
+        $this->assertDatabaseHas('payments', [
+            'id'              => $payment->id,
+            'original_amount' => 80,
+            'amount'          => 160,
+            'date'            => today(),
         ]);
     }
 }

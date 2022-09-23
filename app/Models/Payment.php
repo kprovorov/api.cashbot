@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Currency;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,9 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $amount
  * @property int $original_amount
  * @property Currency $currency
- * @property string $date
+ * @property \Illuminate\Support\Carbon $date
  * @property int|null $group_id
  * @property int $hidden
+ * @property \Illuminate\Support\Carbon|null $ends_on
  * @property-read \App\Models\Transfer|null $from_transfer
  * @property-read \App\Models\Group|null $group
  * @property-read \App\Models\Jar|null $jar
@@ -35,11 +37,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereEndsOn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereOriginalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -63,6 +67,8 @@ class Payment extends Model
         'jar_balance'         => 'integer',
         'jar_savings_balance' => 'integer',
         'currency'            => Currency::class,
+        'date'                => 'date',
+        'ends_on'             => 'date',
     ];
 
     /**

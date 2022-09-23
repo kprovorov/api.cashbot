@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\DTO\CreatePaymentData;
 use App\DTO\UpdatePaymentData;
-use App\Jobs\UpdatePaymentCurrencyAmount;
+use App\Jobs\UpdatePaymentCurrencyAmountJob;
+use App\Jobs\UpdateReducingPaymentJob;
 use App\Models\Jar;
 use App\Models\Payment;
 use Exception;
@@ -25,7 +26,7 @@ class PaymentService
      */
     public function createPayment(CreatePaymentData $data): Payment
     {
-        $jar = Jar::with(['account'])->findOrFail($data->jarId);
+        $jar = Jar::with(['account'])->findOrFail($data->jar_id);
 
         $rate = $data->currency === $jar->account->currency
             ? 1
@@ -36,9 +37,9 @@ class PaymentService
             'amount'          => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
             'currency'        => $data->currency,
-            'group_id'        => $data->groupId,
+            'group_id'        => $data->group_id,
             'date'            => $data->date,
-            'jar_id'          => $data->jarId,
+            'jar_id'          => $data->jar_id,
         ]);
     }
 
@@ -46,7 +47,7 @@ class PaymentService
     {
         $paymentId = $payment instanceof Payment ? $payment->id : $payment;
 
-        $jar = Jar::with(['account'])->findOrFail($data->jarId);
+        $jar = Jar::with(['account'])->findOrFail($data->jar_id);
 
         $rate = $data->currency === $jar->account->currency
             ? 1
@@ -58,7 +59,7 @@ class PaymentService
             'original_amount' => $data->amount,
             'currency'        => $data->currency,
             'date'            => $data->date,
-            'jar_id'          => $data->jarId,
+            'jar_id'          => $data->jar_id,
             'hidden'          => $data->hidden,
         ]);
     }
@@ -77,7 +78,7 @@ class PaymentService
                ->select('payments.*')
                ->chunk(1000, function (Collection $payments) {
                    $payments->each(function (Payment $payment) {
-                       dispatch(new UpdatePaymentCurrencyAmount($payment));
+                       dispatch(new UpdatePaymentCurrencyAmountJob($payment));
                    });
                });
     }
@@ -101,5 +102,38 @@ class PaymentService
             $payment->amount = round($payment->original_amount * $rate, 4);
             $payment->save();
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function updateReducingPayments(): void
+    {
+        Payment::whereNotNull('ends_on')
+               ->chunk(1000, function (Collection $payments) {
+                   $payments->each(function (Payment $payment) {
+                       dispatch(new UpdateReducingPaymentJob($payment));
+                   });
+               });
+    }
+
+    public function updateReducingPayment(Payment|int $payment)
+    {
+        $payment = $payment instanceof Payment ? $payment->refresh() : Payment::find($payment);
+
+        $totalDays = $payment->date->diffInDays($payment->ends_on);
+        $daysLeft = $payment->ends_on->diffInDays(today());
+
+        $amount = round($payment->original_amount / $totalDays * $daysLeft, 4);
+
+        $this->updatePayment(
+            $payment,
+            new UpdatePaymentData([
+                ...$payment->toArray(),
+                'currency' => $payment->currency,
+                'amount'   => $amount,
+                'date'     => today(),
+            ])
+        );
     }
 }

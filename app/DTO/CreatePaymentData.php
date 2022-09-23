@@ -7,8 +7,8 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class CreatePaymentData extends DataTransferObject
 {
-    public int $jarId;
-    public ?int $groupId;
+    public int $jar_id;
+    public ?int $group_id;
     public string $description;
     public int $amount;
     public Currency $currency;

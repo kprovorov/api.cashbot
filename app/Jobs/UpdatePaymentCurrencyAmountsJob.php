@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Payment;
 use App\Services\PaymentService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -12,19 +11,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdatePaymentCurrencyAmount implements ShouldQueue
+class UpdatePaymentCurrencyAmountsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(public Payment $payment)
-    {
-    }
-
 
     /**
      * Execute the job.
@@ -35,7 +24,6 @@ class UpdatePaymentCurrencyAmount implements ShouldQueue
      */
     public function handle(PaymentService $paymentService): void
     {
-        $paymentService->updateCurrencyAmount($this->payment);
+        $paymentService->updateCurrencyAmounts();
     }
-
 }
