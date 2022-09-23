@@ -60,8 +60,8 @@ class TransferController extends Controller
             for ($i = 0; $i < 4; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarFrom->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarFrom->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
@@ -74,8 +74,8 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarTo->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarTo->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
@@ -95,8 +95,8 @@ class TransferController extends Controller
             for ($i = 0; $i < 12; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarFrom->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarFrom->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
@@ -109,8 +109,8 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarTo->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarTo->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
@@ -130,8 +130,8 @@ class TransferController extends Controller
             for ($i = 0; $i < 52; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarFrom->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarFrom->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer to {$jarTo->account->name} ({$jarTo->name})"
@@ -144,8 +144,8 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $jarTo->id,
-                        groupId: isset($group) ? $group->id : null,
+                        jar_id: $jarTo->id,
+                        group_id: isset($group) ? $group->id : null,
                         description: $request->input(
                             'description',
                             "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
@@ -164,8 +164,8 @@ class TransferController extends Controller
         } else {
             $paymentFrom = $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jarId: $jarFrom->id,
-                    groupId: isset($group) ? $group->id : null,
+                    jar_id: $jarFrom->id,
+                    group_id: isset($group) ? $group->id : null,
                     description: $request->input(
                         'description',
                         "Transfer to {$jarTo->account->name} ({$jarTo->name})"
@@ -178,8 +178,8 @@ class TransferController extends Controller
 
             $paymentTo = $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jarId: $jarTo->id,
-                    groupId: isset($group) ? $group->id : null,
+                    jar_id: $jarTo->id,
+                    group_id: isset($group) ? $group->id : null,
                     description: $request->input(
                         'description',
                         "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"

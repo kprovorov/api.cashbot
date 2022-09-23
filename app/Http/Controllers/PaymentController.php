@@ -57,7 +57,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 4; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $request->input('jar_id'),
+                        jar_id: $request->input('jar_id'),
                         groupId: $group->id,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
@@ -70,7 +70,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 12; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $request->input('jar_id'),
+                        jar_id: $request->input('jar_id'),
                         groupId: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
@@ -83,7 +83,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 52; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jarId: $request->input('jar_id'),
+                        jar_id: $request->input('jar_id'),
                         groupId: isset($group) ? $group->id : null,
                         description: $request->input('description'),
                         amount: (int)$request->input('amount'),
@@ -95,7 +95,7 @@ class PaymentController extends Controller
         } else {
             $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jarId: $request->input('jar_id'),
+                    jar_id: $request->input('jar_id'),
                     groupId: isset($group) ? $group->id : null,
                     description: $request->input('description'),
                     amount: (int)$request->input('amount'),
@@ -139,7 +139,7 @@ class PaymentController extends Controller
         $this->paymentService->updatePayment(
             $payment,
             new UpdatePaymentData(
-                jarId: $request->input('jar_id'),
+                jar_id: $request->input('jar_id'),
                 description: $request->input('description'),
                 amount: $amount,
                 currency: Currency::from($request->input('currency')),
@@ -152,7 +152,7 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->from_transfer->payment_from,
                 new UpdatePaymentData(
-                    jarId: $payment->from_transfer->payment_from->jar_id,
+                    jar_id: $payment->from_transfer->payment_from->jar_id,
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
@@ -166,7 +166,7 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->to_transfer->payment_to,
                 new UpdatePaymentData(
-                    jarId: $payment->to_transfer->payment_to->jar_id,
+                    jar_id: $payment->to_transfer->payment_to->jar_id,
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
