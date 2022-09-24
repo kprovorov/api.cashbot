@@ -18,7 +18,7 @@ class PaymentSeeder extends Seeder
     public function run()
     {
         Jar::each(function (Jar $jar) {
-            Payment::factory()->count(3)->create([
+            Payment::factory()->count(30)->create([
                 'jar_id'   => $jar->id,
                 'currency' => $jar->account->currency,
             ]);

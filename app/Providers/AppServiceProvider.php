@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
             ], 'cashbot');
         });
 
-
         $this->app->singleton(CurrencyConverter::class);
     }
 

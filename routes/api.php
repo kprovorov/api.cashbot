@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RateController;
@@ -29,5 +30,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('transfers', TransferController::class);
     Route::apiResource('groups', GroupController::class);
 
+    Route::get('dashboard', DashboardController::class);
     Route::get('rates', RateController::class);
 });
