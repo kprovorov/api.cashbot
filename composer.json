@@ -12,6 +12,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "malkusch/lock": "^2.2",
         "predis/predis": "^2.0",
         "sentry/sentry-laravel": "^2.13",
         "spatie/data-transfer-object": "^3.8"

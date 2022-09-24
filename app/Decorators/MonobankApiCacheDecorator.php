@@ -4,13 +4,20 @@ namespace App\Decorators;
 
 use App\Services\MonobankApi;
 use Cache;
+use Exception;
+use malkusch\lock\mutex\Mutex;
 
 class MonobankApiCacheDecorator extends MonobankApi
 {
     const TTL = 60; // 60 minutes
 
+    public function __construct(protected readonly Mutex $mutex)
+    {
+    }
+
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function getRawClientInfo(): array
     {
@@ -19,6 +26,7 @@ class MonobankApiCacheDecorator extends MonobankApi
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function getRates(): array
     {
@@ -29,18 +37,21 @@ class MonobankApiCacheDecorator extends MonobankApi
      * @param string $method
      * @param int|null $ttl
      * @return mixed
+     * @throws Exception
      */
     protected function getCached(string $method, ?int $ttl = null): mixed
     {
-        $cached = Cache::get($method);
+        return $this->mutex->synchronized(function () use ($method, $ttl) {
+            $cached = Cache::get($method);
 
-        if ($cached) {
-            return unserialize($cached);
-        } else {
-            $res = parent::$method();
-            Cache::put($method, serialize($res), now()->addMinutes($ttl ?? self::TTL));
+            if ($cached) {
+                return unserialize($cached);
+            } else {
+                $res = parent::$method();
+                Cache::put($method, serialize($res), now()->addMinutes($ttl ?? self::TTL));
 
-            return $res;
-        }
+                return $res;
+            }
+        });
     }
 }
