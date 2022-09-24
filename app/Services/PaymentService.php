@@ -50,9 +50,9 @@ class PaymentService
             : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         Payment::where('id', $paymentId)->update([
+            ...$data->toArray(),
             'amount'          => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
-            ...$data->toArray(),
         ]);
     }
 

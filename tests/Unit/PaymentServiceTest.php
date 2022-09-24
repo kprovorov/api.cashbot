@@ -62,7 +62,9 @@ class PaymentServiceTest extends TestCase
         $daysLeft = 4;
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -73,6 +75,7 @@ class PaymentServiceTest extends TestCase
         $payment = Payment::factory()->create([
             'jar_id'          => $jar->id,
             'original_amount' => $originalAmount,
+            'currency'        => Currency::USD,
             'date'            => today()->subDay(),
             'ends_on'         => today()->addDays($daysLeft),
         ]);
@@ -91,7 +94,7 @@ class PaymentServiceTest extends TestCase
             'id'              => $payment->id,
             'original_amount' => 80,
             'amount'          => 160,
-            'date'            => today(),
+            'date'            => today()->toDateString(),
         ]);
     }
 }
