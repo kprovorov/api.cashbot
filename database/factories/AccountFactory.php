@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Account>
@@ -18,7 +19,7 @@ class AccountFactory extends Factory
     public function definition()
     {
         return [
-            'name'     => $this->faker->name,
+            'name'     => Str::ucfirst($this->faker->word()),
             'currency' => $this->faker->randomElement(Currency::cases()),
             'balance'  => $this->faker->numberBetween(0, 1000000),
         ];
