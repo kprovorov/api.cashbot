@@ -43,7 +43,7 @@ class MonobankClientCacheDecorator extends MonobankClient
      */
     protected function getFromCacheOrFetch(string $method, ?int $ttl = null): mixed
     {
-        $cacheKey = Str::slug(Str::snake(__METHOD__));
+        $cacheKey = Str::slug(Str::snake($method));
 
         return $this->mutex->synchronized(function () use ($cacheKey, $method, $ttl) {
             $cached = Cache::get($cacheKey);
