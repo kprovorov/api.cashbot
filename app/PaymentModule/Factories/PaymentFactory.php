@@ -3,18 +3,13 @@
 namespace App\PaymentModule\Factories;
 
 use App\Enums\Currency;
-use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\PaymentModule\Models\Payment>
+ */
 class PaymentFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Payment::class;
-
     /**
      * Define the model's default state.
      *

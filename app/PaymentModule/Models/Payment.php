@@ -57,7 +57,7 @@ class Payment extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'jar_id',
@@ -71,6 +71,11 @@ class Payment extends Model
         'ends_on',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'balance' => 'integer',
         'jar_balance' => 'integer',
@@ -81,9 +86,9 @@ class Payment extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         //

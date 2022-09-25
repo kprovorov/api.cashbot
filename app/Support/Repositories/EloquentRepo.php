@@ -136,7 +136,7 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * {@inheritDoc}
      */
-    public function create(array $data): \T|\Illuminate\Database\Eloquent\Model
+    public function create(array $data): \Illuminate\Database\Eloquent\Model
     {
         return $this->model->create($data);
     }

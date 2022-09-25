@@ -128,9 +128,8 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return Payment
+     * @throws GuzzleException
      * @throws UnknownProperties
-     * @throws ValidationException
      */
     public function update(UpdatePaymentRequest $request, Payment $payment): void
     {
@@ -183,8 +182,6 @@ class PaymentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @return bool
      */
     public function destroy(Payment $payment): void
     {
