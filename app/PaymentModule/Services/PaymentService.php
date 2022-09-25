@@ -163,7 +163,6 @@ class PaymentService
     }
 
     /**
-     *
      * @throws UnknownProperties
      */
     public function updateReducingPayment(Payment|int $payment): void

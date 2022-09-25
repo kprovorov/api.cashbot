@@ -8,7 +8,7 @@ use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__ . '/app',
+        __DIR__.'/app',
     ]);
 
     // register a single rule
@@ -20,5 +20,5 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // Path to PHPStan with extensions, that PHPStan in Rector uses to determine types
-    $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
+    $rectorConfig->phpstanConfig(__DIR__.'/phpstan.neon');
 };

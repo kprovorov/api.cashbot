@@ -38,7 +38,6 @@ class MonobankClientCacheDecorator extends MonobankClient
     }
 
     /**
-     *
      * @throws Exception
      */
     protected function getFromCacheOrFetch(string $method, ?int $ttl = null): mixed

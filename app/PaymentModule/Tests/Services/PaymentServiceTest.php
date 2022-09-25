@@ -230,7 +230,6 @@ class PaymentServiceTest extends TestCase
     /**
      * @test
      *
-     *
      * @throws Exception
      */
     public function it_successfully_updates_payment_currency_amount(): void
@@ -266,7 +265,6 @@ class PaymentServiceTest extends TestCase
 
     /**
      * @test
-     *
      *
      * @throws UnknownProperties
      */

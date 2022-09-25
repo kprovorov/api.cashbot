@@ -20,7 +20,7 @@ class MonobankServiceProvider extends ServiceProvider
     {
         $this->app->singleton(
             MonobankClient::class,
-            fn(Container $app) => new MonobankClientCacheDecorator(
+            fn (Container $app) => new MonobankClientCacheDecorator(
                 new PredisMutex([
                     $app->make('redis'),
                 ], 'cashbot'),
