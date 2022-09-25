@@ -6,9 +6,7 @@ use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
 use App\Services\AccountService;
-use DB;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountController extends Controller
@@ -21,6 +19,7 @@ class AccountController extends Controller
      * Display a listing of the resource.
      *
      * @return Collection
+     *
      * @throws UnknownProperties
      */
     public function index(): Collection
@@ -36,7 +35,7 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StoreAccountRequest $request
+     * @param  \App\Http\Requests\StoreAccountRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreAccountRequest $request)
@@ -47,7 +46,7 @@ class AccountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Account $account
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function show(Account $account)
@@ -58,8 +57,8 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateAccountRequest $request
-     * @param \App\Models\Account $account
+     * @param  \App\Http\Requests\UpdateAccountRequest  $request
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateAccountRequest $request, Account $account)
@@ -75,7 +74,7 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Account $account
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function destroy(Account $account)

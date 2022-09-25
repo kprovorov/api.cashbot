@@ -12,8 +12,11 @@ use Spatie\DataTransferObject\DataTransferObject;
 class ClientInfoResponseData extends DataTransferObject
 {
     public string $clientId;
+
     public string $name;
+
     public string $webHookUrl;
+
     public string $permissions;
 
     #[CastWith(AccountDataCollectionCaster::class)]

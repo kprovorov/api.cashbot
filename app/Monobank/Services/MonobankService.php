@@ -18,6 +18,7 @@ class MonobankService
      * Get currency exchange rates
      *
      * @return RateDataCollection
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -34,6 +35,7 @@ class MonobankService
      * Get Client Info
      *
      * @return ClientInfoResponseData
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */

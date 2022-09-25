@@ -20,8 +20,9 @@ class PaymentService
     /**
      * Create a Payment
      *
-     * @param CreatePaymentData $data
+     * @param  CreatePaymentData  $data
      * @return Payment
+     *
      * @throws Exception
      */
     public function createPayment(CreatePaymentData $data): Payment
@@ -33,7 +34,7 @@ class PaymentService
             : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
 
         return Payment::create([
-            'amount'          => round($data->amount * $rate, 4),
+            'amount' => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
             ...$data->toArray(),
         ]);
@@ -51,7 +52,7 @@ class PaymentService
 
         Payment::where('id', $paymentId)->update([
             ...$data->toArray(),
-            'amount'          => round($data->amount * $rate, 4),
+            'amount' => round($data->amount * $rate, 4),
             'original_amount' => $data->amount,
         ]);
     }
@@ -60,6 +61,7 @@ class PaymentService
      * Find all currency payment and update their amount
      *
      * @return void
+     *
      * @throws Exception
      */
     public function updateCurrencyAmounts(): void
@@ -78,8 +80,9 @@ class PaymentService
     /**
      * Update payment amount on a fresh currency rate
      *
-     * @param Payment|int $payment
+     * @param  Payment|int  $payment
      * @return void
+     *
      * @throws Exception
      */
     public function updateCurrencyAmount(Payment|int $payment): void
@@ -123,9 +126,9 @@ class PaymentService
             new UpdatePaymentData([
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
-                'amount'   => $amount,
-                'ends_on'  => $payment->ends_on,
-                'date'     => today(),
+                'amount' => $amount,
+                'ends_on' => $payment->ends_on,
+                'date' => today(),
             ])
         );
     }

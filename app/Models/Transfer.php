@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $to_payment_id
  * @property-read \App\Models\Payment|null $payment_from
  * @property-read \App\Models\Payment|null $payment_to
+ *
  * @method static \Database\Factories\TransferFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Transfer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transfer newQuery()

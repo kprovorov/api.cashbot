@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\Currency;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Group|null $group
  * @property-read \App\Models\Jar|null $jar
  * @property-read \App\Models\Transfer|null $to_transfer
+ *
  * @method static \Database\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
@@ -63,12 +63,12 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'balance'             => 'integer',
-        'jar_balance'         => 'integer',
+        'balance' => 'integer',
+        'jar_balance' => 'integer',
         'jar_savings_balance' => 'integer',
-        'currency'            => Currency::class,
-        'date'                => 'date',
-        'ends_on'             => 'date',
+        'currency' => Currency::class,
+        'date' => 'date',
+        'ends_on' => 'date',
     ];
 
     /**

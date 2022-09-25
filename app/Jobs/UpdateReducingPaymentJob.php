@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,7 +26,7 @@ class UpdateReducingPaymentJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param PaymentService $paymentService
+     * @param  PaymentService  $paymentService
      * @return void
      */
     public function handle(PaymentService $paymentService): void

@@ -9,10 +9,16 @@ use Spatie\DataTransferObject\DataTransferObject;
 class UpdatePaymentData extends DataTransferObject
 {
     public int $jar_id;
+
     public string $description;
+
     public int $amount;
+
     public Currency $currency;
+
     public Carbon $date;
+
     public ?Carbon $ends_on;
+
     public bool $hidden;
 }

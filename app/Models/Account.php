@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property-read int|null $jars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Payment[] $payments
  * @property-read int|null $payments_count
+ *
  * @method static \Database\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
@@ -51,9 +52,9 @@ class Account extends Model
     ];
 
     protected $casts = [
-        'balance'     => 'int',
+        'balance' => 'int',
         'uah_balance' => 'int',
-        'currency'    => Currency::class,
+        'currency' => Currency::class,
     ];
 
     /**
@@ -76,6 +77,7 @@ class Account extends Model
      * Calculate the balance of the account in the UAH currency.
      *
      * @return Attribute
+     *
      * @throws Exception
      */
     protected function uahBalance(): Attribute
@@ -86,7 +88,7 @@ class Account extends Model
         ) : 1;
 
         return Attribute::make(
-            get: fn() => round($this->balance * $rate),
+            get: fn () => round($this->balance * $rate),
         );
     }
 }

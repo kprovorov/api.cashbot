@@ -12,7 +12,7 @@ class JarDataCollectionCaster implements Caster
     {
         return new JarDataCollection(
             array_map(
-                fn(array $data) => new JarData(...$data),
+                fn (array $data) => new JarData(...$data),
                 $value
             )
         );

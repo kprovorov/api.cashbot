@@ -14,7 +14,9 @@ class PaymentServiceTest extends TestCase
 {
     /**
      * @test
+     *
      * @return void
+     *
      * @throws \Exception
      */
     public function it_successfully_updates_payment_currency_amount(): void
@@ -29,9 +31,9 @@ class PaymentServiceTest extends TestCase
             'account_id' => $account->id,
         ]);
         $payment = Payment::factory()->create([
-            'jar_id'          => $jar->id,
-            'currency'        => $paymentCurrency,
-            'amount'          => 10,
+            'jar_id' => $jar->id,
+            'currency' => $paymentCurrency,
+            'amount' => 10,
             'original_amount' => 100,
         ]);
 
@@ -46,14 +48,15 @@ class PaymentServiceTest extends TestCase
         $paymentService->updateCurrencyAmount($payment);
 
         $this->assertDatabaseHas('payments', [
-            'id'              => $payment->id,
-            'amount'          => 200,
+            'id' => $payment->id,
+            'amount' => 200,
             'original_amount' => 100,
         ]);
     }
 
     /**
      * @test
+     *
      * @return void
      */
     public function it_successfully_updates_reducing_payment(): void
@@ -73,11 +76,11 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id'          => $jar->id,
+            'jar_id' => $jar->id,
             'original_amount' => $originalAmount,
-            'currency'        => Currency::USD,
-            'date'            => today()->subDay(),
-            'ends_on'         => today()->addDays($daysLeft),
+            'currency' => Currency::USD,
+            'date' => today()->subDay(),
+            'ends_on' => today()->addDays($daysLeft),
         ]);
 
         $mock = $this->mock(CurrencyConverter::class);
@@ -91,10 +94,10 @@ class PaymentServiceTest extends TestCase
         $paymentService->updateReducingPayment($payment);
 
         $this->assertDatabaseHas('payments', [
-            'id'              => $payment->id,
+            'id' => $payment->id,
             'original_amount' => 80,
-            'amount'          => 160,
-            'date'            => today()->toDateString(),
+            'amount' => 160,
+            'date' => today()->toDateString(),
         ]);
     }
 }

@@ -14,7 +14,9 @@ class CurrencyConverterTest extends TestCase
 {
     /**
      * @test
+     *
      * @return void
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_converts_eur_to_uah_currency(): void
@@ -23,30 +25,29 @@ class CurrencyConverterTest extends TestCase
         $mock->shouldReceive('getRates')->once()->andReturn(
             new RateDataCollection([
                 new RateData([
-                    "currencyCodeA" => 840,
-                    "currencyCodeB" => 980,
-                    "date"          => 1663794609,
-                    "rateBuy"       => 36.65,
-                    "rateSell"      => 37.9507,
+                    'currencyCodeA' => 840,
+                    'currencyCodeB' => 980,
+                    'date' => 1663794609,
+                    'rateBuy' => 36.65,
+                    'rateSell' => 37.9507,
                 ]),
                 new RateData([
-                    "currencyCodeA" => 978,
-                    "currencyCodeB" => 980,
-                    "date"          => 1663861209,
-                    "rateBuy"       => 36.1,
-                    "rateSell"      => 37.9507,
+                    'currencyCodeA' => 978,
+                    'currencyCodeB' => 980,
+                    'date' => 1663861209,
+                    'rateBuy' => 36.1,
+                    'rateSell' => 37.9507,
                 ]),
                 new RateData([
-                    "currencyCodeA" => 978,
-                    "currencyCodeB" => 840,
-                    "date"          => 1663861209,
-                    "rateBuy"       => 0.982,
-                    "rateSell"      => 1,
+                    'currencyCodeA' => 978,
+                    'currencyCodeB' => 840,
+                    'date' => 1663861209,
+                    'rateBuy' => 0.982,
+                    'rateSell' => 1,
                 ]),
             ])
         );
         $service = $this->app->make(CurrencyConverter::class);
-
 
         $res = $service->getRate(Currency::EUR, Currency::UAH);
 
@@ -55,7 +56,9 @@ class CurrencyConverterTest extends TestCase
 
     /**
      * @test
+     *
      * @return void
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_converts_uah_to_eur_currency(): void
@@ -64,30 +67,29 @@ class CurrencyConverterTest extends TestCase
         $mock->shouldReceive('getRates')->once()->andReturn(
             new RateDataCollection([
                 new RateData([
-                    "currencyCodeA" => 840,
-                    "currencyCodeB" => 980,
-                    "date"          => 1663794609,
-                    "rateBuy"       => 36.65,
-                    "rateSell"      => 37.9507,
+                    'currencyCodeA' => 840,
+                    'currencyCodeB' => 980,
+                    'date' => 1663794609,
+                    'rateBuy' => 36.65,
+                    'rateSell' => 37.9507,
                 ]),
                 new RateData([
-                    "currencyCodeA" => 978,
-                    "currencyCodeB" => 980,
-                    "date"          => 1663861209,
-                    "rateBuy"       => 36.1,
-                    "rateSell"      => 37.9507,
+                    'currencyCodeA' => 978,
+                    'currencyCodeB' => 980,
+                    'date' => 1663861209,
+                    'rateBuy' => 36.1,
+                    'rateSell' => 37.9507,
                 ]),
                 new RateData([
-                    "currencyCodeA" => 978,
-                    "currencyCodeB" => 840,
-                    "date"          => 1663861209,
-                    "rateBuy"       => 0.982,
-                    "rateSell"      => 1,
+                    'currencyCodeA' => 978,
+                    'currencyCodeB' => 840,
+                    'date' => 1663861209,
+                    'rateBuy' => 0.982,
+                    'rateSell' => 1,
                 ]),
             ])
         );
         $service = $this->app->make(CurrencyConverter::class);
-
 
         $res = $service->getRate(Currency::UAH, Currency::EUR);
 

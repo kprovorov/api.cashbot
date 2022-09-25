@@ -17,6 +17,7 @@ class DashboardController extends Controller
 
     /**
      * @return mixed
+     *
      * @throws UnknownProperties
      */
     public function __invoke(): Collection

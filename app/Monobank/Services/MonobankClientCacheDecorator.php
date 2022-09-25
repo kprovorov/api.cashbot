@@ -18,7 +18,8 @@ class MonobankClientCacheDecorator extends MonobankClient
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function getClientInfo(): array
@@ -27,7 +28,8 @@ class MonobankClientCacheDecorator extends MonobankClient
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function getRates(): array
@@ -36,9 +38,10 @@ class MonobankClientCacheDecorator extends MonobankClient
     }
 
     /**
-     * @param string $method
-     * @param int|null $ttl
+     * @param  string  $method
+     * @param  int|null  $ttl
      * @return mixed
+     *
      * @throws Exception
      */
     protected function getFromCacheOrFetch(string $method, ?int $ttl = null): mixed

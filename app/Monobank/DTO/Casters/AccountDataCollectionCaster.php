@@ -2,8 +2,8 @@
 
 namespace App\Monobank\DTO\Casters;
 
-use App\Monobank\DTO\Collections\AccountDataCollection;
 use App\Monobank\DTO\AccountData;
+use App\Monobank\DTO\Collections\AccountDataCollection;
 use Spatie\DataTransferObject\Caster;
 
 class AccountDataCollectionCaster implements Caster
@@ -12,7 +12,7 @@ class AccountDataCollectionCaster implements Caster
     {
         return new AccountDataCollection(
             array_map(
-                fn(array $data) => new AccountData(...$data),
+                fn (array $data) => new AccountData(...$data),
                 $value
             )
         );

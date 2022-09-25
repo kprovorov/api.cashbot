@@ -6,7 +6,6 @@ use App\Models\Payment;
 use App\Services\PaymentService;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -25,17 +24,16 @@ class UpdatePaymentCurrencyAmountJob implements ShouldQueue
     {
     }
 
-
     /**
      * Execute the job.
      *
-     * @param PaymentService $paymentService
+     * @param  PaymentService  $paymentService
      * @return void
+     *
      * @throws Exception
      */
     public function handle(PaymentService $paymentService): void
     {
         $paymentService->updateCurrencyAmount($this->payment);
     }
-
 }

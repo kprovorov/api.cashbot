@@ -19,7 +19,9 @@ class MonobankServiceTest extends TestCase
 {
     /**
      * @test
+     *
      * @return void
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -29,10 +31,10 @@ class MonobankServiceTest extends TestCase
             [
                 'currencyCodeA' => 840,
                 'currencyCodeB' => 980,
-                'date'          => 1552392228,
-                'rateSell'      => 27,
-                'rateBuy'       => 27.2,
-                'rateCross'     => 27.1,
+                'date' => 1552392228,
+                'rateSell' => 27,
+                'rateBuy' => 27.2,
+                'rateCross' => 27.1,
             ],
         ];
 
@@ -57,45 +59,46 @@ class MonobankServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @return void
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
     public function it_successfully_gets_client_info(): void
     {
         $responseData = [
-            "clientId"    => "3MSaMMtczs",
-            "name"        => "Мазепа Іван",
-            "webHookUrl"  => "https://example.com/some_random_data_for_security",
-            "permissions" => "psfj",
-            "accounts"    => [
+            'clientId' => '3MSaMMtczs',
+            'name' => 'Мазепа Іван',
+            'webHookUrl' => 'https://example.com/some_random_data_for_security',
+            'permissions' => 'psfj',
+            'accounts' => [
                 [
-                    "id"           => "kKGVoZuHWzqVoZuH",
-                    "sendId"       => "uHWzqVoZuH",
-                    "balance"      => 10000000,
-                    "creditLimit"  => 10000000,
-                    "type"         => "black",
-                    "currencyCode" => 980,
-                    "cashbackType" => "UAH",
-                    "maskedPan"    => [
-                        "537541******1234",
+                    'id' => 'kKGVoZuHWzqVoZuH',
+                    'sendId' => 'uHWzqVoZuH',
+                    'balance' => 10000000,
+                    'creditLimit' => 10000000,
+                    'type' => 'black',
+                    'currencyCode' => 980,
+                    'cashbackType' => 'UAH',
+                    'maskedPan' => [
+                        '537541******1234',
                     ],
-                    "iban"         => "UA733220010000026201234567890",
+                    'iban' => 'UA733220010000026201234567890',
                 ],
             ],
-            "jars"        => [
+            'jars' => [
                 [
-                    "id"           => "kKGVoZuHWzqVoZuH",
-                    "sendId"       => "uHWzqVoZuH",
-                    "title"        => "На тепловізор",
-                    "description"  => "На тепловізор",
-                    "currencyCode" => 980,
-                    "balance"      => 1000000,
-                    "goal"         => 10000000,
+                    'id' => 'kKGVoZuHWzqVoZuH',
+                    'sendId' => 'uHWzqVoZuH',
+                    'title' => 'На тепловізор',
+                    'description' => 'На тепловізор',
+                    'currencyCode' => 980,
+                    'balance' => 1000000,
+                    'goal' => 10000000,
                 ],
             ],
         ];
-
 
         $mock = new MockHandler([
             new Response(

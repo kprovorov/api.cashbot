@@ -24,8 +24,8 @@ class CurrencyConverter
     /**
      * Get currency exchange rate
      *
-     * @param Currency $from
-     * @param Currency $to
+     * @param  Currency  $from
+     * @param  Currency  $to
      * @return float
      */
     public function getRate(Currency $from, Currency $to): float
@@ -41,6 +41,7 @@ class CurrencyConverter
      * Fetch Monobank exchange rates
      *
      * @return void
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */

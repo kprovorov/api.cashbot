@@ -37,8 +37,9 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StorePaymentRequest $request
+     * @param  StorePaymentRequest  $request
      * @return void
+     *
      * @throws Exception
      */
     public function store(StorePaymentRequest $request)
@@ -61,7 +62,7 @@ class PaymentController extends Controller
                         jar_id: $request->input('jar_id'),
                         group_id: $group->id,
                         description: $request->input('description'),
-                        amount: (int)$request->input('amount'),
+                        amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
                         ends_on: $endsOn?->clone()->addMonthsNoOverflow($i * 3),
@@ -75,7 +76,7 @@ class PaymentController extends Controller
                         jar_id: $request->input('jar_id'),
                         group_id: isset($group) ? $group->id : null,
                         description: $request->input('description'),
-                        amount: (int)$request->input('amount'),
+                        amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
                         ends_on: $endsOn?->clone()->addMonthsNoOverflow($i),
@@ -89,7 +90,7 @@ class PaymentController extends Controller
                         jar_id: $request->input('jar_id'),
                         group_id: isset($group) ? $group->id : null,
                         description: $request->input('description'),
-                        amount: (int)$request->input('amount'),
+                        amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
                         ends_on: $endsOn?->clone()->addWeeks($i * 3),
@@ -102,7 +103,7 @@ class PaymentController extends Controller
                     jar_id: $request->input('jar_id'),
                     group_id: isset($group) ? $group->id : null,
                     description: $request->input('description'),
-                    amount: (int)$request->input('amount'),
+                    amount: (int) $request->input('amount'),
                     currency: Currency::from($request->input('currency')),
                     date: $date,
                     ends_on: $endsOn,
@@ -114,7 +115,7 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Payment $payment
+     * @param  Payment  $payment
      * @return Response|Payment
      */
     public function show(Payment $payment): Response|Payment
@@ -132,14 +133,15 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdatePaymentRequest $request
-     * @param \App\Models\Payment $payment
+     * @param  \App\Http\Requests\UpdatePaymentRequest  $request
+     * @param  \App\Models\Payment  $payment
      * @return Response
+     *
      * @throws UnknownProperties
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        $amount = (int)$request->input('amount');
+        $amount = (int) $request->input('amount');
         $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
         $this->paymentService->updatePayment(
@@ -189,7 +191,7 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Payment $payment
+     * @param  \App\Models\Payment  $payment
      * @return Response
      */
     public function destroy(Payment $payment)

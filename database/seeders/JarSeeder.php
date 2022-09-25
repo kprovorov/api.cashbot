@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class JarSeeder extends Seeder
@@ -15,6 +13,5 @@ class JarSeeder extends Seeder
      */
     public function run()
     {
-        
     }
 }

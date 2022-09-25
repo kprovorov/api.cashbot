@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Currency;
 use App\Models\Account;
-use App\Models\Jar;
 use Illuminate\Database\Seeder;
 
 class AccountSeeder extends Seeder
@@ -19,7 +17,7 @@ class AccountSeeder extends Seeder
         Account::factory()
                ->count(10)
                ->hasJars(1, [
-                   'name'    => 'Default',
+                   'name' => 'Default',
                    'default' => true,
                ])
                ->hasJars(2)

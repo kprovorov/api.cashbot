@@ -27,7 +27,7 @@ class MonobankServiceProvider extends ServiceProvider
                     ], 'cashbot'),
                     new Client([
                         'base_uri' => config('services.monobank.base_url'),
-                        'headers'  => [
+                        'headers' => [
                             'X-Token' => config('services.monobank.token'),
                         ],
                     ])

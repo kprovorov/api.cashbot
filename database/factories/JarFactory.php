@@ -18,7 +18,7 @@ class JarFactory extends Factory
     public function definition()
     {
         return [
-            'name'    => Str::title($this->faker->word()),
+            'name' => Str::title($this->faker->word()),
             'default' => false,
         ];
     }

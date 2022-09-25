@@ -13,7 +13,7 @@ class MonobankClient
     }
 
     /**
-     * @param ResponseInterface $res
+     * @param  ResponseInterface  $res
      * @return array
      */
     protected function parseResponse(ResponseInterface $res): array
@@ -25,6 +25,7 @@ class MonobankClient
      * Get currency exchange rates
      *
      * @return array
+     *
      * @throws GuzzleException
      */
     public function getRates(): array
@@ -34,11 +35,11 @@ class MonobankClient
         return $this->parseResponse($res);
     }
 
-
     /**
      * Get customer info
      *
      * @return array
+     *
      * @throws GuzzleException
      */
     public function getClientInfo(): array

@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum Currency: string
 {
-    case EUR = "EUR";
-    case USD = "USD";
-    case UAH = "UAH";
+    case EUR = 'EUR';
+    case USD = 'USD';
+    case UAH = 'UAH';
 
     /**
      * @return int[]
@@ -23,7 +23,7 @@ enum Currency: string
     /**
      * Get ISO4217 alphabetical code from numeric
      *
-     * @param int $code
+     * @param  int  $code
      * @return static
      */
     public static function fromNumeric(int $code): static
@@ -31,7 +31,6 @@ enum Currency: string
         $name = array_search($code, self::getCodes());
 
         return self::from($name);
-
 
 //        return match ($code) {
 //            978 => self::EUR,

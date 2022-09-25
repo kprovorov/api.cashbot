@@ -13,7 +13,7 @@ class RateController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function __invoke(Request $request): array
@@ -24,13 +24,11 @@ class RateController extends Controller
         try {
             return [
                 'from' => $from->name,
-                'to'   => $to->name,
+                'to' => $to->name,
                 'rate' => $this->currencyConverter->getRate($from, $to),
             ];
         } catch (\Exception $e) {
             return [];
         }
     }
-
-
 }

@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreJarRequest;
-use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdateJarRequest;
-use App\Models\Account;
 use App\Models\Jar;
-use App\Models\Payment;
-use Carbon\Carbon;
 
 class JarController extends Controller
 {
@@ -25,7 +21,7 @@ class JarController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \App\Http\Requests\StoreJarRequest $request
+     * @param  \App\Http\Requests\StoreJarRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreJarRequest $request)
@@ -36,7 +32,7 @@ class JarController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Jar $jar
+     * @param  \App\Models\Jar  $jar
      * @return \Illuminate\Http\Response
      */
     public function show(Jar $jar)
@@ -47,8 +43,8 @@ class JarController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateJarRequest $request
-     * @param \App\Models\Jar $jar
+     * @param  \App\Http\Requests\UpdateJarRequest  $request
+     * @param  \App\Models\Jar  $jar
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateJarRequest $request, Jar $jar)
@@ -59,7 +55,7 @@ class JarController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Jar $jar
+     * @param  \App\Models\Jar  $jar
      * @return \Illuminate\Http\Response
      */
     public function destroy(Jar $jar)

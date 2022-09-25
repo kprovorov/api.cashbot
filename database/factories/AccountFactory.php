@@ -19,9 +19,9 @@ class AccountFactory extends Factory
     public function definition()
     {
         return [
-            'name'     => Str::ucfirst($this->faker->word()),
+            'name' => Str::ucfirst($this->faker->word()),
             'currency' => $this->faker->randomElement(Currency::cases()),
-            'balance'  => $this->faker->numberBetween(0, 1000000),
+            'balance' => $this->faker->numberBetween(0, 1000000),
         ];
     }
 }
