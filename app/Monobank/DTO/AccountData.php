@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DTO;
+namespace App\Monobank\DTO;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-class MonobankAccountData extends DataTransferObject
+class AccountData extends DataTransferObject
 {
     public string $id;
     public string $sendId;

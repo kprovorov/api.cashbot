@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
-use App\DTO\MonobankAccountData;
 use App\Models\Account;
+use App\Monobank\DTO\AccountData;
+use App\Monobank\Services\MonobankService;
+use GuzzleHttp\Exception\GuzzleException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountService
 {
-    public function __construct(private readonly MonobankApi $monobankApi)
+    public function __construct(private readonly MonobankService $monobankService)
     {
     }
 
@@ -17,6 +19,7 @@ class AccountService
      *
      * @return void
      * @throws UnknownProperties
+     * @throws GuzzleException
      */
     public function updateAccountBalances(): void
     {
@@ -31,6 +34,7 @@ class AccountService
      * @param Account $account
      * @return void
      * @throws UnknownProperties
+     * @throws GuzzleException
      */
     public function updateAccountBalance(Account $account): void
     {
@@ -45,6 +49,7 @@ class AccountService
      * @param Account $account
      * @return int
      * @throws UnknownProperties
+     * @throws GuzzleException
      */
     public function fetchAccountBalance(Account $account): int
     {
@@ -57,12 +62,13 @@ class AccountService
 
     /**
      * @param Account $account
-     * @return MonobankAccountData
+     * @return AccountData
      * @throws UnknownProperties
+     * @throws GuzzleException
      */
-    public function fetchMonobankAccountData(Account $account): MonobankAccountData
+    public function fetchMonobankAccountData(Account $account): AccountData
     {
-        $clientInfo = $this->monobankApi->getClientInfo();
+        $clientInfo = $this->monobankService->getClientInfo();
 
         return $clientInfo->accounts->where('id', $account->external_id)->first();
     }

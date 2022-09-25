@@ -3,12 +3,20 @@
 namespace App\Services;
 
 use App\Enums\Currency;
+use App\Monobank\DTO\RateData;
+use App\Monobank\Services\MonobankService;
+use GuzzleHttp\Exception\GuzzleException;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class CurrencyConverter
 {
     protected array $rates = [];
 
-    public function __construct(protected readonly MonobankApi $monobankApi)
+    /**
+     * @throws GuzzleException
+     * @throws UnknownProperties
+     */
+    public function __construct(protected readonly MonobankService $monobankService)
     {
         $this->fetchMonobankRates();
     }
@@ -33,23 +41,27 @@ class CurrencyConverter
      * Fetch Monobank exchange rates
      *
      * @return void
+     * @throws GuzzleException
+     * @throws UnknownProperties
      */
     protected function fetchMonobankRates(): void
     {
-        $rawMonobankRates = $this->monobankApi->getRates();
+        $this->monobankService
+            ->getRates()
 
-        // Filter unsupported currencies
-        $filtered = array_filter($rawMonobankRates, function (array $rate) {
-            return in_array($rate['currencyCodeA'], Currency::getNumericCodes())
-                && in_array($rate['currencyCodeB'], Currency::getNumericCodes());
-        });
+            // Filter out unsupported currencies
+            ->filter(function (RateData $rate) {
+                return in_array($rate->currencyCodeA, Currency::getNumericCodes())
+                    && in_array($rate->currencyCodeB, Currency::getNumericCodes());
+            })
 
-        array_map(function (array $ratePair) {
-            $currencyCodeA = Currency::fromNumeric($ratePair['currencyCodeA']);
-            $currencyCodeB = Currency::fromNumeric($ratePair['currencyCodeB']);
+            // Map to rates
+            ->map(function (RateData $rate) {
+                $currencyCodeA = Currency::fromNumeric($rate->currencyCodeA);
+                $currencyCodeB = Currency::fromNumeric($rate->currencyCodeB);
 
-            $this->rates[$currencyCodeA->name][$currencyCodeB->name] = round($ratePair['rateBuy'], 4);
-            $this->rates[$currencyCodeB->name][$currencyCodeA->name] = round(1 / $ratePair['rateSell'], 4);
-        }, $filtered);
+                $this->rates[$currencyCodeA->name][$currencyCodeB->name] = round($rate->rateBuy, 4);
+                $this->rates[$currencyCodeB->name][$currencyCodeA->name] = round(1 / $rate->rateSell, 4);
+            });
     }
 }

@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Enums\Currency;
+use App\Monobank\Services\MonobankService;
 use App\Services\CurrencyConverter;
-use App\Services\MonobankApi;
 use Tests\TestCase;
 
 class CurrencyConverterTest extends TestCase
@@ -15,7 +15,7 @@ class CurrencyConverterTest extends TestCase
      */
     public function it_successfully_converts_EUR_to_UAH_currency(): void
     {
-        $mock = $this->mock(MonobankApi::class);
+        $mock = $this->mock(MonobankService::class);
         $mock->shouldReceive('getRates')->once()->andReturn([
             [
                 "currencyCodeA" => 840,
@@ -53,7 +53,7 @@ class CurrencyConverterTest extends TestCase
      */
     public function it_successfully_converts_UAH_to_EUR_currency(): void
     {
-        $mock = $this->mock(MonobankApi::class);
+        $mock = $this->mock(MonobankService::class);
         $mock->shouldReceive('getRates')->once()->andReturn([
             [
                 "currencyCodeA" => 840,

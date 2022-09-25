@@ -32,6 +32,7 @@ return [
     ],
 
     'monobank' => [
+        'base_url' => env('MONOBANK_BASE_URL', 'https://api.monobank.ua'),
         'token' => env('MONOBANK_TOKEN'),
     ],
 
