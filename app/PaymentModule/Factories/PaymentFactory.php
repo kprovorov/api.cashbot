@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Factories;
 
 use App\Enums\Currency;
+use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PaymentFactory extends Factory
 {
+    protected $model = Payment::class;
+
     /**
      * Define the model's default state.
      *
