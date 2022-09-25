@@ -43,7 +43,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereOriginalAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
