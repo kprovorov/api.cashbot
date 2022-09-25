@@ -177,6 +177,7 @@ class PaymentServiceTest extends TestCase
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
             'jar_id' => $jar->id,
+            'currency' => Currency::EUR,
         ]);
 
         $data = new UpdatePaymentData([

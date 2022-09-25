@@ -87,11 +87,14 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
-        $payload = $paymentData->toArray();
+        $payload = [
+            ...$paymentData->toArray(),
+            'repeat' => 'none',
+        ];
 
         $this->mock(CurrencyConverter::class)
              ->shouldReceive('getRate')
@@ -103,7 +106,7 @@ class PaymentControllerTest extends TestCase
         $res->assertOk();
 //        $res->assertJson($payload);
         $this->assertDatabaseHas('payments', [
-            ...$payload,
+            ...$paymentData->toArray(),
             'amount_converted' => $payload['amount'] * 2,
         ]);
     }
@@ -128,13 +131,13 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::USD,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::USD,
         ]);
 
