@@ -12,7 +12,7 @@ jobs:
           MYSQL_DATABASE: cashbot
           MYSQL_ROOT_PASSWORD: secret
         options: >-
-          --health-cmd mysqladmin ping
+          --health-cmd "mysqladmin ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
