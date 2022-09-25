@@ -70,8 +70,8 @@ jobs:
       - name: Run IDE Helper
         run: composer ide
 
-#      - name: Run PHP CS Fixer
-#        run: composer lint
+      - name: Run PHP CS Fixer
+        run: composer pint
 
       - name: Commit
         uses: EndBug/add-and-commit@v7
