@@ -32,8 +32,6 @@ class TransferController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreTransferRequest  $request
-     * @return void
      *
      * @throws UnknownProperties
      */
@@ -197,7 +195,6 @@ class TransferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Transfer  $transfer
      * @return \Illuminate\Http\Response
      */
     public function show(Transfer $transfer)
@@ -208,8 +205,6 @@ class TransferController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTransferRequest  $request
-     * @param  \App\Models\Transfer  $transfer
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTransferRequest $request, Transfer $transfer)
@@ -220,7 +215,6 @@ class TransferController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Transfer  $transfer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Transfer $transfer)

@@ -21,8 +21,6 @@ class PaymentController extends Controller
 {
     /**
      * PaymentController constructor.
-     *
-     * @param  PaymentService  $paymentService
      */
     public function __construct(protected PaymentService $paymentService)
     {
@@ -30,8 +28,6 @@ class PaymentController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection
      */
     public function index(): Collection
     {
@@ -41,14 +37,13 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StorePaymentRequest  $request
-     * @return void
      *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
     public function store(StorePaymentRequest $request): void
     {
+        $group = null;
         $repeat = $request->input('repeat', 'none');
 
         $date = Carbon::parse(Carbon::parse($request->input('date')));
@@ -119,9 +114,6 @@ class PaymentController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Payment  $payment
-     * @return Payment
      */
     public function show(Payment $payment): Payment
     {
@@ -136,10 +128,7 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdatePaymentRequest  $request
-     * @param  Payment  $payment
      * @return Payment
-     *
      * @throws UnknownProperties
      * @throws ValidationException
      */
@@ -195,7 +184,6 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Payment  $payment
      * @return bool
      */
     public function destroy(Payment $payment): void

@@ -12,9 +12,9 @@ class RateData extends DataTransferObject
 
     public int $date;
 
-    public ?float $rateBuy;
+    public ?float $rateBuy = null;
 
-    public ?float $rateSell;
+    public ?float $rateSell = null;
 
-    public ?float $rateCross;
+    public ?float $rateCross = null;
 }

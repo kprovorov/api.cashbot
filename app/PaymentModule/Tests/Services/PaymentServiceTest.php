@@ -230,7 +230,6 @@ class PaymentServiceTest extends TestCase
     /**
      * @test
      *
-     * @return void
      *
      * @throws Exception
      */
@@ -268,7 +267,6 @@ class PaymentServiceTest extends TestCase
     /**
      * @test
      *
-     * @return void
      *
      * @throws UnknownProperties
      */

@@ -19,9 +19,6 @@ class CurrencyConverter
     /**
      * Get currency exchange rate
      *
-     * @param  Currency  $from
-     * @param  Currency  $to
-     * @return float
      *
      * @throws GuzzleException
      * @throws UnknownProperties
@@ -42,7 +39,6 @@ class CurrencyConverter
     /**
      * Fetch Monobank exchange rates
      *
-     * @return void
      *
      * @throws GuzzleException
      * @throws UnknownProperties
@@ -53,10 +49,8 @@ class CurrencyConverter
             ->getRates()
 
             // Filter out unsupported currencies
-            ->filter(function (RateData $rate) {
-                return in_array($rate->currencyCodeA, Currency::getNumericCodes())
-                    && in_array($rate->currencyCodeB, Currency::getNumericCodes());
-            })
+            ->filter(fn(RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
+                && in_array($rate->currencyCodeB, Currency::getNumericCodes()))
 
             // Map to rates
             ->map(function (RateData $rate) {

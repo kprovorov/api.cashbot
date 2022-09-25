@@ -20,9 +20,6 @@ class PaymentService
 {
     /**
      * PaymentService constructor.
-     *
-     * @param  PaymentRepo  $paymentRepo
-     * @param  CurrencyConverter  $currencyConverter
      */
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
@@ -32,10 +29,6 @@ class PaymentService
 
     /**
      * Get all Payments
-     *
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Collection
      */
     public function getAllPayments(array $with = [], array $columns = ['*']): Collection
     {
@@ -44,12 +37,6 @@ class PaymentService
 
     /**
      * Get all Payments paginated
-     *
-     * @param  int|null  $perPage
-     * @param  int|null  $page
-     * @param  array  $with
-     * @param  array  $columns
-     * @return LengthAwarePaginator
      */
     public function getAllPaymentsPaginated(
         ?int $perPage = null,
@@ -62,11 +49,6 @@ class PaymentService
 
     /**
      * Get Payment by id
-     *
-     * @param  int  $paymentId
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Payment
      */
     public function getPayment(int $paymentId, array $with = [], array $columns = ['*']): Payment
     {
@@ -76,8 +58,6 @@ class PaymentService
     /**
      * Create new Payment
      *
-     * @param  CreatePaymentData  $data
-     * @return Payment
      *
      * @throws GuzzleException
      * @throws UnknownProperties
@@ -100,9 +80,6 @@ class PaymentService
     /**
      * Update Payment by id
      *
-     * @param  Payment|int  $payment
-     * @param  UpdatePaymentData  $data
-     * @return bool
      *
      * @throws UnknownProperties
      * @throws GuzzleException
@@ -126,9 +103,6 @@ class PaymentService
 
     /**
      * Delete Payment by id
-     *
-     * @param  int  $paymentId
-     * @return bool
      */
     public function deletePayment(int $paymentId): bool
     {
@@ -138,7 +112,6 @@ class PaymentService
     /**
      * Find all currency payment and update their amount
      *
-     * @return void
      *
      * @throws Exception
      */
@@ -158,8 +131,6 @@ class PaymentService
     /**
      * Update payment amount on a fresh currency rate
      *
-     * @param  Payment|int  $payment
-     * @return void
      *
      * @throws Exception
      * @throws GuzzleException
@@ -181,9 +152,6 @@ class PaymentService
         }
     }
 
-    /**
-     * @return void
-     */
     public function updateReducingPayments(): void
     {
         Payment::whereNotNull('ends_on')
@@ -195,8 +163,6 @@ class PaymentService
     }
 
     /**
-     * @param  Payment|int  $payment
-     * @return void
      *
      * @throws UnknownProperties
      */

@@ -18,7 +18,6 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection
      *
      * @throws UnknownProperties
      */
@@ -35,7 +34,6 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAccountRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreAccountRequest $request)
@@ -46,7 +44,6 @@ class AccountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function show(Account $account)
@@ -57,8 +54,6 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAccountRequest  $request
-     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateAccountRequest $request, Account $account)
@@ -74,7 +69,6 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
     public function destroy(Account $account)

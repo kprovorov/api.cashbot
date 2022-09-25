@@ -10,7 +10,7 @@ class CreatePaymentData extends DataTransferObject
 {
     public int $jar_id;
 
-    public ?int $group_id;
+    public ?int $group_id = null;
 
     public string $description;
 
@@ -20,5 +20,5 @@ class CreatePaymentData extends DataTransferObject
 
     public Carbon $date;
 
-    public ?Carbon $ends_on;
+    public ?Carbon $ends_on = null;
 }

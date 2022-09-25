@@ -35,9 +35,6 @@ class Group extends Model
         'name',
     ];
 
-    /**
-     * @return HasMany
-     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);

@@ -13,12 +13,11 @@ class MonobankClient
     }
 
     /**
-     * @param  ResponseInterface  $res
      * @return array
      */
     protected function parseResponse(ResponseInterface $res): array
     {
-        return json_decode($res->getBody()->getContents(), true);
+        return json_decode($res->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

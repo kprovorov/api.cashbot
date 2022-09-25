@@ -22,9 +22,6 @@ enum Currency: string
 
     /**
      * Get ISO4217 alphabetical code from numeric
-     *
-     * @param  int  $code
-     * @return static
      */
     public static function fromNumeric(int $code): static
     {

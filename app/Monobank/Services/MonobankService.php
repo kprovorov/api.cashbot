@@ -17,7 +17,6 @@ class MonobankService
     /**
      * Get currency exchange rates
      *
-     * @return RateDataCollection
      *
      * @throws GuzzleException
      * @throws UnknownProperties
@@ -25,16 +24,13 @@ class MonobankService
     public function getRates(): RateDataCollection
     {
         return new RateDataCollection(
-            array_map(function (array $rate) {
-                return new RateData($rate);
-            }, $this->client->getRates())
+            array_map(fn(array $rate) => new RateData($rate), $this->client->getRates())
         );
     }
 
     /**
      * Get Client Info
      *
-     * @return ClientInfoResponseData
      *
      * @throws GuzzleException
      * @throws UnknownProperties

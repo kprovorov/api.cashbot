@@ -20,19 +20,17 @@ class MonobankServiceProvider extends ServiceProvider
     {
         $this->app->singleton(
             MonobankClient::class,
-            function (Container $app) {
-                return new MonobankClientCacheDecorator(
-                    new PredisMutex([
-                        $app->make('redis'),
-                    ], 'cashbot'),
-                    new Client([
-                        'base_uri' => config('services.monobank.base_url'),
-                        'headers' => [
-                            'X-Token' => config('services.monobank.token'),
-                        ],
-                    ])
-                );
-            }
+            fn(Container $app) => new MonobankClientCacheDecorator(
+                new PredisMutex([
+                    $app->make('redis'),
+                ], 'cashbot'),
+                new Client([
+                    'base_uri' => config('services.monobank.base_url'),
+                    'headers' => [
+                        'X-Token' => config('services.monobank.token'),
+                    ],
+                ])
+            )
         );
     }
 

@@ -12,7 +12,7 @@ class AccountData extends DataTransferObject
 
     public int $currencyCode;
 
-    public ?string $cashbackType;
+    public ?string $cashbackType = null;
 
     public int $balance;
 

@@ -18,7 +18,7 @@ class UpdatePaymentData extends DataTransferObject
 
     public Carbon $date;
 
-    public ?Carbon $ends_on;
+    public ?Carbon $ends_on = null;
 
     public bool $hidden;
 }

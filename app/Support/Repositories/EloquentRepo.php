@@ -18,11 +18,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 abstract class EloquentRepo implements RepoInterface
 {
     /**
-     * @var Application
-     */
-    protected Application $app;
-
-    /**
      * @var T
      */
     protected Model $model;
@@ -30,14 +25,11 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * BaseRepository constructor.
      *
-     * @param  Application  $app
      *
      * @throws BindingResolutionException
      */
-    public function __construct(Application $app)
+    public function __construct(protected Application $app)
     {
-        $this->app = $app;
-
         $this->makeModel();
     }
 
@@ -62,8 +54,6 @@ abstract class EloquentRepo implements RepoInterface
 
     /**
      * Whether Model uses SoftDeletes
-     *
-     * @return bool
      */
     protected function usesSoftDeletes(): bool
     {
@@ -77,8 +67,6 @@ abstract class EloquentRepo implements RepoInterface
      * @param  string[]  $columns
      * @param  string|null  $orderBy
      * @param  string|null  $orderDirection
-     * @param  bool  $withTrashed
-     * @return Builder
      */
     protected function query(
         array $with = [],
@@ -105,13 +93,10 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * Get query builder instance with search applied
      *
-     * @param  SearchQuery  $search
      * @param  string[]  $with
      * @param  string[]  $columns
      * @param  string|null  $orderBy
      * @param  string|null  $orderDirection
-     * @param  bool  $withTrashed
-     * @return Builder
      */
     protected function searchQuery(
         SearchQuery $search,
@@ -134,8 +119,6 @@ abstract class EloquentRepo implements RepoInterface
 
     /**
      * Query results will be ordered by this field by default
-     *
-     * @return string
      */
     public function getOrderBy(): string
     {
@@ -144,8 +127,6 @@ abstract class EloquentRepo implements RepoInterface
 
     /**
      * Query results will be ordered by this direction
-     *
-     * @return string
      */
     public function getOrderDirection(): string
     {
@@ -154,10 +135,8 @@ abstract class EloquentRepo implements RepoInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @return T|Model
      */
-    public function create(array $data)
+    public function create(array $data): \T|\Illuminate\Database\Eloquent\Model
     {
         return $this->model->create($data);
     }

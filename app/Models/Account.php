@@ -58,17 +58,11 @@ class Account extends Model
         'currency' => Currency::class,
     ];
 
-    /**
-     * @return HasMany
-     */
     public function jars(): HasMany
     {
         return $this->hasMany(Jar::class);
     }
 
-    /**
-     * @return HasManyThrough
-     */
     public function payments(): HasManyThrough
     {
         return $this->hasManyThrough(Payment::class, Jar::class);
@@ -77,7 +71,6 @@ class Account extends Model
     /**
      * Calculate the balance of the account in the UAH currency.
      *
-     * @return Attribute
      *
      * @throws Exception
      */

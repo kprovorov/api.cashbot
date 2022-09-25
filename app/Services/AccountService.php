@@ -17,7 +17,6 @@ class AccountService
     /**
      * Update balances for all accounts
      *
-     * @return void
      *
      * @throws UnknownProperties
      * @throws GuzzleException
@@ -32,9 +31,6 @@ class AccountService
     }
 
     /**
-     * @param  Account  $account
-     * @return void
-     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
@@ -48,9 +44,6 @@ class AccountService
     }
 
     /**
-     * @param  Account  $account
-     * @return int
-     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
@@ -64,9 +57,6 @@ class AccountService
     }
 
     /**
-     * @param  Account  $account
-     * @return AccountData
-     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */

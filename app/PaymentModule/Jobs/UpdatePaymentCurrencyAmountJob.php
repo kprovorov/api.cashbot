@@ -27,8 +27,6 @@ class UpdatePaymentCurrencyAmountJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param  PaymentService  $paymentService
-     * @return void
      *
      * @throws Exception
      */

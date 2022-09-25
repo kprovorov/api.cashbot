@@ -23,5 +23,5 @@ class ClientInfoResponseData extends DataTransferObject
     public AccountDataCollection $accounts;
 
     #[CastWith(JarDataCollectionCaster::class)]
-    public ?JarDataCollection $jars;
+    public ?JarDataCollection $jars = null;
 }

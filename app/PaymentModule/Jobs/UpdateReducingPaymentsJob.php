@@ -15,9 +15,6 @@ class UpdateReducingPaymentsJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @param  PaymentService  $paymentService
-     * @return void
      */
     public function handle(PaymentService $paymentService): void
     {

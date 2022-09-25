@@ -91,41 +91,27 @@ class Payment extends Model
 
     /**
      * Create a new factory instance for the model.
-     *
-     * @return PaymentFactory
      */
     protected static function newFactory(): PaymentFactory
     {
         return PaymentFactory::new();
     }
 
-    /**
-     * @return HasOne
-     */
     public function from_transfer(): HasOne
     {
         return $this->hasOne(Transfer::class, 'to_payment_id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function to_transfer(): HasOne
     {
         return $this->hasOne(Transfer::class, 'from_payment_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function jar(): BelongsTo
     {
         return $this->belongsTo(Jar::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
