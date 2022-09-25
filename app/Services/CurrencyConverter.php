@@ -19,9 +19,10 @@ class CurrencyConverter
     /**
      * Get currency exchange rate
      *
-     * @param Currency $from
-     * @param Currency $to
+     * @param  Currency  $from
+     * @param  Currency  $to
      * @return float
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */

@@ -2,8 +2,8 @@
 
 namespace App\PaymentModule\Repositories;
 
-use App\Support\Repositories\EloquentRepo;
 use App\PaymentModule\Models\Payment;
+use App\Support\Repositories\EloquentRepo;
 
 /**
  * @extends EloquentRepo<Payment>
@@ -11,7 +11,7 @@ use App\PaymentModule\Models\Payment;
 class EloquentPaymentRepo extends EloquentRepo implements PaymentRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {

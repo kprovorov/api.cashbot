@@ -14,7 +14,7 @@ interface RepoInterface
     /**
      * Create new Entity
      *
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return T
      */
     public function create(array $data);
@@ -22,7 +22,7 @@ interface RepoInterface
     /**
      * Mass create new Entities
      *
-     * @param array<array<string, int|string|float|bool|null>> $data
+     * @param  array<array<string, int|string|float|bool|null>>  $data
      * @return bool
      */
     public function createMany(array $data): bool;
@@ -30,11 +30,11 @@ interface RepoInterface
     /**
      * Get all Entities
      *
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Collection
      */
     public function getAll(
@@ -48,12 +48,12 @@ interface RepoInterface
     /**
      * Get all Entities by applying search query
      *
-     * @param SearchQuery $search
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  SearchQuery  $search
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Collection
      */
     public function getBySearch(
@@ -68,14 +68,14 @@ interface RepoInterface
     /**
      * Get Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Collection
      */
     public function getWhere(
@@ -92,13 +92,13 @@ interface RepoInterface
     /**
      * Get Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Collection
      */
     public function getWhereIn(
@@ -114,13 +114,13 @@ interface RepoInterface
     /**
      * Get Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Collection
      */
     public function getWhereNotIn(
@@ -136,13 +136,13 @@ interface RepoInterface
     /**
      * Get all Entities paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return LengthAwarePaginator
      */
     public function paginateAll(
@@ -158,14 +158,14 @@ interface RepoInterface
     /**
      * Get all Entities by applying search query paginated
      *
-     * @param SearchQuery $search
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  SearchQuery  $search
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return LengthAwarePaginator
      */
     public function paginateBySearch(
@@ -182,16 +182,16 @@ interface RepoInterface
     /**
      * Get paginated Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return LengthAwarePaginator
      */
     public function paginateWhere(
@@ -210,15 +210,15 @@ interface RepoInterface
     /**
      * Get paginated Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return LengthAwarePaginator
      */
     public function paginateWhereIn(
@@ -236,15 +236,15 @@ interface RepoInterface
     /**
      * Get paginated Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return LengthAwarePaginator
      */
     public function paginateWhereNotIn(
@@ -262,13 +262,13 @@ interface RepoInterface
     /**
      * Chunk over all Entities
      *
-     * @param int $count
-     * @param callable $callback
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return bool
      */
     public function chunkAll(
@@ -284,14 +284,14 @@ interface RepoInterface
     /**
      * Chunk over all Entities by applying search query
      *
-     * @param SearchQuery $search
-     * @param int $count
-     * @param callable $callback
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  SearchQuery  $search
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return bool
      */
     public function chunkBySearch(
@@ -308,16 +308,16 @@ interface RepoInterface
     /**
      * Chunk over Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
-     * @param int $count
-     * @param callable $callback
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return bool
      */
     public function chunkWhere(
@@ -336,15 +336,15 @@ interface RepoInterface
     /**
      * Chunk over Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param int $count
-     * @param callable $callback
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return bool
      */
     public function chunkWhereIn(
@@ -362,15 +362,15 @@ interface RepoInterface
     /**
      * Chunk over Entities where $column doesn't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param int $count
-     * @param callable $callback
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return bool
      */
     public function chunkWhereNotIn(
@@ -388,12 +388,12 @@ interface RepoInterface
     /**
      * Get single Entity by id or return null
      *
-     * @param int|string $id
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  int|string  $id
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return T|null
      */
     public function first(
@@ -408,13 +408,13 @@ interface RepoInterface
     /**
      * Get single Entity by specified column or return null
      *
-     * @param string $column
-     * @param int|string|float|bool|null $value
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  int|string|float|bool|null  $value
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return T|null
      */
     public function firstBy(
@@ -430,12 +430,12 @@ interface RepoInterface
     /**
      * Get single Entity by id or throw exception
      *
-     * @param int|string $id
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  int|string  $id
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return T
      */
     public function firstOrFail(
@@ -450,13 +450,13 @@ interface RepoInterface
     /**
      * Get single Entity by specified column or throw exception
      *
-     * @param string $column
-     * @param int|string|float|bool|null $value
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string  $column
+     * @param  int|string|float|bool|null  $value
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return T
      */
     public function firstByOrFail(
@@ -472,8 +472,8 @@ interface RepoInterface
     /**
      * Update Entity by id
      *
-     * @param int|string $id
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  int|string  $id
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function update(int|string $id, array $data): bool;
@@ -481,8 +481,8 @@ interface RepoInterface
     /**
      * Mass update Entities by ids
      *
-     * @param int[]|string[] $ids
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  int[]|string[]  $ids
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function updateMany(array $ids, array $data): bool;
@@ -490,8 +490,8 @@ interface RepoInterface
     /**
      * Update Entity by applying search query
      *
-     * @param SearchQuery $search
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  SearchQuery  $search
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function updateBySearch(SearchQuery $search, array $data): bool;
@@ -499,10 +499,10 @@ interface RepoInterface
     /**
      * Mass update Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function updateWhere(string $column, string $operator, int|string|float|bool|null $value, array $data): bool;
@@ -510,9 +510,9 @@ interface RepoInterface
     /**
      * Mass update Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function updateWhereIn(string $column, array $values, array $data): bool;
@@ -520,9 +520,9 @@ interface RepoInterface
     /**
      * Mass update Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
-     * @param array<string, int|string|float|bool|null> $data
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
+     * @param  array<string, int|string|float|bool|null>  $data
      * @return bool
      */
     public function updateWhereNotIn(string $column, array $values, array $data): bool;
@@ -530,7 +530,7 @@ interface RepoInterface
     /**
      * Delete Entity by id
      *
-     * @param int|string $id
+     * @param  int|string  $id
      * @return bool
      */
     public function delete(int|string $id): bool;
@@ -538,7 +538,7 @@ interface RepoInterface
     /**
      * Mass delete Entities by ids
      *
-     * @param int[]|string[] $ids
+     * @param  int[]|string[]  $ids
      * @return bool
      */
     public function deleteMany(array $ids): bool;
@@ -546,7 +546,7 @@ interface RepoInterface
     /**
      * Delete Entity by applying search query
      *
-     * @param SearchQuery $search
+     * @param  SearchQuery  $search
      * @return bool
      */
     public function deleteBySearch(SearchQuery $search): bool;
@@ -554,9 +554,9 @@ interface RepoInterface
     /**
      * Mass delete Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
      * @return bool
      */
     public function deleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
@@ -564,8 +564,8 @@ interface RepoInterface
     /**
      * Mass delete Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function deleteWhereIn(string $column, array $values): bool;
@@ -573,8 +573,8 @@ interface RepoInterface
     /**
      * Mass delete Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function deleteWhereNotIn(string $column, array $values): bool;
@@ -582,7 +582,7 @@ interface RepoInterface
     /**
      * Delete Entity by id
      *
-     * @param int|string $id
+     * @param  int|string  $id
      * @return bool
      */
     public function forceDelete(int|string $id): bool;
@@ -590,7 +590,7 @@ interface RepoInterface
     /**
      * Mass delete Entities by ids
      *
-     * @param int[]|string[] $ids
+     * @param  int[]|string[]  $ids
      * @return bool
      */
     public function forceDeleteMany(array $ids): bool;
@@ -598,7 +598,7 @@ interface RepoInterface
     /**
      * Delete Entity by applying search query
      *
-     * @param SearchQuery $search
+     * @param  SearchQuery  $search
      * @return bool
      */
     public function forceDeleteBySearch(SearchQuery $search): bool;
@@ -606,9 +606,9 @@ interface RepoInterface
     /**
      * Mass delete Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
      * @return bool
      */
     public function forceDeleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
@@ -616,8 +616,8 @@ interface RepoInterface
     /**
      * Mass delete Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function forceDeleteWhereIn(string $column, array $values): bool;
@@ -625,8 +625,8 @@ interface RepoInterface
     /**
      * Mass delete Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function forceDeleteWhereNotIn(string $column, array $values): bool;
@@ -634,7 +634,7 @@ interface RepoInterface
     /**
      * Delete Entity by id
      *
-     * @param int|string $id
+     * @param  int|string  $id
      * @return bool
      */
     public function restore(int|string $id): bool;
@@ -642,7 +642,7 @@ interface RepoInterface
     /**
      * Mass restore Entities by ids
      *
-     * @param int[]|string[] $ids
+     * @param  int[]|string[]  $ids
      * @return bool
      */
     public function restoreMany(array $ids): bool;
@@ -650,7 +650,7 @@ interface RepoInterface
     /**
      * Restore Entity by applying search query
      *
-     * @param SearchQuery $search
+     * @param  SearchQuery  $search
      * @return bool
      */
     public function restoreBySearch(SearchQuery $search): bool;
@@ -658,9 +658,9 @@ interface RepoInterface
     /**
      * Mass restore Entities that match condition
      *
-     * @param string $column
-     * @param string $operator
-     * @param int|string|float|bool|null $value
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int|string|float|bool|null  $value
      * @return bool
      */
     public function restoreWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
@@ -668,8 +668,8 @@ interface RepoInterface
     /**
      * Mass restore Entities where $column match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function restoreWhereIn(string $column, array $values): bool;
@@ -677,8 +677,8 @@ interface RepoInterface
     /**
      * Mass restore Entities where $column don't match any of $values
      *
-     * @param string $column
-     * @param array<int|null>|array<string|null>|array<float|null>|array<bool|null> $values
+     * @param  string  $column
+     * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @return bool
      */
     public function restoreWhereNotIn(string $column, array $values): bool;

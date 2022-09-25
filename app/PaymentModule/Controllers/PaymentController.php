@@ -3,13 +3,13 @@
 namespace App\PaymentModule\Controllers;
 
 use App\Enums\Currency;
+use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Requests\StorePaymentRequest;
 use App\PaymentModule\Requests\UpdatePaymentRequest;
-use App\Http\Controllers\Controller;
 use App\PaymentModule\Services\PaymentService;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
@@ -22,7 +22,7 @@ class PaymentController extends Controller
     /**
      * PaymentController constructor.
      *
-     * @param PaymentService $paymentService
+     * @param  PaymentService  $paymentService
      */
     public function __construct(protected PaymentService $paymentService)
     {
@@ -41,8 +41,9 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StorePaymentRequest $request
+     * @param  StorePaymentRequest  $request
      * @return void
+     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
@@ -119,7 +120,7 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Payment $payment
+     * @param  Payment  $payment
      * @return Payment
      */
     public function show(Payment $payment): Payment
@@ -135,9 +136,10 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdatePaymentRequest $request
-     * @param Payment $payment
+     * @param  UpdatePaymentRequest  $request
+     * @param  Payment  $payment
      * @return Payment
+     *
      * @throws UnknownProperties
      * @throws ValidationException
      */
@@ -193,7 +195,7 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Payment $payment
+     * @param  Payment  $payment
      * @return bool
      */
     public function destroy(Payment $payment): void

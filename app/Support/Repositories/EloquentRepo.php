@@ -30,7 +30,8 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * BaseRepository constructor.
      *
-     * @param Application $app
+     * @param  Application  $app
+     *
      * @throws BindingResolutionException
      */
     public function __construct(Application $app)
@@ -51,6 +52,7 @@ abstract class EloquentRepo implements RepoInterface
      * Make Model instance
      *
      * @return T
+     *
      * @throws BindingResolutionException
      */
     protected function makeModel()
@@ -71,11 +73,11 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * Get query builder instance
      *
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Builder
      */
     protected function query(
@@ -103,12 +105,12 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * Get query builder instance with search applied
      *
-     * @param SearchQuery $search
-     * @param string[] $with
-     * @param string[] $columns
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     * @param bool $withTrashed
+     * @param  SearchQuery  $search
+     * @param  string[]  $with
+     * @param  string[]  $columns
+     * @param  string|null  $orderBy
+     * @param  string|null  $orderDirection
+     * @param  bool  $withTrashed
      * @return Builder
      */
     protected function searchQuery(
@@ -151,7 +153,8 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @return T|Model
      */
     public function create(array $data)
@@ -160,7 +163,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function createMany(array $data): bool
     {
@@ -173,7 +176,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getAll(
         array $with = [],
@@ -194,7 +197,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getBySearch(
         SearchQuery $search,
@@ -217,7 +220,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getWhere(
         string $column,
@@ -242,7 +245,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getWhereIn(
         string $column,
@@ -266,7 +269,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getWhereNotIn(
         string $column,
@@ -290,7 +293,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function paginateAll(
         ?int $perPage = null,
@@ -313,7 +316,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function paginateBySearch(
         SearchQuery $search,
@@ -338,7 +341,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function paginateWhere(
         string $column,
@@ -365,7 +368,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function paginateWhereIn(
         string $column,
@@ -391,7 +394,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function paginateWhereNotIn(
         string $column,
@@ -417,7 +420,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function chunkAll(
         int $count,
@@ -440,7 +443,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function chunkBySearch(
         SearchQuery $search,
@@ -465,7 +468,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function chunkWhere(
         string $column,
@@ -492,7 +495,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function chunkWhereIn(
         string $column,
@@ -518,7 +521,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function chunkWhereNotIn(
         string $column,
@@ -544,7 +547,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function first(
         int|string $id,
@@ -559,7 +562,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function firstBy(
         string $column,
@@ -583,7 +586,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function firstOrFail(
         int|string $id,
@@ -598,7 +601,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function firstByOrFail(
         string $column,
@@ -622,7 +625,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function update(int|string $id, array $data): bool
     {
@@ -631,7 +634,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function updateMany(array $ids, array $data): bool
     {
@@ -640,7 +643,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function updateBySearch(SearchQuery $search, array $data): bool
     {
@@ -650,7 +653,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function updateWhere(string $column, string $operator, int|string|float|bool|null $value, array $data): bool
     {
@@ -661,7 +664,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function updateWhereIn(string $column, array $values, array $data): bool
     {
@@ -672,7 +675,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function updateWhereNotIn(string $column, array $values, array $data): bool
     {
@@ -683,7 +686,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function delete(int|string $id): bool
     {
@@ -692,7 +695,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteMany(array $ids): bool
     {
@@ -701,7 +704,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteBySearch(SearchQuery $search): bool
     {
@@ -711,7 +714,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool
     {
@@ -722,7 +725,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteWhereIn(string $column, array $values): bool
     {
@@ -733,7 +736,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function deleteWhereNotIn(string $column, array $values): bool
     {
@@ -744,7 +747,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDelete(int|string $id): bool
     {
@@ -753,7 +756,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDeleteMany(array $ids): bool
     {
@@ -762,7 +765,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDeleteBySearch(SearchQuery $search): bool
     {
@@ -772,7 +775,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDeleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool
     {
@@ -783,7 +786,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDeleteWhereIn(string $column, array $values): bool
     {
@@ -794,7 +797,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function forceDeleteWhereNotIn(string $column, array $values): bool
     {
@@ -805,7 +808,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restore(int|string $id): bool
     {
@@ -814,7 +817,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restoreMany(array $ids): bool
     {
@@ -823,7 +826,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restoreBySearch(SearchQuery $search): bool
     {
@@ -834,7 +837,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restoreWhere(string $column, string $operator, int|string|float|bool|null $value): bool
     {
@@ -846,7 +849,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restoreWhereIn(string $column, array $values): bool
     {
@@ -858,7 +861,7 @@ abstract class EloquentRepo implements RepoInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function restoreWhereNotIn(string $column, array $values): bool
     {

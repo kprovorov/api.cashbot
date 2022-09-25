@@ -3,8 +3,8 @@
 namespace App\PaymentModule\Factories;
 
 use App\Enums\Currency;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\PaymentModule\Models\Payment;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PaymentFactory extends Factory
 {
@@ -23,12 +23,12 @@ class PaymentFactory extends Factory
     public function definition()
     {
         return [
-            'description'      => $this->faker->sentence(2),
-            'amount'           => $this->faker->numberBetween(-10, 10) * 1000000,
+            'description' => $this->faker->sentence(2),
+            'amount' => $this->faker->numberBetween(-10, 10) * 1000000,
             'amount_converted' => $this->faker->numberBetween(-10, 10) * 1000000,
-            'currency'         => $this->faker->randomElement(Currency::cases()),
-            'date'             => $this->faker->dateTimeBetween('now', '1 month'),
-            'hidden'           => false,
+            'currency' => $this->faker->randomElement(Currency::cases()),
+            'date' => $this->faker->dateTimeBetween('now', '1 month'),
+            'hidden' => false,
         ];
     }
 

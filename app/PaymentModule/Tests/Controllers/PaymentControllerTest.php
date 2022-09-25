@@ -34,7 +34,7 @@ class PaymentControllerTest extends TestCase
             'jar_id' => $jar->id,
         ]);
 
-        $res = $this->get("api/payments");
+        $res = $this->get('api/payments');
 
         $res->assertSuccessful();
         $res->assertJson($payments->sortByDesc('id')->values()->toArray());
@@ -87,7 +87,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -98,7 +98,7 @@ class PaymentControllerTest extends TestCase
              ->once()
              ->andReturn(2);
 
-        $res = $this->post("api/payments", $payload);
+        $res = $this->post('api/payments', $payload);
 
         $res->assertOk();
 //        $res->assertJson($payload);
@@ -128,13 +128,13 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::USD,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::USD,
         ]);
 

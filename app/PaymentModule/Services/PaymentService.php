@@ -12,8 +12,8 @@ use App\PaymentModule\Repositories\PaymentRepo;
 use App\Services\CurrencyConverter;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class PaymentService
@@ -21,8 +21,8 @@ class PaymentService
     /**
      * PaymentService constructor.
      *
-     * @param PaymentRepo $paymentRepo
-     * @param CurrencyConverter $currencyConverter
+     * @param  PaymentRepo  $paymentRepo
+     * @param  CurrencyConverter  $currencyConverter
      */
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
@@ -33,8 +33,8 @@ class PaymentService
     /**
      * Get all Payments
      *
-     * @param array $with
-     * @param array $columns
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllPayments(array $with = [], array $columns = ['*']): Collection
@@ -45,10 +45,10 @@ class PaymentService
     /**
      * Get all Payments paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param array $with
-     * @param array $columns
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  array  $with
+     * @param  array  $columns
      * @return LengthAwarePaginator
      */
     public function getAllPaymentsPaginated(
@@ -63,9 +63,9 @@ class PaymentService
     /**
      * Get Payment by id
      *
-     * @param int $paymentId
-     * @param array $with
-     * @param array $columns
+     * @param  int  $paymentId
+     * @param  array  $with
+     * @param  array  $columns
      * @return Payment
      */
     public function getPayment(int $paymentId, array $with = [], array $columns = ['*']): Payment
@@ -76,8 +76,9 @@ class PaymentService
     /**
      * Create new Payment
      *
-     * @param CreatePaymentData $data
+     * @param  CreatePaymentData  $data
      * @return Payment
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -91,7 +92,7 @@ class PaymentService
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => round($data->amount * $rate, 4),
         ]);
     }
@@ -99,9 +100,10 @@ class PaymentService
     /**
      * Update Payment by id
      *
-     * @param Payment|int $payment
-     * @param UpdatePaymentData $data
+     * @param  Payment|int  $payment
+     * @param  UpdatePaymentData  $data
      * @return bool
+     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
@@ -117,7 +119,7 @@ class PaymentService
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => round($data->amount * $rate, 4),
         ]);
     }
@@ -125,7 +127,7 @@ class PaymentService
     /**
      * Delete Payment by id
      *
-     * @param int $paymentId
+     * @param  int  $paymentId
      * @return bool
      */
     public function deletePayment(int $paymentId): bool
@@ -156,7 +158,7 @@ class PaymentService
     /**
      * Update payment amount on a fresh currency rate
      *
-     * @param Payment|int $payment
+     * @param  Payment|int  $payment
      * @return void
      *
      * @throws Exception
@@ -172,8 +174,8 @@ class PaymentService
                 new UpdatePaymentData([
                     ...$payment->toArray(),
                     'currency' => $payment->currency,
-                    'date'     => $payment->date,
-                    'ends_on'  => $payment->ends_on,
+                    'date' => $payment->date,
+                    'ends_on' => $payment->ends_on,
                 ])
             );
         }
@@ -193,8 +195,9 @@ class PaymentService
     }
 
     /**
-     * @param Payment|int $payment
+     * @param  Payment|int  $payment
      * @return void
+     *
      * @throws UnknownProperties
      */
     public function updateReducingPayment(Payment|int $payment): void
@@ -211,9 +214,9 @@ class PaymentService
             new UpdatePaymentData([
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
-                'ends_on'  => $payment->ends_on,
-                'amount'   => $amount,
-                'date'     => today(),
+                'ends_on' => $payment->ends_on,
+                'amount' => $amount,
+                'date' => today(),
             ])
         );
     }

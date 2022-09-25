@@ -41,7 +41,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPayments();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -69,7 +69,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPaymentsPaginated();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -101,6 +101,7 @@ class PaymentServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_creates_payment(): void
@@ -117,13 +118,13 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
         $data = new CreatePaymentData([
             ...$paymentData->toArray(),
-            'date'     => $paymentData->date,
+            'date' => $paymentData->date,
             'currency' => $paymentData->currency,
         ]);
 
@@ -136,8 +137,8 @@ class PaymentServiceTest extends TestCase
         $this->assertEquals([
             ...$data->toArray(),
             'amount_converted' => $data->amount * 2,
-            'date'             => $data->date->toDateTimeString(),
-            'currency'         => $data->currency->name,
+            'date' => $data->date->toDateTimeString(),
+            'currency' => $data->currency->name,
         ], [
             ...Arr::except($res->toArray(), [
                 'id',
@@ -151,6 +152,7 @@ class PaymentServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      * @throws GuzzleException
      */
@@ -168,7 +170,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -179,7 +181,7 @@ class PaymentServiceTest extends TestCase
 
         $data = new UpdatePaymentData([
             ...$paymentData->toArray(),
-            'date'     => $paymentData->date,
+            'date' => $paymentData->date,
             'currency' => $paymentData->currency,
         ]);
 
@@ -192,7 +194,7 @@ class PaymentServiceTest extends TestCase
         $this->assertTrue($res);
         $this->assertDatabaseHas('payments', [
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => $data->amount * 2,
         ]);
     }
@@ -240,9 +242,9 @@ class PaymentServiceTest extends TestCase
             'account_id' => $account->id,
         ]);
         $payment = Payment::factory()->create([
-            'jar_id'           => $jar->id,
-            'currency'         => Currency::EUR,
-            'amount'           => 10,
+            'jar_id' => $jar->id,
+            'currency' => Currency::EUR,
+            'amount' => 10,
             'amount_converted' => 100,
         ]);
 
@@ -256,8 +258,8 @@ class PaymentServiceTest extends TestCase
         $paymentService->updateCurrencyAmount($payment);
 
         $this->assertDatabaseHas('payments', [
-            'id'               => $payment->id,
-            'amount'           => 10,
+            'id' => $payment->id,
+            'amount' => 10,
             'amount_converted' => 20,
         ]);
     }
@@ -266,6 +268,7 @@ class PaymentServiceTest extends TestCase
      * @test
      *
      * @return void
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_updates_reducing_payment(): void
@@ -285,11 +288,11 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id'   => $jar->id,
-            'amount'   => $amount,
+            'jar_id' => $jar->id,
+            'amount' => $amount,
             'currency' => Currency::EUR,
-            'date'     => today()->subDay(),
-            'ends_on'  => today()->addDays($daysLeft),
+            'date' => today()->subDay(),
+            'ends_on' => today()->addDays($daysLeft),
         ]);
 
         $mock = $this->mock(CurrencyConverter::class);
@@ -301,10 +304,10 @@ class PaymentServiceTest extends TestCase
         $paymentService->updateReducingPayment($payment);
 
         $this->assertDatabaseHas('payments', [
-            'id'               => $payment->id,
-            'amount'           => 80,
+            'id' => $payment->id,
+            'amount' => 80,
             'amount_converted' => 160,
-            'date'             => today()->toDateString(),
+            'date' => today()->toDateString(),
         ]);
     }
 }

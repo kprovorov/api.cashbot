@@ -20,7 +20,6 @@ class PaymentServiceProvider extends ServiceProvider
             PaymentRepo::class,
             EloquentPaymentRepo::class
         );
-
     }
 
     /**

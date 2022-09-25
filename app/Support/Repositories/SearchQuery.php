@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 abstract class SearchQuery
 {
     /**
-     * @param array $args
+     * @param  array  $args
      */
     public function __construct(array $args)
     {
@@ -19,7 +19,7 @@ abstract class SearchQuery
     /**
      * Apply search query
      *
-     * @param Builder $query
+     * @param  Builder  $query
      * @return Builder
      */
     abstract public function apply(Builder $query): Builder;
