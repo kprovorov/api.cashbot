@@ -12,24 +12,25 @@ class CurrencyConverter
 {
     protected array $rates = [];
 
-    /**
-     * @throws GuzzleException
-     * @throws UnknownProperties
-     */
     public function __construct(protected readonly MonobankService $monobankService)
     {
-        $this->fetchMonobankRates();
     }
 
     /**
      * Get currency exchange rate
      *
-     * @param  Currency  $from
-     * @param  Currency  $to
+     * @param Currency $from
+     * @param Currency $to
      * @return float
+     * @throws GuzzleException
+     * @throws UnknownProperties
      */
     public function getRate(Currency $from, Currency $to): float
     {
+        if (count($this->rates) === 0) {
+            $this->fetchMonobankRates();
+        }
+
         if ($from === $to) {
             return 1;
         }

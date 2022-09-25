@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Jar;
-use App\Models\Payment;
+use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Seeder;
 
 class PaymentSeeder extends Seeder

@@ -1,0 +1,12 @@
+---
+inject: true
+to: routes/api.php
+append: true
+skip_if: \$this->app->register\(\\App\\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Module\\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>ServiceProvider::class\)
+---
+// <%= h.changeCase.pascal(h.inflection.singularize(name)) %> routes. Uncomment middlewares if you want to protect your routes
+Route::get('<%= h.changeCase.param(h.inflection.pluralize(name)) %>', [\App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Controllers\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller::class, 'index']); // ->middleware(['can:index,' . \App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Models\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>::class]);
+Route::post('<%= h.changeCase.param(h.inflection.pluralize(name)) %>', [\App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Controllers\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller::class, 'create']); // ->middleware(['can:create,' . \App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Models\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>::class]);
+Route::get('<%= h.changeCase.param(h.inflection.pluralize(name)) %>/{<%= h.changeCase.camel(h.inflection.singularize(name)) %>}', [\App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Controllers\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller::class, 'show']); // ->middleware(['can:view,<%= h.changeCase.param(h.inflection.singularize(name)) %>']);
+Route::put('<%= h.changeCase.param(h.inflection.pluralize(name)) %>/{<%= h.changeCase.camel(h.inflection.singularize(name)) %>}', [\App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Controllers\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller::class, 'update']); // ->middleware(['can:update,<%= h.changeCase.param(h.inflection.singularize(name)) %>']);
+Route::delete('<%= h.changeCase.param(h.inflection.pluralize(name)) %>/{<%= h.changeCase.camel(h.inflection.singularize(name)) %>}', [\App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Controllers\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller::class, 'delete']); // ->middleware(['can:delete,<%= h.changeCase.param(h.inflection.singularize(name)) %>']);

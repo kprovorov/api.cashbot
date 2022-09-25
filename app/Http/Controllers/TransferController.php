@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\CreatePaymentData;
 use App\Enums\Currency;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Group;
 use App\Models\Jar;
 use App\Models\Transfer;
-use App\Services\PaymentService;
+use App\PaymentModule\DTO\CreatePaymentData;
+use App\PaymentModule\Services\PaymentService;
 use Carbon\Carbon;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 

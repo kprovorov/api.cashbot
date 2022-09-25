@@ -29,15 +29,15 @@ class DashboardController extends Controller
             'jars',
             'payments' => function (HasManyThrough $query) {
                 $selectBalance = DB::raw(
-                    'accounts.balance + sum(payments.amount) over (partition by jars.account_id order by payments.date, payments.created_at, payments.amount rows between unbounded preceding and current row) as balance'
+                    'accounts.balance + sum(payments.amount_converted) over (partition by jars.account_id order by payments.date, payments.created_at, payments.amount_converted rows between unbounded preceding and current row) as balance'
                 );
 
                 $selectJarBalance = DB::raw(
-                    'sum(payments.amount) over (partition by payments.jar_id order by payments.date, payments.created_at, payments.amount rows between unbounded preceding and current row) as jar_balance'
+                    'sum(payments.amount_converted) over (partition by payments.jar_id order by payments.date, payments.created_at, payments.amount_converted rows between unbounded preceding and current row) as jar_balance'
                 );
 
                 $selectJarSavingsBalance = DB::raw(
-                    'if(jars.default, null, sum(payments.amount) over (partition by jars.default order by payments.date, payments.created_at, payments.amount rows between unbounded preceding and current row)) as jar_savings_balance'
+                    'if(jars.default, null, sum(payments.amount_converted) over (partition by jars.default order by payments.date, payments.created_at, payments.amount_converted rows between unbounded preceding and current row)) as jar_savings_balance'
                 );
 
                 $query->join('accounts', 'accounts.id', '=', 'jars.account_id');
@@ -48,7 +48,7 @@ class DashboardController extends Controller
                       ->addSelect($selectJarSavingsBalance)
                       ->orderBy('payments.date')
                       ->orderBy('payments.created_at')
-                      ->orderBy('payments.amount')
+                      ->orderBy('payments.amount_converted')
                       ->with([
                           'jar.account',
                           'from_transfer.payment_from.jar',
