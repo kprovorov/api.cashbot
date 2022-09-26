@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Group;
-use App\Models\User;
+use App\UserModule\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GroupPolicy
