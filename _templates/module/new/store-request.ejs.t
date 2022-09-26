@@ -1,5 +1,5 @@
 ---
-to: app/<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module/Requests/Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request.php
+to: app/<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module/Requests/Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request.php
 ---
 <?php
 
@@ -7,7 +7,7 @@ namespace App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request extends FormRequest
+class Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
