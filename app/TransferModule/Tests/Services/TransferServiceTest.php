@@ -3,7 +3,7 @@
 namespace App\TransferModule\Tests\Services;
 
 use App\AccountModule\Models\Account;
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use App\TransferModule\DTO\CreateTransferData;
 use App\TransferModule\DTO\UpdateTransferData;

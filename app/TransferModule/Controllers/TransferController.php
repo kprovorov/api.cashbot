@@ -5,7 +5,7 @@ namespace App\TransferModule\Controllers;
 use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\Services\PaymentService;
 use App\TransferModule\DTO\UpdateTransferData;

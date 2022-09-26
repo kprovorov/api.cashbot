@@ -4,7 +4,7 @@ namespace App\AccountModule\Models;
 
 use App\AccountModule\Factories\AccountFactory;
 use App\Enums\Currency;
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
 use GuzzleHttp\Exception\GuzzleException;

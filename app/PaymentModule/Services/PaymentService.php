@@ -2,7 +2,7 @@
 
 namespace App\PaymentModule\Services;
 
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;

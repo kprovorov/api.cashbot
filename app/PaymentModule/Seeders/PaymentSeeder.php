@@ -2,7 +2,7 @@
 
 namespace App\PaymentModule\Seeders;
 
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Seeder;
 
