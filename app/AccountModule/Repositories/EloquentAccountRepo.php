@@ -2,8 +2,8 @@
 
 namespace App\AccountModule\Repositories;
 
-use App\Support\Repositories\EloquentRepo;
 use App\AccountModule\Models\Account;
+use App\Support\Repositories\EloquentRepo;
 
 /**
  * @extends EloquentRepo<Account>
@@ -11,7 +11,7 @@ use App\AccountModule\Models\Account;
 class EloquentAccountRepo extends EloquentRepo implements AccountRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {

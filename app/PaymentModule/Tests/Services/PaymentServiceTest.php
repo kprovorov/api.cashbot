@@ -2,8 +2,8 @@
 
 namespace App\PaymentModule\Tests\Services;
 
-use App\Enums\Currency;
 use App\AccountModule\Models\Account;
+use App\Enums\Currency;
 use App\Models\Jar;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;

@@ -2,9 +2,9 @@
 
 namespace App\AccountModule\Factories;
 
+use App\AccountModule\Models\Account;
 use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\AccountModule\Models\Account;
 use Str;
 
 /**

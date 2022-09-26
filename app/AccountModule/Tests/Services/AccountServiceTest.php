@@ -7,10 +7,8 @@ use App\AccountModule\DTO\UpdateAccountData;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Services\AccountService;
 use Arr;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 use Tests\TestCase;
 
 class AccountServiceTest extends TestCase
@@ -67,6 +65,7 @@ class AccountServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_creates_account(): void
@@ -89,6 +88,7 @@ class AccountServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_updates_account(): void

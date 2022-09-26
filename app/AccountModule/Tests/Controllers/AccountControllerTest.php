@@ -26,7 +26,7 @@ class AccountControllerTest extends TestCase
              ->times(3)
              ->andReturn(2);
 
-        $res = $this->get("api/accounts");
+        $res = $this->get('api/accounts');
 
         $res->assertSuccessful();
         $res->assertJson($accounts->sortByDesc('id')->values()->toArray());
@@ -62,7 +62,7 @@ class AccountControllerTest extends TestCase
 
         $payload = $accountData->toArray();
 
-        $res = $this->post("api/accounts", $payload);
+        $res = $this->post('api/accounts', $payload);
 
         $res->assertCreated();
         $res->assertJson($payload);

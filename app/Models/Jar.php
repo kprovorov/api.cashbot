@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Account|null $account
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
+ *
  * @method static \Database\Factories\JarFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Jar newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Jar newQuery()

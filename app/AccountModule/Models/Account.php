@@ -7,11 +7,10 @@ use App\Enums\Currency;
 use App\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -31,6 +30,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property-read int|null $jars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
+ *
  * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
@@ -72,9 +72,9 @@ class Account extends Model
     ];
 
     protected $casts = [
-        'balance'     => 'int',
+        'balance' => 'int',
         'uah_balance' => 'int',
-        'currency'    => Currency::class,
+        'currency' => Currency::class,
     ];
 
     /**
@@ -101,6 +101,7 @@ class Account extends Model
      * Calculate the balance of the account in the UAH currency.
      *
      * @return Attribute
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -112,7 +113,7 @@ class Account extends Model
         ) : 1;
 
         return Attribute::make(
-            get: fn() => round($this->balance * $rate),
+            get: fn () => round($this->balance * $rate),
         );
     }
 }

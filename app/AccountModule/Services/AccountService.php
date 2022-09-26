@@ -9,8 +9,8 @@ use App\AccountModule\Repositories\AccountRepo;
 use App\Monobank\DTO\AccountData;
 use App\Monobank\Services\MonobankService;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountService
@@ -18,8 +18,8 @@ class AccountService
     /**
      * AccountService constructor.
      *
-     * @param AccountRepo $accountRepo
-     * @param MonobankService $monobankService
+     * @param  AccountRepo  $accountRepo
+     * @param  MonobankService  $monobankService
      */
     public function __construct(protected AccountRepo $accountRepo, private readonly MonobankService $monobankService)
     {
@@ -28,8 +28,8 @@ class AccountService
     /**
      * Get all Accounts
      *
-     * @param array $with
-     * @param array $columns
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllAccounts(array $with = [], array $columns = ['*']): Collection
@@ -40,10 +40,10 @@ class AccountService
     /**
      * Get all Accounts paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param array $with
-     * @param array $columns
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  array  $with
+     * @param  array  $columns
      * @return LengthAwarePaginator
      */
     public function getAllAccountsPaginated(
@@ -58,9 +58,9 @@ class AccountService
     /**
      * Get Account by id
      *
-     * @param int $accountId
-     * @param array $with
-     * @param array $columns
+     * @param  int  $accountId
+     * @param  array  $with
+     * @param  array  $columns
      * @return Account
      */
     public function getAccount(int $accountId, array $with = [], array $columns = ['*']): Account
@@ -71,7 +71,7 @@ class AccountService
     /**
      * Create new Account
      *
-     * @param CreateAccountData $data
+     * @param  CreateAccountData  $data
      * @return Account
      */
     public function createAccount(CreateAccountData $data): Account
@@ -82,8 +82,8 @@ class AccountService
     /**
      * Update Account by id
      *
-     * @param int $accountId
-     * @param UpdateAccountData $data
+     * @param  int  $accountId
+     * @param  UpdateAccountData  $data
      * @return bool
      */
     public function updateAccount(int $accountId, UpdateAccountData $data): bool
@@ -94,7 +94,7 @@ class AccountService
     /**
      * Delete Account by id
      *
-     * @param int $accountId
+     * @param  int  $accountId
      * @return bool
      */
     public function deleteAccount(int $accountId): bool

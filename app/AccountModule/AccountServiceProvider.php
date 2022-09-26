@@ -18,7 +18,6 @@ class AccountServiceProvider extends ServiceProvider
             \App\AccountModule\Repositories\AccountRepo::class,
             \App\AccountModule\Repositories\EloquentAccountRepo::class
         );
-
     }
 
     /**
