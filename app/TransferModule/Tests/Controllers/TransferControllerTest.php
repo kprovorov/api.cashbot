@@ -7,7 +7,6 @@ use App\Enums\Currency;
 use App\Models\Jar;
 use App\Models\User;
 use App\PaymentModule\Models\Payment;
-use App\Services\CurrencyConverter;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
