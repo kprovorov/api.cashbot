@@ -12,10 +12,10 @@ class UserPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param User $user
+     * @param User $actingUser
      * @return bool
      */
-    public function index(User $user): bool
+    public function index(User $actingUser): bool
     {
         return true;
     }
@@ -23,11 +23,11 @@ class UserPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param User $user
+     * @param User $actingUser
      * @param User $user
      * @return bool
      */
-    public function view(User $user, User $user): bool
+    public function view(User $actingUser, User $user): bool
     {
         return true;
     }
@@ -35,10 +35,10 @@ class UserPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param User $user
+     * @param User $actingUser
      * @return bool
      */
-    public function create(User $user): bool
+    public function create(User $actingUser): bool
     {
         return true;
     }
@@ -46,11 +46,11 @@ class UserPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param User $user
+     * @param User $actingUser
      * @param User $user
      * @return bool
      */
-    public function update(User $user, User $user): bool
+    public function update(User $actingUser, User $user): bool
     {
         return true;
     }
@@ -58,11 +58,11 @@ class UserPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param User $user
+     * @param User $actingUser
      * @param User $user
      * @return bool
      */
-    public function delete(User $user, User $user): bool
+    public function delete(User $actingUser, User $user): bool
     {
         return true;
     }
@@ -70,11 +70,11 @@ class UserPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param User $user
+     * @param User $actingUser
      * @param User $user
      * @return bool
      */
-    public function restore(User $user, User $user): bool
+    public function restore(User $actingUser, User $user): bool
     {
         return true;
     }
@@ -82,11 +82,11 @@ class UserPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param User $user
+     * @param User $actingUser
      * @param User $user
      * @return bool
      */
-    public function forceDelete(User $user, User $user): bool
+    public function forceDelete(User $actingUser, User $user): bool
     {
         return true;
     }

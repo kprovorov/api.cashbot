@@ -31,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Group|null $group
  * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
- *
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
