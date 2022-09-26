@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\AccountModule\Seeders;
 
-use App\Models\Account;
+use App\AccountModule\Models\Account;
 use Illuminate\Database\Seeder;
 
 class AccountSeeder extends Seeder

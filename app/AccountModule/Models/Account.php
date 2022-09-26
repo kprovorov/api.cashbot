@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Models;
+namespace App\AccountModule\Models;
 
+use App\AccountModule\Factories\AccountFactory;
 use App\Enums\Currency;
+use App\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 /**
- * App\Models\Account
+ * App\AccountModule\Models\Account
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -23,12 +27,11 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property int $balance
  * @property string|null $external_id
  * @property string|null $provider
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Jar[] $jars
+ * @property-read \Illuminate\Database\Eloquent\Collection|Jar[] $jars
  * @property-read int|null $jars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
- *
- * @method static \Database\Factories\AccountFactory factory(...$parameters)
+ * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account query()
@@ -46,17 +49,43 @@ class Account extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
         'currency',
         'balance',
+        'external_id',
+        'provider',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        //
     ];
 
     protected $casts = [
-        'balance' => 'int',
+        'balance'     => 'int',
         'uah_balance' => 'int',
-        'currency' => Currency::class,
+        'currency'    => Currency::class,
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return AccountFactory
+     */
+    protected static function newFactory(): AccountFactory
+    {
+        return AccountFactory::new();
+    }
 
     public function jars(): HasMany
     {
@@ -71,8 +100,9 @@ class Account extends Model
     /**
      * Calculate the balance of the account in the UAH currency.
      *
-     *
-     * @throws Exception
+     * @return Attribute
+     * @throws GuzzleException
+     * @throws UnknownProperties
      */
     protected function uahBalance(): Attribute
     {
@@ -82,7 +112,7 @@ class Account extends Model
         ) : 1;
 
         return Attribute::make(
-            get: fn () => round($this->balance * $rate),
+            get: fn() => round($this->balance * $rate),
         );
     }
 }
