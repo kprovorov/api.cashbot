@@ -2,8 +2,8 @@
 
 namespace App\TransferModule\Policies;
 
-use App\UserModule\Models\User;
 use App\TransferModule\Models\Transfer;
+use App\UserModule\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TransferPolicy

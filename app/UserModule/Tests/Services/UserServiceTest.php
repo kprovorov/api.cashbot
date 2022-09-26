@@ -8,10 +8,8 @@ use App\UserModule\Models\User;
 use App\UserModule\Services\UserService;
 use Arr;
 use Hash;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 use Tests\TestCase;
 
 class UserServiceTest extends TestCase
@@ -28,7 +26,7 @@ class UserServiceTest extends TestCase
         $res = $service->getAllUsers();
 
         $this->assertCount(3, $res);
-        $users->each(fn(User $user) => $this->assertContains(
+        $users->each(fn (User $user) => $this->assertContains(
             $user->id,
             $res->pluck('id')
         ));
@@ -46,7 +44,7 @@ class UserServiceTest extends TestCase
         $res = $service->getAllUsersPaginated();
 
         $this->assertCount(3, $res);
-        $users->each(fn(User $user) => $this->assertContains(
+        $users->each(fn (User $user) => $this->assertContains(
             $user->id,
             $res->pluck('id')
         ));
@@ -68,6 +66,7 @@ class UserServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_creates_user(): void
@@ -96,6 +95,7 @@ class UserServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_updates_user(): void

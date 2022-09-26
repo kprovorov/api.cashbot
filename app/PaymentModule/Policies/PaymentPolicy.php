@@ -2,8 +2,8 @@
 
 namespace App\PaymentModule\Policies;
 
-use App\UserModule\Models\User;
 use App\PaymentModule\Models\Payment;
+use App\UserModule\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PaymentPolicy

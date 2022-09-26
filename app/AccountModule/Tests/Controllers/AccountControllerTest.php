@@ -3,8 +3,8 @@
 namespace App\AccountModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\UserModule\Models\User;
 use App\Services\CurrencyConverter;
+use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 

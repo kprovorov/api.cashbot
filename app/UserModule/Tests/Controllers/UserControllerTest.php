@@ -19,7 +19,7 @@ class UserControllerTest extends TestCase
         /** @var Collection $users */
         $users = User::factory()->count(3)->create();
 
-        $res = $this->get("api/users");
+        $res = $this->get('api/users');
 
         $res->assertSuccessful();
         $res->assertJson($users->sortByDesc('id')->values()->toArray());
@@ -58,7 +58,7 @@ class UserControllerTest extends TestCase
             'password' => 'secret',
         ];
 
-        $res = $this->post("api/users", $payload);
+        $res = $this->post('api/users', $payload);
 
         $res->assertCreated();
         $res->assertJson($userData->toArray());

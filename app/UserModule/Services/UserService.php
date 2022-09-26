@@ -6,15 +6,15 @@ use App\UserModule\DTO\CreateUserData;
 use App\UserModule\DTO\UpdateUserData;
 use App\UserModule\Models\User;
 use App\UserModule\Repositories\UserRepo;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
     /**
      * UserService constructor.
      *
-     * @param UserRepo $userRepo
+     * @param  UserRepo  $userRepo
      */
     public function __construct(protected UserRepo $userRepo)
     {
@@ -23,8 +23,8 @@ class UserService
     /**
      * Get all Users
      *
-     * @param array $with
-     * @param array $columns
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllUsers(array $with = [], array $columns = ['*']): Collection
@@ -35,10 +35,10 @@ class UserService
     /**
      * Get all Users paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param array $with
-     * @param array $columns
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  array  $with
+     * @param  array  $columns
      * @return LengthAwarePaginator
      */
     public function getAllUsersPaginated(?int $perPage = null, ?int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
@@ -49,9 +49,9 @@ class UserService
     /**
      * Get User by id
      *
-     * @param int $userId
-     * @param array $with
-     * @param array $columns
+     * @param  int  $userId
+     * @param  array  $with
+     * @param  array  $columns
      * @return User
      */
     public function getUser(int $userId, array $with = [], array $columns = ['*']): User
@@ -62,7 +62,7 @@ class UserService
     /**
      * Create new User
      *
-     * @param CreateUserData $data
+     * @param  CreateUserData  $data
      * @return User
      */
     public function createUser(CreateUserData $data): User
@@ -73,8 +73,8 @@ class UserService
     /**
      * Update User by id
      *
-     * @param int $userId
-     * @param UpdateUserData $data
+     * @param  int  $userId
+     * @param  UpdateUserData  $data
      * @return bool
      */
     public function updateUser(int $userId, UpdateUserData $data): bool
@@ -85,7 +85,7 @@ class UserService
     /**
      * Delete User by id
      *
-     * @param int $userId
+     * @param  int  $userId
      * @return bool
      */
     public function deleteUser(int $userId): bool

@@ -11,7 +11,7 @@ use App\UserModule\Models\User;
 class EloquentUserRepo extends EloquentRepo implements UserRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {

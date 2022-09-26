@@ -18,7 +18,6 @@ class UserServiceProvider extends ServiceProvider
             \App\UserModule\Repositories\UserRepo::class,
             \App\UserModule\Repositories\EloquentUserRepo::class
         );
-
     }
 
     /**
