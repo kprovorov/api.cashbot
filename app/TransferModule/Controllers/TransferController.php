@@ -3,6 +3,7 @@
 namespace App\TransferModule\Controllers;
 
 use App\Enums\Currency;
+use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\Jar;
 use App\PaymentModule\DTO\CreatePaymentData;
@@ -11,28 +12,25 @@ use App\TransferModule\DTO\UpdateTransferData;
 use App\TransferModule\Models\Transfer;
 use App\TransferModule\Requests\StoreTransferRequest;
 use App\TransferModule\Requests\UpdateTransferRequest;
-use App\Http\Controllers\Controller;
 use App\TransferModule\Services\TransferService;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 
 class TransferController extends Controller
 {
     /**
      * TransferController constructor.
      *
-     * @param TransferService $transferService
-     * @param PaymentService $paymentService
+     * @param  TransferService  $transferService
+     * @param  PaymentService  $paymentService
      */
     public function __construct(
         protected readonly TransferService $transferService,
         protected readonly PaymentService $paymentService
     ) {
     }
-
 
     /**
      * Display a listing of the resource.
@@ -47,8 +45,9 @@ class TransferController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreTransferRequest $request
+     * @param  StoreTransferRequest  $request
      * @return void
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -100,7 +99,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id'   => $paymentTo->id,
+                    'to_payment_id' => $paymentTo->id,
                 ]);
             }
         } elseif ($repeat === 'monthly') {
@@ -135,7 +134,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id'   => $paymentTo->id,
+                    'to_payment_id' => $paymentTo->id,
                 ]);
             }
         } elseif ($repeat === 'weekly') {
@@ -170,7 +169,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id'   => $paymentTo->id,
+                    'to_payment_id' => $paymentTo->id,
                 ]);
             }
         } else {
@@ -204,7 +203,7 @@ class TransferController extends Controller
 
             Transfer::create([
                 'from_payment_id' => $paymentFrom->id,
-                'to_payment_id'   => $paymentTo->id,
+                'to_payment_id' => $paymentTo->id,
             ]);
         }
     }
@@ -212,7 +211,7 @@ class TransferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Transfer $transfer
+     * @param  Transfer  $transfer
      * @return Transfer
      */
     public function show(Transfer $transfer): Transfer
@@ -223,9 +222,10 @@ class TransferController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateTransferRequest $request
-     * @param Transfer $transfer
+     * @param  UpdateTransferRequest  $request
+     * @param  Transfer  $transfer
      * @return Transfer
+     *
      * @throws UnknownProperties
      */
     public function update(UpdateTransferRequest $request, Transfer $transfer): Transfer
@@ -240,7 +240,7 @@ class TransferController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Transfer $transfer
+     * @param  Transfer  $transfer
      * @return bool
      */
     public function destroy(Transfer $transfer): bool

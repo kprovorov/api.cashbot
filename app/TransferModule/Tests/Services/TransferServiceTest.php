@@ -10,10 +10,8 @@ use App\TransferModule\DTO\UpdateTransferData;
 use App\TransferModule\Models\Transfer;
 use App\TransferModule\Services\TransferService;
 use Arr;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 use Tests\TestCase;
 
 class TransferServiceTest extends TestCase
@@ -52,14 +50,14 @@ class TransferServiceTest extends TestCase
         /** @var Collection $transfers */
         $transfers = Transfer::factory()->count(3)->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $service = $this->app->make(TransferService::class);
         $res = $service->getAllTransfers();
 
         $this->assertCount(3, $res);
-        $transfers->each(fn(Transfer $transfer) => $this->assertContains(
+        $transfers->each(fn (Transfer $transfer) => $this->assertContains(
             $transfer->id,
             $res->pluck('id')
         ));
@@ -99,14 +97,14 @@ class TransferServiceTest extends TestCase
         /** @var Collection $transfers */
         $transfers = Transfer::factory()->count(3)->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $service = $this->app->make(TransferService::class);
         $res = $service->getAllTransfersPaginated();
 
         $this->assertCount(3, $res);
-        $transfers->each(fn(Transfer $transfer) => $this->assertContains(
+        $transfers->each(fn (Transfer $transfer) => $this->assertContains(
             $transfer->id,
             $res->pluck('id')
         ));
@@ -146,7 +144,7 @@ class TransferServiceTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $service = $this->app->make(TransferService::class);
@@ -157,6 +155,7 @@ class TransferServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_creates_transfer(): void
@@ -190,7 +189,7 @@ class TransferServiceTest extends TestCase
         /** @var Transfer $transferData */
         $transferData = Transfer::factory()->make([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $data = new CreateTransferData($transferData->toArray());
@@ -211,6 +210,7 @@ class TransferServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_updates_transfer(): void
@@ -244,13 +244,13 @@ class TransferServiceTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         /** @var Transfer $transferData */
         $transferData = Transfer::factory()->make([
             'from_payment_id' => $paymentTo->id,
-            'to_payment_id'   => $paymentFrom->id,
+            'to_payment_id' => $paymentFrom->id,
         ]);
 
         $data = new UpdateTransferData($transferData->toArray());
@@ -296,7 +296,7 @@ class TransferServiceTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $service = $this->app->make(TransferService::class);

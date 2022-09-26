@@ -50,10 +50,10 @@ class TransferControllerTest extends TestCase
         /** @var Collection $transfers */
         $transfers = Transfer::factory()->count(3)->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
-        $res = $this->get("api/transfers");
+        $res = $this->get('api/transfers');
 
         $res->assertSuccessful();
         $res->assertJson($transfers->sortByDesc('id')->values()->toArray());
@@ -96,7 +96,7 @@ class TransferControllerTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $res = $this->get("api/transfers/{$transfer->id}");
@@ -138,9 +138,9 @@ class TransferControllerTest extends TestCase
                 'date',
                 'description',
             ]),
-            'currency'    => $paymentData->currency->name,
+            'currency' => $paymentData->currency->name,
             'jar_from_id' => $jarFrom->id,
-            'jar_to_id'   => $jarTo->id,
+            'jar_to_id' => $jarTo->id,
         ];
 
         $this->mock(CurrencyConverter::class)
@@ -148,7 +148,7 @@ class TransferControllerTest extends TestCase
              ->once()
              ->andReturn(2);
 
-        $res = $this->post("api/transfers", $payload);
+        $res = $this->post('api/transfers', $payload);
 
         $res->assertOk();
     }
@@ -190,13 +190,13 @@ class TransferControllerTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         /** @var Transfer $transferData */
         $transferData = Transfer::factory()->make([
             'from_payment_id' => $paymentTo->id,
-            'to_payment_id'   => $paymentFrom->id,
+            'to_payment_id' => $paymentFrom->id,
         ]);
 
         $payload = $transferData->toArray();
@@ -245,7 +245,7 @@ class TransferControllerTest extends TestCase
         /** @var Transfer $transfer */
         $transfer = Transfer::factory()->create([
             'from_payment_id' => $paymentFrom->id,
-            'to_payment_id'   => $paymentTo->id,
+            'to_payment_id' => $paymentTo->id,
         ]);
 
         $res = $this->delete("api/transfers/{$transfer->id}");

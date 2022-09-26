@@ -18,7 +18,6 @@ class TransferServiceProvider extends ServiceProvider
             \App\TransferModule\Repositories\TransferRepo::class,
             \App\TransferModule\Repositories\EloquentTransferRepo::class
         );
-
     }
 
     /**

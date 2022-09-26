@@ -2,9 +2,8 @@
 
 namespace App\TransferModule\Factories;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\TransferModule\Models\Transfer;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TransferFactory extends Factory
 {

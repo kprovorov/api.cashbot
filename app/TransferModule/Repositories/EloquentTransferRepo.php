@@ -11,7 +11,7 @@ use App\TransferModule\Models\Transfer;
 class EloquentTransferRepo extends EloquentRepo implements TransferRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {
