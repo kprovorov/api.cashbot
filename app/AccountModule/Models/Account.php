@@ -25,7 +25,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property int $balance
  * @property string|null $external_id
  * @property string|null $provider
- * @property-read \Illuminate\Database\Eloquent\Collection|Jar[] $jars
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\AccountModule\Models\Jar[] $jars
  * @property-read int|null $jars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
