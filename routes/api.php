@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RateController;
 use App\PaymentModule\Controllers\PaymentController;
 use App\TransferModule\Controllers\TransferController;
+use App\UserModule\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('payments', PaymentController::class);
     Route::apiResource('transfers', TransferController::class);
     Route::apiResource('groups', GroupController::class);
+    Route::apiResource('users', UserController::class);
 
     Route::get('dashboard', DashboardController::class);
     Route::get('rates', RateController::class);

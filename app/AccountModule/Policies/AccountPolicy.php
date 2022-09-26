@@ -3,7 +3,7 @@
 namespace App\AccountModule\Policies;
 
 use App\AccountModule\Models\Account;
-use App\Models\User;
+use App\UserModule\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AccountPolicy

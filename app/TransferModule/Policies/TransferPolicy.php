@@ -2,7 +2,7 @@
 
 namespace App\TransferModule\Policies;
 
-use App\Models\User;
+use App\UserModule\Models\User;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

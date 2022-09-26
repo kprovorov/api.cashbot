@@ -5,7 +5,7 @@ namespace App\TransferModule\Tests\Controllers;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
-use App\Models\User;
+use App\UserModule\Models\User;
 use App\PaymentModule\Models\Payment;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Collection;

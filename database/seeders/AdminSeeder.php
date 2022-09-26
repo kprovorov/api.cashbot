@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
+use App\UserModule\Models\User;
 use Hash;
 use Illuminate\Database\Seeder;
 
