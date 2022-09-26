@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\AccountModule\Seeders\AccountSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

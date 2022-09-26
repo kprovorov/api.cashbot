@@ -20,7 +20,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 {
     /**
      * @test
-     * @throws BindingResolutionException
      */
     public function it_successfully_gets_all_<%= h.changeCase.snake(h.inflection.pluralize(name)) %>(): void
     {
@@ -39,7 +38,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 
     /**
      * @test
-     * @throws BindingResolutionException
      */
     public function it_successfully_gets_all_<%= h.changeCase.snake(h.inflection.pluralize(name)) %>_paginated(): void
     {
@@ -58,7 +56,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 
     /**
      * @test
-     * @throws BindingResolutionException
      */
     public function it_successfully_gets_<%= h.changeCase.snake(h.inflection.singularize(name)) %>(): void
     {
@@ -73,7 +70,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 
     /**
      * @test
-     * @throws BindingResolutionException
      * @throws UnknownProperties
      * @throws ValidationException
      */
@@ -97,7 +93,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 
     /**
      * @test
-     * @throws BindingResolutionException
      * @throws UnknownProperties
      * @throws ValidationException
      */
@@ -120,7 +115,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>ServiceTest exte
 
     /**
      * @test
-     * @throws BindingResolutionException
      */
     public function it_successfully_deletes_<%= h.changeCase.snake(h.inflection.singularize(name)) %>(): void
     {

@@ -2,6 +2,7 @@
 
 namespace App\PaymentModule\Seeders;
 
+use App\Models\Jar;
 use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,11 @@ class PaymentSeeder extends Seeder
      */
     public function run()
     {
-        Payment::factory()->create();
+        Jar::each(function (Jar $jar) {
+            Payment::factory()->count(30)->create([
+                'jar_id' => $jar->id,
+                'currency' => $jar->account->currency,
+            ]);
+        });
     }
 }

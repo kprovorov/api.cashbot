@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\AccountModule\Models\Account;
 use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $account_id
  * @property string $name
  * @property int $default
- * @property-read \App\Models\Account|null $account
+ * @property-read Account|null $account
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
  *

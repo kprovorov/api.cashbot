@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\AccountModule\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateAccountRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,12 +19,14 @@ class UpdateAccountRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'currency' => 'required|string|max:255',
+            'balance' => 'required|integer',
         ];
     }
 }

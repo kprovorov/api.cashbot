@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\AccountModule\AccountServiceProvider;
 use App\Monobank\MonobankServiceProvider;
 use App\PaymentModule\PaymentServiceProvider;
 use App\Services\CurrencyConverter;
@@ -17,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         // Providers
+        $this->app->register(AccountServiceProvider::class);
+
         $this->app->register(PaymentServiceProvider::class);
+
         $this->app->register(MonobankServiceProvider::class);
 
         $this->app->singleton(CurrencyConverter::class);

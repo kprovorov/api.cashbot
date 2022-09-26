@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
-use App\Services\AccountService;
+use App\AccountModule\Models\Account;
+use App\AccountModule\Services\AccountService;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class DashboardController extends Controller
 {
@@ -17,8 +16,6 @@ class DashboardController extends Controller
 
     /**
      * @return mixed
-     *
-     * @throws UnknownProperties
      */
     public function __invoke(): Collection
     {
