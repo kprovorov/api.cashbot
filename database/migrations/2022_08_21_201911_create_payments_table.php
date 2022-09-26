@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Jar;
+use App\AccountModule\Models\Jar;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

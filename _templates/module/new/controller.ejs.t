@@ -8,7 +8,7 @@ namespace App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module
 use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\DTO\Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Data;
 use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\DTO\Update<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Data;
 use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Models\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>;
-use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Requests\Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request;
+use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Requests\Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request;
 use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Requests\Update<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request;
 use App\Http\Controllers\Controller;
 use App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\Services\<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Service;
@@ -40,10 +40,9 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller exten
     /**
      * Store a newly created resource in storage.
      *
-     * @param Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request
+     * @param Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request
      * @return <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
      * @throws UnknownProperties
-     * @throws ValidationException
      */
     public function store(Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request): <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
     {
@@ -70,7 +69,6 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller exten
      * @param <%= h.changeCase.pascal(h.inflection.singularize(name)) %> $<%= h.changeCase.camel(h.inflection.singularize(name)) %>
      * @return <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
      * @throws UnknownProperties
-     * @throws ValidationException
      */
     public function update(Update<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request, <%= h.changeCase.pascal(h.inflection.singularize(name)) %> $<%= h.changeCase.camel(h.inflection.singularize(name)) %>): <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
     {

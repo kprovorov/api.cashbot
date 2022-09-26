@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\AccountModule\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,20 +11,22 @@ class StoreJarRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'account_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'default' => 'required|boolean',
         ];
     }
 }
