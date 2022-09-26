@@ -150,11 +150,6 @@ class TransferControllerTest extends TestCase
             'jar_to_id' => $jarTo->id,
         ];
 
-        $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
-             ->once()
-             ->andReturn(2);
-
         $res = $this->post('api/transfers', $payload);
 
         $res->assertOk();
