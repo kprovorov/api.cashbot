@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\TransferModule\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransferRequest extends FormRequest
+class UpdateTransferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,12 +19,13 @@ class StoreTransferRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'from_payment_id' => 'required|integer',
+            'to_payment_id' => 'required|integer',
         ];
     }
 }

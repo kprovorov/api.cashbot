@@ -4,8 +4,8 @@ use App\AccountModule\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RateController;
-use App\Http\Controllers\TransferController;
 use App\PaymentModule\Controllers\PaymentController;
+use App\TransferModule\Controllers\TransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

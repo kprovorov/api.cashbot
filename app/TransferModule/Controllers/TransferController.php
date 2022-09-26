@@ -1,38 +1,55 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\TransferModule\Controllers;
 
 use App\Enums\Currency;
-use App\Http\Requests\StoreTransferRequest;
-use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Group;
 use App\Models\Jar;
-use App\Models\Transfer;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\Services\PaymentService;
+use App\TransferModule\DTO\UpdateTransferData;
+use App\TransferModule\Models\Transfer;
+use App\TransferModule\Requests\StoreTransferRequest;
+use App\TransferModule\Requests\UpdateTransferRequest;
+use App\Http\Controllers\Controller;
+use App\TransferModule\Services\TransferService;
 use Carbon\Carbon;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use Spatie\DataTransferObject\Exceptions\ValidationException;
 
 class TransferController extends Controller
 {
-    public function __construct(protected readonly PaymentService $paymentService)
-    {
+    /**
+     * TransferController constructor.
+     *
+     * @param TransferService $transferService
+     * @param PaymentService $paymentService
+     */
+    public function __construct(
+        protected readonly TransferService $transferService,
+        protected readonly PaymentService $paymentService
+    ) {
     }
+
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
-    public function index()
+    public function index(): Collection
     {
-        //
+        return $this->transferService->getAllTransfers();
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     *
+     * @param StoreTransferRequest $request
+     * @return void
+     * @throws GuzzleException
      * @throws UnknownProperties
      */
     public function store(StoreTransferRequest $request): void
@@ -83,7 +100,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
+                    'to_payment_id'   => $paymentTo->id,
                 ]);
             }
         } elseif ($repeat === 'monthly') {
@@ -118,7 +135,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
+                    'to_payment_id'   => $paymentTo->id,
                 ]);
             }
         } elseif ($repeat === 'weekly') {
@@ -153,7 +170,7 @@ class TransferController extends Controller
 
                 Transfer::create([
                     'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
+                    'to_payment_id'   => $paymentTo->id,
                 ]);
             }
         } else {
@@ -187,7 +204,7 @@ class TransferController extends Controller
 
             Transfer::create([
                 'from_payment_id' => $paymentFrom->id,
-                'to_payment_id' => $paymentTo->id,
+                'to_payment_id'   => $paymentTo->id,
             ]);
         }
     }
@@ -195,30 +212,39 @@ class TransferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Transfer $transfer
+     * @return Transfer
      */
-    public function show(Transfer $transfer)
+    public function show(Transfer $transfer): Transfer
     {
-        //
+        return $this->transferService->getTransfer($transfer->id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param UpdateTransferRequest $request
+     * @param Transfer $transfer
+     * @return Transfer
+     * @throws UnknownProperties
      */
-    public function update(UpdateTransferRequest $request, Transfer $transfer)
+    public function update(UpdateTransferRequest $request, Transfer $transfer): Transfer
     {
-        //
+        $data = new UpdateTransferData($request->all());
+
+        $this->transferService->updateTransfer($transfer->id, $data);
+
+        return $this->transferService->getTransfer($transfer->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param Transfer $transfer
+     * @return bool
      */
-    public function destroy(Transfer $transfer)
+    public function destroy(Transfer $transfer): bool
     {
-        //
+        return $this->transferService->deleteTransfer($transfer->id);
     }
 }

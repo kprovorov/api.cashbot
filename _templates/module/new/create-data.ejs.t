@@ -5,7 +5,7 @@ to: app/<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module/DTO/C
 
 namespace App\<%= h.changeCase.pascal(h.inflection.singularize(module)) %>Module\DTO;
 
-use App\Support\DTO\DataTransferObject;
+use Spatie\DataTransferObject\DataTransferObject;
 
 class Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Data extends DataTransferObject
 {

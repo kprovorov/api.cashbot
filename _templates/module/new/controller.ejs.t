@@ -45,7 +45,7 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller exten
      * @throws UnknownProperties
      * @throws ValidationException
      */
-    public function create(Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request): <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
+    public function store(Store<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Request $request): <%= h.changeCase.pascal(h.inflection.singularize(name)) %>
     {
         $data = new Create<%= h.changeCase.pascal(h.inflection.singularize(name)) %>Data($request->all());
 
@@ -87,7 +87,7 @@ class <%= h.changeCase.pascal(h.inflection.singularize(name)) %>Controller exten
      * @param <%= h.changeCase.pascal(h.inflection.singularize(name)) %> $<%= h.changeCase.camel(h.inflection.singularize(name)) %>
      * @return bool
      */
-    public function delete(<%= h.changeCase.pascal(h.inflection.singularize(name)) %> $<%= h.changeCase.camel(h.inflection.singularize(name)) %>): bool
+    public function destroy(<%= h.changeCase.pascal(h.inflection.singularize(name)) %> $<%= h.changeCase.camel(h.inflection.singularize(name)) %>): bool
     {
         return $this-><%= h.changeCase.camel(h.inflection.singularize(name)) %>Service->delete<%= h.changeCase.pascal(h.inflection.singularize(name)) %>($<%= h.changeCase.camel(h.inflection.singularize(name)) %>->id);
     }

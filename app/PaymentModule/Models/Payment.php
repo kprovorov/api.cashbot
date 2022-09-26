@@ -5,7 +5,7 @@ namespace App\PaymentModule\Models;
 use App\Enums\Currency;
 use App\Models\Group;
 use App\Models\Jar;
-use App\Models\Transfer;
+use App\TransferModule\Models\Transfer;
 use App\PaymentModule\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
