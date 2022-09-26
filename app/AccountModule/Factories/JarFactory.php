@@ -2,9 +2,8 @@
 
 namespace App\AccountModule\Factories;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\AccountModule\Models\Jar;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Str;
 
 class JarFactory extends Factory

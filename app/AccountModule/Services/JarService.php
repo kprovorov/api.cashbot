@@ -6,15 +6,15 @@ use App\AccountModule\DTO\CreateJarData;
 use App\AccountModule\DTO\UpdateJarData;
 use App\AccountModule\Models\Jar;
 use App\AccountModule\Repositories\JarRepo;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class JarService
 {
     /**
      * JarService constructor.
      *
-     * @param JarRepo $jarRepo
+     * @param  JarRepo  $jarRepo
      */
     public function __construct(protected JarRepo $jarRepo)
     {
@@ -23,8 +23,8 @@ class JarService
     /**
      * Get all Jars
      *
-     * @param array $with
-     * @param array $columns
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllJars(array $with = [], array $columns = ['*']): Collection
@@ -35,10 +35,10 @@ class JarService
     /**
      * Get all Jars paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param array $with
-     * @param array $columns
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  array  $with
+     * @param  array  $columns
      * @return LengthAwarePaginator
      */
     public function getAllJarsPaginated(?int $perPage = null, ?int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
@@ -49,9 +49,9 @@ class JarService
     /**
      * Get Jar by id
      *
-     * @param int $jarId
-     * @param array $with
-     * @param array $columns
+     * @param  int  $jarId
+     * @param  array  $with
+     * @param  array  $columns
      * @return Jar
      */
     public function getJar(int $jarId, array $with = [], array $columns = ['*']): Jar
@@ -62,7 +62,7 @@ class JarService
     /**
      * Create new Jar
      *
-     * @param CreateJarData $data
+     * @param  CreateJarData  $data
      * @return Jar
      */
     public function createJar(CreateJarData $data): Jar
@@ -73,8 +73,8 @@ class JarService
     /**
      * Update Jar by id
      *
-     * @param int $jarId
-     * @param UpdateJarData $data
+     * @param  int  $jarId
+     * @param  UpdateJarData  $data
      * @return bool
      */
     public function updateJar(int $jarId, UpdateJarData $data): bool
@@ -85,7 +85,7 @@ class JarService
     /**
      * Delete Jar by id
      *
-     * @param int $jarId
+     * @param  int  $jarId
      * @return bool
      */
     public function deleteJar(int $jarId): bool

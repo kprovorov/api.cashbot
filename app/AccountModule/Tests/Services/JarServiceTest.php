@@ -8,10 +8,8 @@ use App\AccountModule\Models\Account;
 use App\AccountModule\Models\Jar;
 use App\AccountModule\Services\JarService;
 use Arr;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 use Tests\TestCase;
 
 class JarServiceTest extends TestCase
@@ -33,7 +31,7 @@ class JarServiceTest extends TestCase
         $res = $service->getAllJars();
 
         $this->assertCount(3, $res);
-        $jars->each(fn(Jar $jar) => $this->assertContains(
+        $jars->each(fn (Jar $jar) => $this->assertContains(
             $jar->id,
             $res->pluck('id')
         ));
@@ -56,7 +54,7 @@ class JarServiceTest extends TestCase
         $res = $service->getAllJarsPaginated();
 
         $this->assertCount(3, $res);
-        $jars->each(fn(Jar $jar) => $this->assertContains(
+        $jars->each(fn (Jar $jar) => $this->assertContains(
             $jar->id,
             $res->pluck('id')
         ));
@@ -83,6 +81,7 @@ class JarServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_creates_jar(): void
@@ -113,6 +112,7 @@ class JarServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      */
     public function it_successfully_updates_jar(): void

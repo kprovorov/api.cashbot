@@ -26,7 +26,7 @@ class JarControllerTest extends TestCase
             'account_id' => $account->id,
         ]);
 
-        $res = $this->get("api/jars");
+        $res = $this->get('api/jars');
 
         $res->assertSuccessful();
         $res->assertJson($jars->sortByDesc('id')->values()->toArray());
@@ -72,7 +72,7 @@ class JarControllerTest extends TestCase
 
         $payload = $jarData->toArray();
 
-        $res = $this->post("api/jars", $payload);
+        $res = $this->post('api/jars', $payload);
 
         $res->assertCreated();
         $res->assertJson($payload);

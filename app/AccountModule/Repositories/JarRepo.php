@@ -2,8 +2,8 @@
 
 namespace App\AccountModule\Repositories;
 
-use App\Support\Interfaces\RepoInterface;
 use App\AccountModule\Models\Jar;
+use App\Support\Interfaces\RepoInterface;
 
 /**
  * @extends RepoInterface<Jar>

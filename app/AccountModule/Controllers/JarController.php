@@ -7,18 +7,17 @@ use App\AccountModule\DTO\UpdateJarData;
 use App\AccountModule\Models\Jar;
 use App\AccountModule\Requests\StoreJarRequest;
 use App\AccountModule\Requests\UpdateJarRequest;
-use App\Http\Controllers\Controller;
 use App\AccountModule\Services\JarService;
+use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 
 class JarController extends Controller
 {
     /**
      * JarController constructor.
      *
-     * @param JarService $jarService
+     * @param  JarService  $jarService
      */
     public function __construct(protected JarService $jarService)
     {
@@ -37,8 +36,9 @@ class JarController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreJarRequest $request
+     * @param  StoreJarRequest  $request
      * @return Jar
+     *
      * @throws UnknownProperties
      */
     public function store(StoreJarRequest $request): Jar
@@ -51,7 +51,7 @@ class JarController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Jar $jar
+     * @param  Jar  $jar
      * @return Jar
      */
     public function show(Jar $jar): Jar
@@ -62,9 +62,10 @@ class JarController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateJarRequest $request
-     * @param Jar $jar
+     * @param  UpdateJarRequest  $request
+     * @param  Jar  $jar
      * @return Jar
+     *
      * @throws UnknownProperties
      */
     public function update(UpdateJarRequest $request, Jar $jar): Jar
@@ -79,7 +80,7 @@ class JarController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Jar $jar
+     * @param  Jar  $jar
      * @return bool
      */
     public function destroy(Jar $jar): bool

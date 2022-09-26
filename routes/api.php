@@ -35,4 +35,3 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('dashboard', DashboardController::class);
     Route::get('rates', RateController::class);
 });
-

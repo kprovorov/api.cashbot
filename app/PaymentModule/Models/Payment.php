@@ -2,9 +2,9 @@
 
 namespace App\PaymentModule\Models;
 
+use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\Models\Group;
-use App\AccountModule\Models\Jar;
 use App\PaymentModule\Factories\PaymentFactory;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

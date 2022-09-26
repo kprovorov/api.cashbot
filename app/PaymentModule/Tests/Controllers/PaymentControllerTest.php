@@ -3,8 +3,8 @@
 namespace App\PaymentModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\Enums\Currency;
 use App\AccountModule\Models\Jar;
+use App\Enums\Currency;
 use App\Models\User;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;

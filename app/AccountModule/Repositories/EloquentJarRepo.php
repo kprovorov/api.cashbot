@@ -2,8 +2,8 @@
 
 namespace App\AccountModule\Repositories;
 
-use App\Support\Repositories\EloquentRepo;
 use App\AccountModule\Models\Jar;
+use App\Support\Repositories\EloquentRepo;
 
 /**
  * @extends EloquentRepo<Jar>
@@ -11,7 +11,7 @@ use App\AccountModule\Models\Jar;
 class EloquentJarRepo extends EloquentRepo implements JarRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {
