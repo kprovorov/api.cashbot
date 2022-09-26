@@ -3,6 +3,7 @@
 namespace App\TransferModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
+use App\Enums\Currency;
 use App\Models\Jar;
 use App\Models\User;
 use App\PaymentModule\Models\Payment;
@@ -114,10 +115,14 @@ class TransferControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'currency' => Currency::USD,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'currency' => Currency::USD,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -130,7 +135,9 @@ class TransferControllerTest extends TestCase
         ]);
 
         /** @var Payment $paymentData */
-        $paymentData = Payment::factory()->make();
+        $paymentData = Payment::factory()->make([
+            'currency' => Currency::USD,
+        ]);
 
         $payload = [
             ...$paymentData->only([
