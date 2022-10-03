@@ -118,11 +118,13 @@ class TransferControllerTest extends TestCase
         /** @var Account $accountFrom */
         $accountFrom = Account::factory()->create([
             'currency' => Currency::USD,
+            'user_id' => $user->id,
         ]);
 
         /** @var Account $accountTo */
         $accountTo = Account::factory()->create([
             'currency' => Currency::USD,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jarFrom */

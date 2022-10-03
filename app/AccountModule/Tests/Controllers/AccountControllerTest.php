@@ -20,7 +20,9 @@ class AccountControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Collection $accounts */
-        $accounts = Account::factory()->count(3)->create();
+        $accounts = Account::factory()->count(3)->create([
+            'user_id' => $user->id,
+        ]);
 
         $this->mock(CurrencyConverter::class)
              ->shouldReceive('getRate')
@@ -43,7 +45,9 @@ class AccountControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $res = $this->get("api/accounts/{$account->id}");
 
@@ -61,7 +65,9 @@ class AccountControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $accountData */
-        $accountData = Account::factory()->make();
+        $accountData = Account::factory()->make([
+            'user_id' => $user->id,
+        ]);
 
         $payload = $accountData->toArray();
 
@@ -81,7 +87,9 @@ class AccountControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountData */
         $accountData = Account::factory()->make();

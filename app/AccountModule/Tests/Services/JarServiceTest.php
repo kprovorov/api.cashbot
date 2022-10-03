@@ -7,6 +7,7 @@ use App\AccountModule\DTO\UpdateJarData;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Models\Jar;
 use App\AccountModule\Services\JarService;
+use App\UserModule\Models\User;
 use Arr;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -19,8 +20,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_gets_all_jars(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Collection $jars */
         $jars = Jar::factory()->count(3)->create([
@@ -42,8 +47,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_gets_all_jars_paginated(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Collection $jars */
         $jars = Jar::factory()->count(3)->create([
@@ -65,8 +74,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_gets_jar(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -86,8 +99,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_creates_jar(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarData */
         $jarData = Jar::factory()->make([
@@ -117,8 +134,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_updates_jar(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -144,8 +165,12 @@ class JarServiceTest extends TestCase
      */
     public function it_successfully_deletes_jar(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([

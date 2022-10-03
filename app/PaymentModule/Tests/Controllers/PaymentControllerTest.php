@@ -23,7 +23,9 @@ class PaymentControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -50,7 +52,9 @@ class PaymentControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -79,6 +83,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -123,6 +128,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -168,7 +174,9 @@ class PaymentControllerTest extends TestCase
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([

@@ -59,6 +59,7 @@ class Account extends Model
         'balance',
         'external_id',
         'provider',
+        'user_id',
     ];
 
     /**

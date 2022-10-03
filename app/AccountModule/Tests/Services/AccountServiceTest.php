@@ -6,6 +6,7 @@ use App\AccountModule\DTO\CreateAccountData;
 use App\AccountModule\DTO\UpdateAccountData;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Services\AccountService;
+use App\UserModule\Models\User;
 use Arr;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -18,8 +19,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_gets_all_accounts(): void
     {
+        $user = User::factory()->create();
+
         /** @var Collection $accounts */
-        $accounts = Account::factory()->count(3)->create();
+        $accounts = Account::factory()->count(3)->create([
+            'user_id' => $user->id,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->getAllAccounts();
@@ -36,8 +41,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_gets_all_accounts_paginated(): void
     {
+        $user = User::factory()->create();
+
         /** @var Collection $accounts */
-        $accounts = Account::factory()->count(3)->create();
+        $accounts = Account::factory()->count(3)->create([
+            'user_id' => $user->id,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->getAllAccountsPaginated();
@@ -54,8 +63,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_gets_account(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->getAccount($account->id);
@@ -70,8 +83,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_creates_account(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountData */
-        $accountData = Account::factory()->make();
+        $accountData = Account::factory()->make([
+            'user_id' => $user->id,
+        ]);
 
         $data = new CreateAccountData($accountData->toArray());
 
@@ -93,8 +110,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_updates_account(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountData */
         $accountData = Account::factory()->make();
@@ -113,8 +134,12 @@ class AccountServiceTest extends TestCase
      */
     public function it_successfully_deletes_account(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->deleteAccount($account->id);

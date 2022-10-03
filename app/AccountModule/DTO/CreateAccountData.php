@@ -6,6 +6,8 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class CreateAccountData extends DataTransferObject
 {
+    public int $user_id;
+
     public string $name;
 
     public string $currency;

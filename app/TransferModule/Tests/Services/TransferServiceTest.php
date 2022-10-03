@@ -9,6 +9,7 @@ use App\TransferModule\DTO\CreateTransferData;
 use App\TransferModule\DTO\UpdateTransferData;
 use App\TransferModule\Models\Transfer;
 use App\TransferModule\Services\TransferService;
+use App\UserModule\Models\User;
 use Arr;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
@@ -21,11 +22,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_gets_all_transfers(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -68,11 +75,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_gets_all_transfers_paginated(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -115,11 +128,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_gets_transfer(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -160,11 +179,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_creates_transfer(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -215,11 +240,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_updates_transfer(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([
@@ -267,11 +298,17 @@ class TransferServiceTest extends TestCase
      */
     public function it_successfully_deletes_transfer(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $accountFrom */
-        $accountFrom = Account::factory()->create();
+        $accountFrom = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Account $accountTo */
-        $accountTo = Account::factory()->create();
+        $accountTo = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jarFrom */
         $jarFrom = Jar::factory()->create([

@@ -10,6 +10,7 @@ use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Services\PaymentService;
 use App\Services\CurrencyConverter;
+use App\UserModule\Models\User;
 use Arr;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -24,8 +25,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_gets_all_payments(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -52,8 +57,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_gets_all_payments_paginated(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -80,8 +89,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_gets_payment(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -106,9 +119,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_creates_payment(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -158,9 +174,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_updates_payment(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -205,8 +224,12 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_deletes_payment(): void
     {
+        $user = User::factory()->create();
+
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         /** @var Jar $jar */
         $jar = Jar::factory()->create([
@@ -234,8 +257,11 @@ class PaymentServiceTest extends TestCase
      */
     public function it_successfully_updates_payment_currency_amount(): void
     {
+        $user = User::factory()->create();
+
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
         $jar = Jar::factory()->create([
             'account_id' => $account->id,
@@ -273,9 +299,12 @@ class PaymentServiceTest extends TestCase
         $amount = 100;
         $daysLeft = 4;
 
+        $user = User::factory()->create();
+
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
