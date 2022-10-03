@@ -18,6 +18,7 @@ class TransferControllerTest extends TestCase
      */
     public function it_successfully_lists_transfers(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -64,6 +65,7 @@ class TransferControllerTest extends TestCase
      */
     public function it_successfully_shows_transfer(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -159,6 +161,7 @@ class TransferControllerTest extends TestCase
      */
     public function it_successfully_updates_transfer(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -214,6 +217,7 @@ class TransferControllerTest extends TestCase
      */
     public function it_successfully_deletes_transfer(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 

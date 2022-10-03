@@ -24,8 +24,8 @@ class StoreTransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jar_from_id' => 'required|integer',
-            'jar_to_id' => 'required|integer',
+            'jar_from_id' => 'required|integer|exists:jars,id',
+            'jar_to_id'   => 'required|integer|exists:jars,id',
         ];
     }
 }

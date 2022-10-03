@@ -2,7 +2,9 @@
 
 namespace App\AccountModule\Requests;
 
+use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -24,9 +26,9 @@ class UpdateAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'currency' => 'required|string|max:255',
-            'balance' => 'required|integer',
+            'name'     => 'required|string|max:255',
+            'currency' => ['required', new Enum(Currency::class)],
+            'balance'  => 'required|integer',
         ];
     }
 }

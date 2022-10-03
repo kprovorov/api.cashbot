@@ -2,7 +2,9 @@
 
 namespace App\PaymentModule\Requests;
 
+use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdatePaymentRequest extends FormRequest
 {
@@ -20,10 +22,10 @@ class UpdatePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jar_id'      => 'required|integer',
+            'jar_id'      => 'required|integer|exists:jars,id',
             'description' => 'required|string|max:255',
             'amount'      => 'required|integer',
-            'currency'    => 'required|string|max:255',
+            'currency'    => ['required', new Enum(Currency::class)],
             'date'        => 'required|date',
             'hidden'      => 'required|boolean',
             'ends_on'     => 'nullable|date',
