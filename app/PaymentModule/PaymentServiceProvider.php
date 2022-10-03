@@ -2,7 +2,9 @@
 
 namespace App\PaymentModule;
 
+use App\PaymentModule\Repositories\EloquentGroupRepo;
 use App\PaymentModule\Repositories\EloquentPaymentRepo;
+use App\PaymentModule\Repositories\GroupRepo;
 use App\PaymentModule\Repositories\PaymentRepo;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,6 +18,11 @@ class PaymentServiceProvider extends ServiceProvider
     public function register()
     {
         // Repositories
+        $this->app->bind(
+            GroupRepo::class,
+            EloquentGroupRepo::class
+        );
+
         $this->app->bind(
             PaymentRepo::class,
             EloquentPaymentRepo::class
