@@ -2,8 +2,8 @@
 
 namespace App\PaymentModule\Repositories;
 
-use App\Support\Interfaces\RepoInterface;
 use App\PaymentModule\Models\Group;
+use App\Support\Interfaces\RepoInterface;
 
 /**
  * @extends RepoInterface<Group>

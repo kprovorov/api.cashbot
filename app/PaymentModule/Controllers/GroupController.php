@@ -2,23 +2,22 @@
 
 namespace App\PaymentModule\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreateGroupData;
 use App\PaymentModule\DTO\UpdateGroupData;
 use App\PaymentModule\Models\Group;
 use App\PaymentModule\Requests\StoreGroupRequest;
 use App\PaymentModule\Requests\UpdateGroupRequest;
-use App\Http\Controllers\Controller;
 use App\PaymentModule\Services\GroupService;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Spatie\DataTransferObject\Exceptions\ValidationException;
 
 class GroupController extends Controller
 {
     /**
      * GroupController constructor.
      *
-     * @param GroupService $groupService
+     * @param  GroupService  $groupService
      */
     public function __construct(protected GroupService $groupService)
     {
@@ -37,8 +36,9 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreGroupRequest $request
+     * @param  StoreGroupRequest  $request
      * @return Group
+     *
      * @throws UnknownProperties
      */
     public function store(StoreGroupRequest $request): Group
@@ -51,7 +51,7 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Group $group
+     * @param  Group  $group
      * @return Group
      */
     public function show(Group $group): Group
@@ -66,9 +66,10 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateGroupRequest $request
-     * @param Group $group
+     * @param  UpdateGroupRequest  $request
+     * @param  Group  $group
      * @return Group
+     *
      * @throws UnknownProperties
      */
     public function update(UpdateGroupRequest $request, Group $group): Group
@@ -83,7 +84,7 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Group $group
+     * @param  Group  $group
      * @return bool
      */
     public function destroy(Group $group): bool

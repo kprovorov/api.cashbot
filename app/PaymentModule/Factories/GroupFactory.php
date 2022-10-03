@@ -2,9 +2,8 @@
 
 namespace App\PaymentModule\Factories;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\PaymentModule\Models\Group;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GroupFactory extends Factory
 {

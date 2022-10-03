@@ -7,7 +7,6 @@ use App\PaymentModule\DTO\UpdateGroupData;
 use App\PaymentModule\Models\Group;
 use App\PaymentModule\Services\GroupService;
 use Arr;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 use Spatie\DataTransferObject\Exceptions\ValidationException;
@@ -67,6 +66,7 @@ class GroupServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      * @throws ValidationException
      */
@@ -90,6 +90,7 @@ class GroupServiceTest extends TestCase
 
     /**
      * @test
+     *
      * @throws UnknownProperties
      * @throws ValidationException
      */

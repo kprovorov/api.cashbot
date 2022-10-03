@@ -3,8 +3,8 @@
 namespace App\PaymentModule\Models;
 
 use App\PaymentModule\Factories\GroupFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\PaymentModule\Models\Payment[] $payments
+ * @property-read int|null $payments_count
+ *
  * @method static \App\PaymentModule\Factories\GroupFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Group newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Group newQuery()

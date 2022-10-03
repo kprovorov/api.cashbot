@@ -2,8 +2,8 @@
 
 namespace App\PaymentModule\Repositories;
 
-use App\Support\Repositories\EloquentRepo;
 use App\PaymentModule\Models\Group;
+use App\Support\Repositories\EloquentRepo;
 
 /**
  * @extends EloquentRepo<Group>
@@ -11,7 +11,7 @@ use App\PaymentModule\Models\Group;
 class EloquentGroupRepo extends EloquentRepo implements GroupRepo
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function model(): string
     {

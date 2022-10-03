@@ -20,7 +20,7 @@ class GroupControllerTest extends TestCase
         /** @var Collection $groups */
         $groups = Group::factory()->count(3)->create();
 
-        $res = $this->get("api/groups");
+        $res = $this->get('api/groups');
 
         $res->assertSuccessful();
         $res->assertJson($groups->sortByDesc('id')->values()->toArray());
@@ -56,7 +56,7 @@ class GroupControllerTest extends TestCase
 
         $payload = $groupData->toArray();
 
-        $res = $this->post("api/groups", $payload);
+        $res = $this->post('api/groups', $payload);
 
         $res->assertCreated();
         $res->assertJson($payload);
