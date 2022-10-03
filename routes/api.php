@@ -27,12 +27,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::apiResource('accounts', AccountController::class);
-    Route::apiResource('jars', JarController::class);
-    Route::apiResource('payments', PaymentController::class);
-    Route::apiResource('transfers', TransferController::class);
-    Route::apiResource('groups', GroupController::class);
-    Route::apiResource('users', UserController::class);
+//    Route::apiResource('users', UserController::class);
+//    Route::apiResource('jars', JarController::class);
+
+    Route::apiResource('accounts', AccountController::class)->only([
+        'index',
+        'update',
+    ]);
+    Route::apiResource('payments', PaymentController::class)->except([
+        'index',
+    ]);
+    Route::apiResource('transfers', TransferController::class)->only([
+        'store',
+    ]);
+    Route::apiResource('groups', GroupController::class)->only([
+        'show',
+    ]);
 
     Route::get('dashboard', DashboardController::class);
     Route::get('rates', RateController::class);

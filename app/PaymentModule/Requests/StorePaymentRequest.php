@@ -20,14 +20,14 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jar_id' => 'required|integer',
+            'jar_id'      => 'required|integer',
             'description' => 'required|string|max:255',
-            'amount' => 'required|integer',
-            'currency' => 'required|string|max:255',
-            'date' => 'required|date',
-            'hidden' => 'required|boolean',
-            'ends_on' => 'nullable|date',
-            'repeat' => 'required|string',
+            'amount'      => 'required|integer',
+            'currency'    => 'required|string|max:255',
+            'date'        => 'required|date',
+            'hidden'      => 'required|boolean',
+            'ends_on'     => 'nullable|date',
+            'repeat'      => 'required|string|in:none,weekly,monthly,quarterly',
         ];
     }
 }
