@@ -28,7 +28,7 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Collection
      *
      * @throws GuzzleException

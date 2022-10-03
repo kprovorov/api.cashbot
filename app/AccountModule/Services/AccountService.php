@@ -41,16 +41,16 @@ class AccountService
     /**
      * Get all Accounts
      *
-     * @param User|int $user
-     * @param array $with
-     * @param array $columns
+     * @param  User|int  $user
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllUserAccounts(User|int $user, array $with = [], array $columns = ['*']): Collection
     {
         $userId = $user instanceof User ? $user->id : $user;
 
-        return $this->accountRepo->getWhere('user_id', '=', $userId,$with, $columns);
+        return $this->accountRepo->getWhere('user_id', '=', $userId, $with, $columns);
     }
 
     /**

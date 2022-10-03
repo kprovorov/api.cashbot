@@ -29,17 +29,17 @@ class UpdatePaymentRequest extends FormRequest
         })->pluck('id');
 
         return [
-            'jar_id'      => [
+            'jar_id' => [
                 'required',
                 'integer',
                 Rule::in($userJars),
             ],
             'description' => 'required|string|max:255',
-            'amount'      => 'required|integer',
-            'currency'    => ['required', new Enum(Currency::class)],
-            'date'        => 'required|date',
-            'hidden'      => 'required|boolean',
-            'ends_on'     => 'nullable|date',
+            'amount' => 'required|integer',
+            'currency' => ['required', new Enum(Currency::class)],
+            'date' => 'required|date',
+            'hidden' => 'required|boolean',
+            'ends_on' => 'nullable|date',
         ];
     }
 }

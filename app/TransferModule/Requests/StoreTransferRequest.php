@@ -36,7 +36,7 @@ class StoreTransferRequest extends FormRequest
                 'integer',
                 Rule::in($userJars),
             ],
-            'jar_to_id'   => [
+            'jar_to_id' => [
                 'required',
                 'integer',
                 Rule::in($userJars),
