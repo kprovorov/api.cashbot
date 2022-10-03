@@ -30,7 +30,7 @@ class GroupPolicy
      */
     public function view(User $user, Group $group): bool
     {
-        return true;
+        return $group->payments()->pluck('user_id')->contains($user->id);
     }
 
     /**
@@ -53,7 +53,7 @@ class GroupPolicy
      */
     public function update(User $user, Group $group): bool
     {
-        return true;
+        return $group->payments()->pluck('user_id')->contains($user->id);
     }
 
     /**
@@ -65,7 +65,7 @@ class GroupPolicy
      */
     public function delete(User $user, Group $group): bool
     {
-        return true;
+        return $group->payments()->pluck('user_id')->contains($user->id);
     }
 
     /**
@@ -77,7 +77,7 @@ class GroupPolicy
      */
     public function restore(User $user, Group $group): bool
     {
-        return true;
+        return $group->payments()->pluck('user_id')->contains($user->id);
     }
 
     /**
@@ -89,6 +89,6 @@ class GroupPolicy
      */
     public function forceDelete(User $user, Group $group): bool
     {
-        return true;
+        return $group->payments()->pluck('user_id')->contains($user->id);
     }
 }

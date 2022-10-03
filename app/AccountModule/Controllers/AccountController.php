@@ -11,6 +11,7 @@ use App\AccountModule\Services\AccountService;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountController extends Controller
@@ -27,17 +28,18 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Collection
      *
-     * @throws UnknownProperties
      * @throws GuzzleException
+     * @throws UnknownProperties
      */
-    public function index(): Collection
+    public function index(Request $request): Collection
     {
         // Refresh balances
         $this->accountService->updateAccountBalances();
 
-        return $this->accountService->getAllAccounts([
+        return $this->accountService->getAllUserAccounts($request->user()->id, [
             'jars',
         ])->each->append('uah_balance');
     }

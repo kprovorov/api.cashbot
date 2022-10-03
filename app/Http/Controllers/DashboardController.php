@@ -7,6 +7,7 @@ use App\AccountModule\Services\AccountService;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -17,12 +18,12 @@ class DashboardController extends Controller
     /**
      * @return mixed
      */
-    public function __invoke(): Collection
+    public function __invoke(Request $request): Collection
     {
         // Refresh balances
         $this->accountService->updateAccountBalances();
 
-        return Account::with([
+        return Account::where('user_id', $request->user()->id)->with([
             'jars',
             'payments' => function (HasManyThrough $query) {
                 $selectBalance = DB::raw(

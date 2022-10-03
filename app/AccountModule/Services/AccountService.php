@@ -8,6 +8,7 @@ use App\AccountModule\Models\Account;
 use App\AccountModule\Repositories\AccountRepo;
 use App\Monobank\DTO\AccountData;
 use App\Monobank\Services\MonobankService;
+use App\UserModule\Models\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,6 +36,21 @@ class AccountService
     public function getAllAccounts(array $with = [], array $columns = ['*']): Collection
     {
         return $this->accountRepo->getAll($with, $columns);
+    }
+
+    /**
+     * Get all Accounts
+     *
+     * @param User|int $user
+     * @param array $with
+     * @param array $columns
+     * @return Collection
+     */
+    public function getAllUserAccounts(User|int $user, array $with = [], array $columns = ['*']): Collection
+    {
+        $userId = $user instanceof User ? $user->id : $user;
+
+        return $this->accountRepo->getWhere('user_id', '=', $userId,$with, $columns);
     }
 
     /**

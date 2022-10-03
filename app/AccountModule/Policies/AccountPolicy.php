@@ -30,7 +30,7 @@ class AccountPolicy
      */
     public function view(User $user, Account $account): bool
     {
-        return true;
+        return $account->user_id === $user->id;
     }
 
     /**
@@ -53,7 +53,7 @@ class AccountPolicy
      */
     public function update(User $user, Account $account): bool
     {
-        return true;
+        return $account->user_id === $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class AccountPolicy
      */
     public function delete(User $user, Account $account): bool
     {
-        return true;
+        return $account->user_id === $user->id;
     }
 
     /**
@@ -77,7 +77,7 @@ class AccountPolicy
      */
     public function restore(User $user, Account $account): bool
     {
-        return true;
+        return $account->user_id === $user->id;
     }
 
     /**
@@ -89,6 +89,6 @@ class AccountPolicy
      */
     public function forceDelete(User $user, Account $account): bool
     {
-        return true;
+        return $account->user_id === $user->id;
     }
 }
