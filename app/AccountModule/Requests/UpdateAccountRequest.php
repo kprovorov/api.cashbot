@@ -26,9 +26,9 @@ class UpdateAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'currency' => ['required', new Enum(Currency::class)],
-            'balance'  => 'required|integer',
+            'balance' => 'required|integer',
         ];
     }
 }

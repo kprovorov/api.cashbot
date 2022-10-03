@@ -22,14 +22,14 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jar_id'      => 'required|integer|exists:jars,id',
+            'jar_id' => 'required|integer|exists:jars,id',
             'description' => 'required|string|max:255',
-            'amount'      => 'required|integer',
-            'currency'    => ['required', new Enum(Currency::class)],
-            'date'        => 'required|date',
-            'hidden'      => 'required|boolean',
-            'ends_on'     => 'nullable|date',
-            'repeat'      => 'required|string|in:none,weekly,monthly,quarterly',
+            'amount' => 'required|integer',
+            'currency' => ['required', new Enum(Currency::class)],
+            'date' => 'required|date',
+            'hidden' => 'required|boolean',
+            'ends_on' => 'nullable|date',
+            'repeat' => 'required|string|in:none,weekly,monthly,quarterly',
         ];
     }
 }
