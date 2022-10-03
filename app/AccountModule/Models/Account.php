@@ -20,6 +20,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $user_id
  * @property string $name
  * @property Currency $currency
  * @property int $balance
@@ -42,6 +43,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereProvider($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereUserId($value)
  * @mixin \Eloquent
  */
 class Account extends Model
