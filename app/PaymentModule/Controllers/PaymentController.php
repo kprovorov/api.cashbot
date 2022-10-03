@@ -4,7 +4,7 @@ namespace App\PaymentModule\Controllers;
 
 use App\Enums\Currency;
 use App\Http\Controllers\Controller;
-use App\Models\Group;
+use App\PaymentModule\Models\Group;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;

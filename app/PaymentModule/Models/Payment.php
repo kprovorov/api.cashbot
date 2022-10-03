@@ -4,7 +4,7 @@ namespace App\PaymentModule\Models;
 
 use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
-use App\Models\Group;
+use App\PaymentModule\Models\Group;
 use App\PaymentModule\Factories\PaymentFactory;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Group|null $group
  * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
- *
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()

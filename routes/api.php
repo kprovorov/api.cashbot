@@ -3,8 +3,8 @@
 use App\AccountModule\Controllers\AccountController;
 use App\AccountModule\Controllers\JarController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RateController;
+use App\PaymentModule\Controllers\GroupController;
 use App\PaymentModule\Controllers\PaymentController;
 use App\TransferModule\Controllers\TransferController;
 use App\UserModule\Controllers\UserController;

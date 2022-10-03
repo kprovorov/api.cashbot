@@ -1,23 +1,20 @@
 <?php
 
-namespace App\Models;
+namespace App\PaymentModule\Models;
 
-use App\PaymentModule\Models\Payment;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\PaymentModule\Factories\GroupFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * App\Models\Group
+ * App\PaymentModule\Models\Group
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
- * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
- * @property-read int|null $payments_count
- *
- * @method static \Database\Factories\GroupFactory factory(...$parameters)
+ * @method static \App\PaymentModule\Factories\GroupFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Group newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Group newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Group query()
@@ -31,10 +28,39 @@ class Group extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        //
+    ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return GroupFactory
+     */
+    protected static function newFactory(): GroupFactory
+    {
+        return GroupFactory::new();
+    }
+
+    /**
+     * Payments
+     *
+     * @return HasMany
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
