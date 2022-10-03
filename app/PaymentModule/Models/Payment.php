@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $hidden
  * @property \Illuminate\Support\Carbon|null $ends_on
  * @property-read Transfer|null $from_transfer
- * @property-read Group|null $group
+ * @property-read \App\PaymentModule\Models\Group|null $group
  * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
  *
