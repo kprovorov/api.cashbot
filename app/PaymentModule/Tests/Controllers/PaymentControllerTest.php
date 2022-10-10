@@ -83,7 +83,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
-            'user_id' => $user->id,
+            'user_id'  => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -93,7 +93,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -103,9 +103,9 @@ class PaymentControllerTest extends TestCase
         ];
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
+             ->shouldReceive('convert')
              ->once()
-             ->andReturn(2);
+             ->andReturn($paymentData->amount * 2);
 
         $res = $this->post('api/payments', $payload);
 
@@ -128,7 +128,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
-            'user_id' => $user->id,
+            'user_id'  => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -138,22 +138,22 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::USD,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'jar_id'   => $jar->id,
             'currency' => Currency::USD,
         ]);
 
         $payload = $paymentData->toArray();
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
-             ->once()
-             ->andReturn(2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $res = $this->put("api/payments/{$payment->id}", $payload);
 
