@@ -83,7 +83,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
-            'user_id'  => $user->id,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -93,7 +93,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -128,7 +128,7 @@ class PaymentControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create([
             'currency' => Currency::UAH,
-            'user_id'  => $user->id,
+            'user_id' => $user->id,
         ]);
 
         /** @var Jar $jar */
@@ -138,13 +138,13 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::USD,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id'   => $jar->id,
+            'jar_id' => $jar->id,
             'currency' => Currency::USD,
         ]);
 

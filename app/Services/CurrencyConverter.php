@@ -49,7 +49,7 @@ class CurrencyConverter
             ->getRates()
 
             // Filter out unsupported currencies
-            ->filter(fn(RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
+            ->filter(fn (RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
                 && in_array($rate->currencyCodeB, Currency::getNumericCodes()))
 
             // Map to rates
@@ -65,10 +65,11 @@ class CurrencyConverter
     /**
      * Convert amount from one currency to another
      *
-     * @param int $amount
-     * @param Currency $currencyFrom
-     * @param Currency $currencyTo
+     * @param  int  $amount
+     * @param  Currency  $currencyFrom
+     * @param  Currency  $currencyTo
      * @return int
+     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -78,7 +79,6 @@ class CurrencyConverter
             ? $this->getRate($currencyFrom, $currencyTo)
             : $this->getRate($currencyTo, $currencyFrom);
 
-        return (int)round($amount < 0 ? $amount / $rate : $amount * $rate, 6);
+        return (int) round($amount < 0 ? $amount / $rate : $amount * $rate, 6);
     }
-
 }

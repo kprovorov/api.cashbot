@@ -68,7 +68,7 @@ class PaymentService
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
                 $jar->account->currency,
@@ -92,7 +92,7 @@ class PaymentService
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
                 $jar->account->currency,
@@ -145,8 +145,8 @@ class PaymentService
                 new UpdatePaymentData([
                     ...$payment->toArray(),
                     'currency' => $payment->currency,
-                    'date'     => $payment->date,
-                    'ends_on'  => $payment->ends_on,
+                    'date' => $payment->date,
+                    'ends_on' => $payment->ends_on,
                 ])
             );
         }
@@ -179,9 +179,9 @@ class PaymentService
             new UpdatePaymentData([
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
-                'ends_on'  => $payment->ends_on,
-                'amount'   => $amount,
-                'date'     => today(),
+                'ends_on' => $payment->ends_on,
+                'amount' => $amount,
+                'date' => today(),
             ])
         );
     }
