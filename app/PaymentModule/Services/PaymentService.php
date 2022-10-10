@@ -66,14 +66,14 @@ class PaymentService
     {
         $jar = Jar::with(['account'])->findOrFail($data->jar_id);
 
-        $rate = $data->currency === $jar->account->currency
-            ? 1
-            : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
-
         return $this->paymentRepo->create([
             ...$data->toArray(),
             'amount' => $data->amount,
-            'amount_converted' => round($data->amount * $rate, 4),
+            'amount_converted' => $this->currencyConverter->convert(
+                $data->amount,
+                $jar->account->currency,
+                $data->currency,
+            ),
         ]);
     }
 
@@ -90,14 +90,14 @@ class PaymentService
 
         $jar = Jar::with(['account'])->findOrFail($data->jar_id);
 
-        $rate = $data->currency === $jar->account->currency
-            ? 1
-            : $this->currencyConverter->getRate($data->currency, $jar->account->currency);
-
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
             'amount' => $data->amount,
-            'amount_converted' => round($data->amount * $rate, 4),
+            'amount_converted' => $this->currencyConverter->convert(
+                $data->amount,
+                $jar->account->currency,
+                $data->currency,
+            ),
         ]);
     }
 

@@ -144,8 +144,10 @@ class PaymentServiceTest extends TestCase
             'currency' => $paymentData->currency,
         ]);
 
-        $mock = $this->mock(CurrencyConverter::class);
-        $mock->shouldReceive('getRate')->once()->andReturn(2);
+        $this->mock(CurrencyConverter::class)
+             ->shouldReceive('convert')
+             ->once()
+             ->andReturn($paymentData->amount * 2);
 
         $service = $this->app->make(PaymentService::class);
         $res = $service->createPayment($data);
@@ -205,8 +207,10 @@ class PaymentServiceTest extends TestCase
             'currency' => $paymentData->currency,
         ]);
 
-        $mock = $this->mock(CurrencyConverter::class);
-        $mock->shouldReceive('getRate')->once()->andReturn(2);
+        $this->mock(CurrencyConverter::class)
+             ->shouldReceive('convert')
+             ->once()
+             ->andReturn($paymentData->amount * 2);
 
         $service = $this->app->make(PaymentService::class);
         $res = $service->updatePayment($payment->id, $data);
@@ -273,10 +277,10 @@ class PaymentServiceTest extends TestCase
             'amount_converted' => 100,
         ]);
 
-        $mock = $this->mock(CurrencyConverter::class);
-        $mock->shouldReceive('getRate')
+        $this->mock(CurrencyConverter::class)
+             ->shouldReceive('convert')
              ->once()
-             ->andReturn(2);
+             ->andReturn($payment->amount * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
 
@@ -321,10 +325,10 @@ class PaymentServiceTest extends TestCase
             'ends_on' => today()->addDays($daysLeft),
         ]);
 
-        $mock = $this->mock(CurrencyConverter::class);
-        $mock->shouldReceive('getRate')
+        $this->mock(CurrencyConverter::class)
+             ->shouldReceive('convert')
              ->once()
-             ->andReturn(2);
+             ->andReturn(80 * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
         $paymentService->updateReducingPayment($payment);

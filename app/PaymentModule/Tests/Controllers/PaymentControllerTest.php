@@ -103,9 +103,9 @@ class PaymentControllerTest extends TestCase
         ];
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
+             ->shouldReceive('convert')
              ->once()
-             ->andReturn(2);
+             ->andReturn($paymentData->amount * 2);
 
         $res = $this->post('api/payments', $payload);
 
@@ -151,9 +151,9 @@ class PaymentControllerTest extends TestCase
         $payload = $paymentData->toArray();
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
-             ->once()
-             ->andReturn(2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $res = $this->put("api/payments/{$payment->id}", $payload);
 
