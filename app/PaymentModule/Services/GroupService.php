@@ -5,7 +5,9 @@ namespace App\PaymentModule\Services;
 use App\PaymentModule\DTO\CreateGroupData;
 use App\PaymentModule\DTO\UpdateGroupData;
 use App\PaymentModule\Models\Group;
+use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Repositories\GroupRepo;
+use App\PaymentModule\Repositories\PaymentRepo;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,17 +16,18 @@ class GroupService
     /**
      * GroupService constructor.
      *
-     * @param  GroupRepo  $groupRepo
+     * @param GroupRepo $groupRepo
+     * @param PaymentRepo $paymentRepo
      */
-    public function __construct(protected GroupRepo $groupRepo)
+    public function __construct(protected GroupRepo $groupRepo, protected PaymentRepo $paymentRepo)
     {
     }
 
     /**
      * Get all Groups
      *
-     * @param  array  $with
-     * @param  array  $columns
+     * @param array $with
+     * @param array $columns
      * @return Collection
      */
     public function getAllGroups(array $with = [], array $columns = ['*']): Collection
@@ -35,23 +38,27 @@ class GroupService
     /**
      * Get all Groups paginated
      *
-     * @param  int|null  $perPage
-     * @param  int|null  $page
-     * @param  array  $with
-     * @param  array  $columns
+     * @param int|null $perPage
+     * @param int|null $page
+     * @param array $with
+     * @param array $columns
      * @return LengthAwarePaginator
      */
-    public function getAllGroupsPaginated(?int $perPage = null, ?int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
-    {
+    public function getAllGroupsPaginated(
+        ?int $perPage = null,
+        ?int $page = null,
+        array $with = [],
+        array $columns = ['*']
+    ): LengthAwarePaginator {
         return $this->groupRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
     /**
      * Get Group by id
      *
-     * @param  int  $groupId
-     * @param  array  $with
-     * @param  array  $columns
+     * @param int $groupId
+     * @param array $with
+     * @param array $columns
      * @return Group
      */
     public function getGroup(int $groupId, array $with = [], array $columns = ['*']): Group
@@ -62,7 +69,7 @@ class GroupService
     /**
      * Create new Group
      *
-     * @param  CreateGroupData  $data
+     * @param CreateGroupData $data
      * @return Group
      */
     public function createGroup(CreateGroupData $data): Group
@@ -73,8 +80,8 @@ class GroupService
     /**
      * Update Group by id
      *
-     * @param  int  $groupId
-     * @param  UpdateGroupData  $data
+     * @param int $groupId
+     * @param UpdateGroupData $data
      * @return bool
      */
     public function updateGroup(int $groupId, UpdateGroupData $data): bool
@@ -85,11 +92,27 @@ class GroupService
     /**
      * Delete Group by id
      *
-     * @param  int  $groupId
+     * @param int $groupId
      * @return bool
      */
     public function deleteGroup(int $groupId): bool
     {
+        $payments = $this->paymentRepo->getWhere('group_id', '=', $groupId, [
+            'from_transfer',
+            'to_transfer',
+        ]);
+
+        $payments->each(function (Payment $payment) {
+            $transfer = $payment->from_transfer ?? $payment->to_transfer;
+            if ($transfer) {
+                $transfer->payment_from->delete();
+                $transfer->payment_to->delete();
+                $transfer->delete();
+            } else {
+                $payment->delete();
+            }
+        });
+
         return $this->groupRepo->delete($groupId);
     }
 }
