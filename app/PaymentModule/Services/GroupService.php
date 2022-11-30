@@ -97,10 +97,7 @@ class GroupService
      */
     public function deleteGroup(int $groupId): bool
     {
-        $payments = $this->paymentRepo->getWhere('group_id', '=', $groupId, [
-            'from_transfer',
-            'to_transfer',
-        ]);
+        $payments = $this->paymentRepo->getWhere('group_id', '=', $groupId);
 
         $payments->each(function (Payment $payment) {
             $transfer = $payment->from_transfer ?? $payment->to_transfer;
