@@ -104,13 +104,8 @@ class GroupService
 
         $payments->each(function (Payment $payment) {
             $transfer = $payment->from_transfer ?? $payment->to_transfer;
-            if ($transfer) {
-                $transfer->payment_from->delete();
-                $transfer->payment_to->delete();
-                $transfer->delete();
-            } else {
-                $payment->delete();
-            }
+            $transfer?->delete();
+            $payment->delete();
         });
 
         return $this->groupRepo->delete($groupId);
