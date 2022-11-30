@@ -16,8 +16,8 @@ class GroupService
     /**
      * GroupService constructor.
      *
-     * @param GroupRepo $groupRepo
-     * @param PaymentRepo $paymentRepo
+     * @param  GroupRepo  $groupRepo
+     * @param  PaymentRepo  $paymentRepo
      */
     public function __construct(protected GroupRepo $groupRepo, protected PaymentRepo $paymentRepo)
     {
@@ -26,8 +26,8 @@ class GroupService
     /**
      * Get all Groups
      *
-     * @param array $with
-     * @param array $columns
+     * @param  array  $with
+     * @param  array  $columns
      * @return Collection
      */
     public function getAllGroups(array $with = [], array $columns = ['*']): Collection
@@ -38,10 +38,10 @@ class GroupService
     /**
      * Get all Groups paginated
      *
-     * @param int|null $perPage
-     * @param int|null $page
-     * @param array $with
-     * @param array $columns
+     * @param  int|null  $perPage
+     * @param  int|null  $page
+     * @param  array  $with
+     * @param  array  $columns
      * @return LengthAwarePaginator
      */
     public function getAllGroupsPaginated(
@@ -56,9 +56,9 @@ class GroupService
     /**
      * Get Group by id
      *
-     * @param int $groupId
-     * @param array $with
-     * @param array $columns
+     * @param  int  $groupId
+     * @param  array  $with
+     * @param  array  $columns
      * @return Group
      */
     public function getGroup(int $groupId, array $with = [], array $columns = ['*']): Group
@@ -69,7 +69,7 @@ class GroupService
     /**
      * Create new Group
      *
-     * @param CreateGroupData $data
+     * @param  CreateGroupData  $data
      * @return Group
      */
     public function createGroup(CreateGroupData $data): Group
@@ -80,8 +80,8 @@ class GroupService
     /**
      * Update Group by id
      *
-     * @param int $groupId
-     * @param UpdateGroupData $data
+     * @param  int  $groupId
+     * @param  UpdateGroupData  $data
      * @return bool
      */
     public function updateGroup(int $groupId, UpdateGroupData $data): bool
@@ -92,7 +92,7 @@ class GroupService
     /**
      * Delete Group by id
      *
-     * @param int $groupId
+     * @param  int  $groupId
      * @return bool
      */
     public function deleteGroup(int $groupId): bool
