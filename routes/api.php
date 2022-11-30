@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     ]);
     Route::apiResource('groups', GroupController::class)->only([
         'show',
+        'destroy'
     ]);
 
     Route::get('dashboard', DashboardController::class);
