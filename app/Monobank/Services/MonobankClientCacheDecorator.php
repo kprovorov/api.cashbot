@@ -24,7 +24,7 @@ class MonobankClientCacheDecorator extends MonobankClient
      */
     public function getClientInfo(): array
     {
-        return $this->getFromCacheOrFetch(__FUNCTION__, 5);
+        return $this->getFromCacheOrFetch(__FUNCTION__, 1);
     }
 
     /**
