@@ -48,10 +48,11 @@ class DashboardController extends Controller
                       ->orderBy('payments.created_at')
                       ->orderBy('payments.amount_converted')
                       ->with([
-                          'jar.account',
-                          'from_transfer.payment_from.jar',
-                          'to_transfer.payment_to.jar',
-                          'group.payments',
+                          'jar',
+//                          'jar.account',
+//                          'from_transfer.payment_from.jar',
+//                          'to_transfer.payment_to.jar',
+//                          'group.payments',
                       ]);
             },
         ])->get();
