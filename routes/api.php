@@ -1,7 +1,6 @@
 <?php
 
 use App\AccountModule\Controllers\AccountController;
-use App\AccountModule\Controllers\JarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RateController;
 use App\PaymentModule\Controllers\PaymentController;
@@ -27,7 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 //    Route::apiResource('users', UserController::class);
-//    Route::apiResource('jars', JarController::class);
 
     Route::apiResource('accounts', AccountController::class)->only([
         'index',

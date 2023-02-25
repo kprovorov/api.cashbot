@@ -2,7 +2,6 @@
 
 namespace App\TransferModule\Requests;
 
-use App\AccountModule\Models\Jar;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,20 +25,16 @@ class StoreTransferRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userJars = Jar::whereHas('account', function (Builder $query) {
-            return $query->where('user_id', $this->user()->id);
-        })->pluck('id');
-
         return [
-            'jar_from_id' => [
+            'account_from_id' => [
                 'required',
                 'integer',
-                Rule::in($userJars),
+                Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
-            'jar_to_id' => [
+            'account_to_id' => [
                 'required',
                 'integer',
-                Rule::in($userJars),
+                Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
         ];
     }

@@ -2,7 +2,6 @@
 
 namespace App\TransferModule\Controllers;
 
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
@@ -58,21 +57,15 @@ class TransferController extends Controller
         $date = Carbon::parse($request->input('date'));
         $amount = $request->input('amount');
 
-        $jarFrom = Jar::with('account')->findOrFail($request->input('jar_from_id'));
-        $jarTo = Jar::with('account')->findOrFail($request->input('jar_to_id'));
-
         $group = Str::orderedUuid();
 
         if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarFrom->id,
+                        account_id: $request->input('account_from_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: -$amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
@@ -81,12 +74,9 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarTo->id,
+                        account_id: $request->input('account_to_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: $amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i * 3),
@@ -102,12 +92,9 @@ class TransferController extends Controller
             for ($i = 0; $i < 12; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarFrom->id,
+                        account_id: $request->input('account_from_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: -$amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
@@ -116,12 +103,9 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarTo->id,
+                        account_id: $request->input('account_to_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: $amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addMonthsNoOverflow($i),
@@ -137,12 +121,9 @@ class TransferController extends Controller
             for ($i = 0; $i < 52; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarFrom->id,
+                        account_id: $request->input('account_from_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer to {$jarTo->account->name} ({$jarTo->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: -$amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
@@ -151,12 +132,9 @@ class TransferController extends Controller
 
                 $paymentTo = $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $jarTo->id,
+                        account_id: $request->input('account_to_id'),
                         group: $group,
-                        description: $request->input(
-                            'description',
-                            "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
-                        ),
+                        description: $request->input('description'),
                         amount: $amount,
                         currency: Currency::from($request->input('currency')),
                         date: $date->clone()->addWeeks($i),
@@ -171,12 +149,9 @@ class TransferController extends Controller
         } else {
             $paymentFrom = $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jar_id: $jarFrom->id,
+                    account_id: $request->input('account_from_id'),
                     group: $group,
-                    description: $request->input(
-                        'description',
-                        "Transfer to {$jarTo->account->name} ({$jarTo->name})"
-                    ),
+                    description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
                     date: $date,
@@ -185,12 +160,9 @@ class TransferController extends Controller
 
             $paymentTo = $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jar_id: $jarTo->id,
+                    account_id: $request->input('account_to_id'),
                     group: $group,
-                    description: $request->input(
-                        'description',
-                        "Transfer from {$jarFrom->account->name} ({$jarFrom->name})"
-                    ),
+                    description: $request->input('description'),
                     amount: $amount,
                     currency: Currency::from($request->input('currency')),
                     date: $date,

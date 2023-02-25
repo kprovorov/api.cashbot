@@ -15,11 +15,6 @@ class AccountServiceProvider extends ServiceProvider
     {
         // Repositories
         $this->app->bind(
-            \App\AccountModule\Repositories\JarRepo::class,
-            \App\AccountModule\Repositories\EloquentJarRepo::class
-        );
-
-        $this->app->bind(
             \App\AccountModule\Repositories\AccountRepo::class,
             \App\AccountModule\Repositories\EloquentAccountRepo::class
         );

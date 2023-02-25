@@ -3,7 +3,6 @@
 namespace App\PaymentModule\Tests\Services;
 
 use App\AccountModule\Models\Account;
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
@@ -32,14 +31,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -64,14 +61,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -96,14 +91,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -127,14 +120,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -184,20 +175,18 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -235,14 +224,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -267,11 +254,9 @@ class PaymentServiceTest extends TestCase
             'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::EUR,
             'amount' => 10,
             'amount_converted' => 100,
@@ -311,14 +296,12 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
+        
+        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'amount' => $amount,
             'currency' => Currency::EUR,
             'date' => today()->subDay(),

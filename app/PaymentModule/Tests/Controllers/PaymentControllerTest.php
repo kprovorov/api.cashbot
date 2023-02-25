@@ -3,7 +3,6 @@
 namespace App\PaymentModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
@@ -28,14 +27,9 @@ class PaymentControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
-
         /** @var Collection $payments */
         $payments = Payment::factory()->count(2)->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $res = $this->get('api/payments');
@@ -57,14 +51,9 @@ class PaymentControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
-
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $res = $this->get("api/payments/{$payment->id}");
@@ -87,14 +76,9 @@ class PaymentControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
-
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -132,20 +116,15 @@ class PaymentControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
-
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::USD,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
             'currency' => Currency::USD,
         ]);
 
@@ -179,14 +158,9 @@ class PaymentControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jar */
-        $jar = Jar::factory()->create([
-            'account_id' => $account->id,
-        ]);
-
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'jar_id' => $jar->id,
+            'account_id' => $account->id,
         ]);
 
         $res = $this->delete("api/payments/{$payment->id}");

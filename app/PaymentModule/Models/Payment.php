@@ -2,7 +2,7 @@
 
 namespace App\PaymentModule\Models;
 
-use App\AccountModule\Models\Jar;
+use App\AccountModule\Models\Account;
 use App\Enums\Currency;
 use App\PaymentModule\Factories\PaymentFactory;
 use App\TransferModule\Models\Transfer;
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $jar_id
  * @property string $description
  * @property int $amount_converted
  * @property int $amount
@@ -27,7 +26,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property \Illuminate\Support\Carbon|null $ends_on
  * @property string $group
  * @property-read Transfer|null $from_transfer
- * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
  *
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
@@ -44,7 +42,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -58,7 +55,7 @@ class Payment extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'jar_id',
+        'account_id',
         'group',
         'description',
         'amount',
@@ -76,8 +73,6 @@ class Payment extends Model
      */
     protected $casts = [
         'balance' => 'integer',
-        'jar_balance' => 'integer',
-        'jar_savings_balance' => 'integer',
         'currency' => Currency::class,
         'date' => 'date',
         'ends_on' => 'date',
@@ -110,8 +105,8 @@ class Payment extends Model
         return $this->hasOne(Transfer::class, 'from_payment_id');
     }
 
-    public function jar(): BelongsTo
+    public function account(): BelongsTo
     {
-        return $this->belongsTo(Jar::class);
+        return $this->belongsTo(Account::class);
     }
 }

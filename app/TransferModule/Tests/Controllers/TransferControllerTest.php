@@ -3,7 +3,6 @@
 namespace App\TransferModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\PaymentModule\Models\Payment;
 use App\TransferModule\Models\Transfer;
@@ -28,24 +27,14 @@ class TransferControllerTest extends TestCase
         /** @var Account $accountTo */
         $accountTo = Account::factory()->create();
 
-        /** @var Jar $jarFrom */
-        $jarFrom = Jar::factory()->create([
-            'account_id' => $accountFrom->id,
-        ]);
-
-        /** @var Jar $jarTo */
-        $jarTo = Jar::factory()->create([
-            'account_id' => $accountTo->id,
-        ]);
-
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-            'jar_id' => $jarFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
         $paymentTo = Payment::factory()->create([
-            'jar_id' => $jarTo->id,
+            'account_id' => $accountTo->id,
         ]);
 
         /** @var Collection $transfers */
@@ -75,24 +64,14 @@ class TransferControllerTest extends TestCase
         /** @var Account $accountTo */
         $accountTo = Account::factory()->create();
 
-        /** @var Jar $jarFrom */
-        $jarFrom = Jar::factory()->create([
-            'account_id' => $accountFrom->id,
-        ]);
-
-        /** @var Jar $jarTo */
-        $jarTo = Jar::factory()->create([
-            'account_id' => $accountTo->id,
-        ]);
-
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-            'jar_id' => $jarFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
         $paymentTo = Payment::factory()->create([
-            'jar_id' => $jarTo->id,
+            'account_id' => $accountTo->id,
         ]);
 
         /** @var Transfer $transfer */
@@ -127,16 +106,6 @@ class TransferControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        /** @var Jar $jarFrom */
-        $jarFrom = Jar::factory()->create([
-            'account_id' => $accountFrom->id,
-        ]);
-
-        /** @var Jar $jarTo */
-        $jarTo = Jar::factory()->create([
-            'account_id' => $accountTo->id,
-        ]);
-
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
             'currency' => Currency::USD,
@@ -149,8 +118,8 @@ class TransferControllerTest extends TestCase
                 'description',
             ]),
             'currency' => $paymentData->currency->name,
-            'jar_from_id' => $jarFrom->id,
-            'jar_to_id' => $jarTo->id,
+            'account_from_id' => $accountFrom->id,
+            'account_to_id' => $accountTo->id,
         ];
 
         $res = $this->post('api/transfers', $payload);
@@ -173,24 +142,14 @@ class TransferControllerTest extends TestCase
         /** @var Account $accountTo */
         $accountTo = Account::factory()->create();
 
-        /** @var Jar $jarFrom */
-        $jarFrom = Jar::factory()->create([
-            'account_id' => $accountFrom->id,
-        ]);
-
-        /** @var Jar $jarTo */
-        $jarTo = Jar::factory()->create([
-            'account_id' => $accountTo->id,
-        ]);
-
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-            'jar_id' => $jarFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
         $paymentTo = Payment::factory()->create([
-            'jar_id' => $jarTo->id,
+            'account_id' => $accountTo->id,
         ]);
 
         /** @var Transfer $transfer */
@@ -229,24 +188,14 @@ class TransferControllerTest extends TestCase
         /** @var Account $accountTo */
         $accountTo = Account::factory()->create();
 
-        /** @var Jar $jarFrom */
-        $jarFrom = Jar::factory()->create([
-            'account_id' => $accountFrom->id,
-        ]);
-
-        /** @var Jar $jarTo */
-        $jarTo = Jar::factory()->create([
-            'account_id' => $accountTo->id,
-        ]);
-
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-            'jar_id' => $jarFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
         $paymentTo = Payment::factory()->create([
-            'jar_id' => $jarTo->id,
+            'account_id' => $accountTo->id,
         ]);
 
         /** @var Transfer $transfer */

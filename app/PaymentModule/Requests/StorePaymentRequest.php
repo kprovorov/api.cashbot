@@ -2,9 +2,7 @@
 
 namespace App\PaymentModule\Requests;
 
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -24,15 +22,11 @@ class StorePaymentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userJars = Jar::whereHas('account', function (Builder $query) {
-            return $query->where('user_id', $this->user()->id);
-        })->pluck('id');
-
         return [
-            'jar_id' => [
+            'account_id' => [
                 'required',
                 'integer',
-                Rule::in($userJars),
+                Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
             'description' => 'required|string|max:255',
             'amount' => 'required|integer',

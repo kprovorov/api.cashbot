@@ -31,7 +31,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request): Collection
     {
-        $with = ['jar.account'];
+        $with = ['account'];
 
         return $request->has('group')
             ? $this->paymentService->getPaymentsWhere('group', '=', $request->input('group'), $with)
@@ -58,7 +58,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 4; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $request->input('jar_id'),
+                        account_id: $request->input('account_id'),
                         group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
@@ -72,7 +72,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 12; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $request->input('jar_id'),
+                        account_id: $request->input('account_id'),
                         group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
@@ -86,7 +86,7 @@ class PaymentController extends Controller
             for ($i = 0; $i < 52; $i++) {
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
-                        jar_id: $request->input('jar_id'),
+                        account_id: $request->input('account_id'),
                         group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
@@ -99,7 +99,7 @@ class PaymentController extends Controller
         } else {
             $this->paymentService->createPayment(
                 new CreatePaymentData(
-                    jar_id: $request->input('jar_id'),
+                    account_id: $request->input('account_id'),
                     group: $group,
                     description: $request->input('description'),
                     amount: (int) $request->input('amount'),
@@ -117,9 +117,9 @@ class PaymentController extends Controller
     public function show(Payment $payment): Payment
     {
         return $this->paymentService->getPayment($payment->id, [
-            'jar.account.jars',
-            'from_transfer.payment_from.jar',
-            'to_transfer.payment_to.jar',
+            'account',
+            'from_transfer.payment_from.account',
+            'to_transfer.payment_to.account',
         ]);
     }
 
@@ -137,7 +137,7 @@ class PaymentController extends Controller
         $this->paymentService->updatePayment(
             $payment,
             new UpdatePaymentData(
-                jar_id: $request->input('jar_id'),
+                account_id: $request->input('account_id'),
                 description: $request->input('description'),
                 amount: $amount,
                 currency: Currency::from($request->input('currency')),
@@ -151,7 +151,7 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->from_transfer->payment_from,
                 new UpdatePaymentData(
-                    jar_id: $payment->from_transfer->payment_from->jar_id,
+                    account_id: $payment->from_transfer->payment_from->account_id,
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),
@@ -166,7 +166,7 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->to_transfer->payment_to,
                 new UpdatePaymentData(
-                    jar_id: $payment->to_transfer->payment_to->jar_id,
+                    account_id: $payment->to_transfer->payment_to->account_id,
                     description: $request->input('description'),
                     amount: -$amount,
                     currency: Currency::from($request->input('currency')),

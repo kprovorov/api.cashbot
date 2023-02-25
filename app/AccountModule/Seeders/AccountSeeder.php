@@ -3,7 +3,6 @@
 namespace App\AccountModule\Seeders;
 
 use App\AccountModule\Models\Account;
-use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\PaymentModule\Models\Payment;
 use App\TransferModule\Models\Transfer;
@@ -80,18 +79,15 @@ class AccountSeeder extends Seeder
                 'balance' => $accountData['balance'] * 10000,
                 'user_id' => 1,
             ]);
-            Jar::create([
-                'name' => 'Default',
-                'default' => true,
-                'account_id' => $account->id,
-            ]);
 
             if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
-                Jar::create([
-                    'name' => 'Backup',
-                    'default' => false,
-                    'account_id' => $account->id,
-                ]);
+               Account::create([
+                ...$accountData,
+                'parent_id' => $account->id,
+                'name' => 'Backup',
+                'balance' => 0,
+                'user_id' => 1,
+            ]);
             }
         });
 

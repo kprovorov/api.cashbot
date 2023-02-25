@@ -39,9 +39,7 @@ class AccountController extends Controller
         // Refresh balances
         $this->accountService->updateAccountBalances();
 
-        return $this->accountService->getAllUserAccounts($request->user()->id, [
-            'jars',
-        ])->each->append('uah_balance');
+        return $this->accountService->getAllUserAccounts($request->user()->id)->each->append('uah_balance');
     }
 
     /**

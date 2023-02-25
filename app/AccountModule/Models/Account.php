@@ -26,8 +26,6 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property int $balance
  * @property string|null $external_id
  * @property string|null $provider
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\AccountModule\Models\Jar[] $jars
- * @property-read int|null $jars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
  *
@@ -56,6 +54,7 @@ class Account extends Model
      * @var array
      */
     protected $fillable = [
+        'parent_id',
         'name',
         'currency',
         'balance',
@@ -89,14 +88,9 @@ class Account extends Model
         return AccountFactory::new();
     }
 
-    public function jars(): HasMany
+    public function payments(): HasMany
     {
-        return $this->hasMany(Jar::class);
-    }
-
-    public function payments(): HasManyThrough
-    {
-        return $this->hasManyThrough(Payment::class, Jar::class);
+        return $this->hasMany(Payment::class);
     }
 
     /**

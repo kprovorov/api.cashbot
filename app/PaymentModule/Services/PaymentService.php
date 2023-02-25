@@ -2,7 +2,7 @@
 
 namespace App\PaymentModule\Services;
 
-use App\AccountModule\Models\Jar;
+use App\AccountModule\Models\Account;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;
@@ -77,14 +77,14 @@ class PaymentService
      */
     public function createPayment(CreatePaymentData $data): Payment
     {
-        $jar = Jar::with(['account'])->findOrFail($data->jar_id);
+        $account = Account::findOrFail($data->account_id);
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
             'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
-                $jar->account->currency,
+                $account->currency,
                 $data->currency,
             ),
         ]);
@@ -101,14 +101,14 @@ class PaymentService
     {
         $paymentId = $payment instanceof Payment ? $payment->id : $payment;
 
-        $jar = Jar::with(['account'])->findOrFail($data->jar_id);
+        $account = Account::findOrFail($data->account_id);
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
             'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
-                $jar->account->currency,
+                $account->currency,
                 $data->currency,
             ),
         ]);
@@ -130,8 +130,7 @@ class PaymentService
      */
     public function updateCurrencyAmounts(): void
     {
-        Payment::join('jars', 'payments.jar_id', '=', 'jars.id')
-               ->join('accounts', 'jars.account_id', '=', 'accounts.id')
+        Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
                ->where('payments.currency', '!=', 'accounts.currency')
                ->select('payments.*')
                ->chunk(1000, function (Collection $payments) {
@@ -152,7 +151,7 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
-        if ($payment->currency !== $payment->jar->account->currency) {
+        if ($payment->currency !== $payment->account->currency) {
             $this->updatePayment(
                 $payment,
                 new UpdatePaymentData([
