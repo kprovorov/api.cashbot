@@ -26,7 +26,7 @@ class UpdateTransferRequest extends FormRequest
         return [
             'from_payment_id' => 'required|integer',
             'to_payment_id' => 'required|integer',
-               'auto_apply' => 'required|boolean',
+            'auto_apply' => 'required|boolean',
         ];
     }
 }

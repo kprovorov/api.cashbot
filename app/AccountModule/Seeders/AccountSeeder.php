@@ -81,13 +81,13 @@ class AccountSeeder extends Seeder
             ]);
 
             if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
-               Account::create([
-                ...$accountData,
-                'parent_id' => $account->id,
-                'name' => 'Backup',
-                'balance' => 0,
-                'user_id' => 1,
-            ]);
+                Account::create([
+                    ...$accountData,
+                    'parent_id' => $account->id,
+                    'name' => 'Backup',
+                    'balance' => 0,
+                    'user_id' => 1,
+                ]);
             }
         });
 

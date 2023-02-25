@@ -78,7 +78,7 @@ class TransferServiceTest extends TestCase
 
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-          'account_id' => $accountFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
@@ -162,12 +162,12 @@ class TransferServiceTest extends TestCase
 
         /** @var Payment $paymentFrom */
         $paymentFrom = Payment::factory()->create([
-           'account_id' => $accountFrom->id,
+            'account_id' => $accountFrom->id,
         ]);
 
         /** @var Payment $paymentTo */
         $paymentTo = Payment::factory()->create([
-              'account_id' => $accountTo->id,
+            'account_id' => $accountTo->id,
         ]);
 
         /** @var Transfer $transferData */

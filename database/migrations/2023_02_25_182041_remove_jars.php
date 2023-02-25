@@ -27,9 +27,8 @@ return new class extends Migration
 
         // Create sub-accounts for each Jar
         DB::table('jars')->where('default', false)->get()->each(function ($jar) {
-            
             $mainAccount = Account::find($jar->account_id);
-            
+
             $account = Account::create([
                 'parent_id' => $mainAccount->id,
                 'name' => $jar->name,

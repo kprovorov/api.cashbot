@@ -31,9 +31,6 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        
-        
-
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
             'account_id' => $account->id,
@@ -61,9 +58,6 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        
-        
-
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
             'account_id' => $account->id,
@@ -90,9 +84,6 @@ class PaymentServiceTest extends TestCase
         $account = Account::factory()->create([
             'user_id' => $user->id,
         ]);
-
-        
-        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
@@ -151,7 +142,7 @@ class PaymentServiceTest extends TestCase
                 'created_at',
                 'updated_at',
             ]),
-            'auto_apply'=> false,
+            'auto_apply' => false,
             'date' => $res->date->toDateTimeString(),
         ]);
         $this->assertDatabaseHas('payments', $data->toArray());
@@ -172,9 +163,6 @@ class PaymentServiceTest extends TestCase
             'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
-
-        
-        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
@@ -222,9 +210,6 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        
-        
-
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
             'account_id' => $account->id,
@@ -252,7 +237,7 @@ class PaymentServiceTest extends TestCase
             'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
-        
+
         $payment = Payment::factory()->create([
             'account_id' => $account->id,
             'currency' => Currency::EUR,
@@ -293,9 +278,6 @@ class PaymentServiceTest extends TestCase
             'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
-
-        
-        
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
