@@ -23,9 +23,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $amount
  * @property Currency $currency
  * @property \Illuminate\Support\Carbon $date
-
  * @property int $hidden
  * @property \Illuminate\Support\Carbon|null $ends_on
+ * @property string $group
  * @property-read Transfer|null $from_transfer
  * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereEndsOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)

@@ -6,7 +6,6 @@ use App\AccountModule\Models\Jar;
 use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
-
 use App\PaymentModule\Services\PaymentService;
 use App\TransferModule\DTO\UpdateTransferData;
 use App\TransferModule\Models\Transfer;

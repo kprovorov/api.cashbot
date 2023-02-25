@@ -6,7 +6,6 @@ use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
-
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Requests\StorePaymentRequest;
 use App\PaymentModule\Requests\UpdatePaymentRequest;
@@ -57,8 +56,6 @@ class PaymentController extends Controller
 
         if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
-                
-
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),

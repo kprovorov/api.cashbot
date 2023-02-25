@@ -95,7 +95,6 @@ class AccountSeeder extends Seeder
             }
         });
 
-
 //        Account::factory()
 //               ->count(10)
 //               ->hasJars(1, [

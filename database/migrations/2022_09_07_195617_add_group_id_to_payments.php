@@ -18,7 +18,7 @@ return new class extends Migration
                   ->nullable()
                   ->after('jar_id');
 
-                  $table->foreign('group_id')->references('id')->on('groups');
+            $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 
