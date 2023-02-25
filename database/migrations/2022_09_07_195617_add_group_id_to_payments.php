@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->integer('group_id')
+            $table->foreignId('group_id')
                   ->nullable()
                   ->after('jar_id');
+
+                  $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 
