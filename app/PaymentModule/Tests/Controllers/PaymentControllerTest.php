@@ -8,6 +8,7 @@ use App\Enums\Currency;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
+use Arr;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 
@@ -112,7 +113,7 @@ class PaymentControllerTest extends TestCase
         $res->assertOk();
 //        $res->assertJson($payload);
         $this->assertDatabaseHas('payments', [
-            ...$paymentData->toArray(),
+            ...Arr::except($paymentData->toArray(), ['group']),
             'amount_converted' => $payload['amount'] * 2,
         ]);
     }
@@ -148,7 +149,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::USD,
         ]);
 
-        $payload = $paymentData->toArray();
+        $payload = Arr::except($paymentData->toArray(), ['group']);
 
         $this->mock(CurrencyConverter::class)
             ->shouldReceive('convert')
