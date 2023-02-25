@@ -18,6 +18,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * App\AccountModule\Models\Account
  *
  * @property int $id
+ * @property int|null $parent_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $user_id
@@ -28,7 +29,6 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property string|null $provider
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
- *
  * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
@@ -39,6 +39,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereExternalId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereProvider($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUserId($value)

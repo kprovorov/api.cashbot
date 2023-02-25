@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * App\PaymentModule\Models\Payment
  *
  * @property int $id
+ * @property int $account_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $description
@@ -25,15 +26,20 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $hidden
  * @property \Illuminate\Support\Carbon|null $ends_on
  * @property string $group
+ * @property int $auto_apply
+ * @property string|null $applied_at
+ * @property-read Account|null $account
  * @property-read Transfer|null $from_transfer
  * @property-read Transfer|null $to_transfer
- *
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountConverted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAppliedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAutoApply($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
