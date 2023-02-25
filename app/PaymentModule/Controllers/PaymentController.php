@@ -6,7 +6,7 @@ use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
-use App\PaymentModule\Models\Group;
+
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Requests\StorePaymentRequest;
 use App\PaymentModule\Requests\UpdatePaymentRequest;
@@ -14,7 +14,9 @@ use App\PaymentModule\Services\PaymentService;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use Str;
 
 class PaymentController extends Controller
 {
@@ -28,9 +30,13 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Collection
+    public function index(Request $request): Collection
     {
-        return $this->paymentService->getAllPayments();
+        $with = ['jar.account'];
+
+        return $request->has('group')
+            ? $this->paymentService->getPaymentsWhere('group', '=', $request->input('group'), $with)
+            : $this->paymentService->getAllPayments($with);
     }
 
     /**
@@ -42,24 +48,21 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request): void
     {
-        $group = null;
         $repeat = $request->input('repeat', 'none');
 
         $date = Carbon::parse(Carbon::parse($request->input('date')));
         $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
-        if ($repeat !== 'none') {
-            $group = Group::create([
-                'name' => $request->input('description'),
-            ]);
-        }
+        $group = Str::orderedUuid();
 
         if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
+                
+
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        group_id: $group->id,
+                        group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
@@ -73,7 +76,7 @@ class PaymentController extends Controller
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        group_id: isset($group) ? $group->id : null,
+                        group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
@@ -87,7 +90,7 @@ class PaymentController extends Controller
                 $this->paymentService->createPayment(
                     new CreatePaymentData(
                         jar_id: $request->input('jar_id'),
-                        group_id: isset($group) ? $group->id : null,
+                        group: $group,
                         description: $request->input('description'),
                         amount: (int) $request->input('amount'),
                         currency: Currency::from($request->input('currency')),
@@ -100,7 +103,7 @@ class PaymentController extends Controller
             $this->paymentService->createPayment(
                 new CreatePaymentData(
                     jar_id: $request->input('jar_id'),
-                    group_id: isset($group) ? $group->id : null,
+                    group: $group,
                     description: $request->input('description'),
                     amount: (int) $request->input('amount'),
                     currency: Currency::from($request->input('currency')),

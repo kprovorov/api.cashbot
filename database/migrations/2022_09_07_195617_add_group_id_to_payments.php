@@ -1,6 +1,5 @@
 <?php
 
-use App\PaymentModule\Models\Group;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->foreignIdFor(Group::class)
+            $table->integer('group_id')
                   ->nullable()
-                  ->constrained()
-                  ->cascadeOnDelete()
-                  ->cascadeOnUpdate()
                   ->after('jar_id');
         });
     }

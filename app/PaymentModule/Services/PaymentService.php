@@ -32,7 +32,21 @@ class PaymentService
      */
     public function getAllPayments(array $with = [], array $columns = ['*']): Collection
     {
-        return $this->paymentRepo->getAll($with, $columns);
+        return $this->paymentRepo->getAll($with, $columns, 'date', 'asc');
+    }
+
+    /**
+     * Get all Payments filtered by column
+     */
+    public function getPaymentsWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+        array $with = [],
+        array $columns = ['*']
+    ): Collection
+    {
+        return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
     /**

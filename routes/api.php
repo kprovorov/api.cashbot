@@ -4,7 +4,6 @@ use App\AccountModule\Controllers\AccountController;
 use App\AccountModule\Controllers\JarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RateController;
-use App\PaymentModule\Controllers\GroupController;
 use App\PaymentModule\Controllers\PaymentController;
 use App\TransferModule\Controllers\TransferController;
 use App\UserModule\Controllers\UserController;
@@ -34,15 +33,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'index',
         'update',
     ]);
-    Route::apiResource('payments', PaymentController::class)->except([
-        'index',
-    ]);
+    Route::apiResource('payments', PaymentController::class);
     Route::apiResource('transfers', TransferController::class)->only([
         'store',
-    ]);
-    Route::apiResource('groups', GroupController::class)->only([
-        'show',
-        'destroy',
     ]);
 
     Route::get('dashboard', DashboardController::class);

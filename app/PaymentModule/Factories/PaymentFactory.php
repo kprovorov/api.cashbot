@@ -27,6 +27,7 @@ class PaymentFactory extends Factory
             'currency' => $this->faker->randomElement(Currency::cases()),
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
             'hidden' => false,
+            'group' => $this->faker->uuid(),
         ];
     }
 

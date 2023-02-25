@@ -23,11 +23,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $amount
  * @property Currency $currency
  * @property \Illuminate\Support\Carbon $date
- * @property int|null $group_id
+
  * @property int $hidden
  * @property \Illuminate\Support\Carbon|null $ends_on
  * @property-read Transfer|null $from_transfer
- * @property-read \App\PaymentModule\Models\Group|null $group
  * @property-read Jar|null $jar
  * @property-read Transfer|null $to_transfer
  *
@@ -42,7 +41,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereEndsOn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereJarId($value)
@@ -60,7 +58,7 @@ class Payment extends Model
      */
     protected $fillable = [
         'jar_id',
-        'group_id',
+        'group',
         'description',
         'amount',
         'amount_converted',
@@ -114,10 +112,5 @@ class Payment extends Model
     public function jar(): BelongsTo
     {
         return $this->belongsTo(Jar::class);
-    }
-
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(Group::class);
     }
 }
