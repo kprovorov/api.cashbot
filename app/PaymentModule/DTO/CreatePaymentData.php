@@ -21,4 +21,6 @@ class CreatePaymentData extends DataTransferObject
     public ?Carbon $ends_on = null;
 
     public string $group;
+
+    public bool $auto_apply;
 }

@@ -62,25 +62,25 @@ class TransferController extends Controller
         if ($repeat === 'quarterly') {
             for ($i = 0; $i < 4; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_from_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: -$amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addMonthsNoOverflow($i * 3),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_from_id'),
+                        'group' => $group,
+                        'amount' => -$amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addMonthsNoOverflow($i * 3),
+                    ])
                 );
 
                 $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_to_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: $amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addMonthsNoOverflow($i * 3),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_to_id'),
+                        'group' => $group,
+                        'amount' => $amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addMonthsNoOverflow($i * 3),
+                    ])
                 );
 
                 Transfer::create([
@@ -91,25 +91,25 @@ class TransferController extends Controller
         } elseif ($repeat === 'monthly') {
             for ($i = 0; $i < 12; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_from_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: -$amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addMonthsNoOverflow($i),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_from_id'),
+                        'group' => $group,
+                        'amount' => -$amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addMonthsNoOverflow($i),
+                    ])
                 );
 
                 $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_to_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: $amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addMonthsNoOverflow($i),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_to_id'),
+                        'group' => $group,
+                        'amount' => $amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addMonthsNoOverflow($i),
+                    ])
                 );
 
                 Transfer::create([
@@ -120,25 +120,25 @@ class TransferController extends Controller
         } elseif ($repeat === 'weekly') {
             for ($i = 0; $i < 52; $i++) {
                 $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_from_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: -$amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addWeeks($i),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_from_id'),
+                        'group' => $group,
+                        'amount' => -$amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addWeeks($i),
+                    ])
                 );
 
                 $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData(
-                        account_id: $request->input('account_to_id'),
-                        group: $group,
-                        description: $request->input('description'),
-                        amount: $amount,
-                        currency: Currency::from($request->input('currency')),
-                        date: $date->clone()->addWeeks($i),
-                    )
+                    new CreatePaymentData([
+                        ...$request->validated(),
+                        'account_id' => $request->input('account_to_id'),
+                        'group' => $group,
+                        'amount' => $amount,
+                        'currency' => Currency::from($request->input('currency')),
+                        'date' => $date->clone()->addWeeks($i),
+                    ])
                 );
 
                 Transfer::create([
@@ -148,25 +148,25 @@ class TransferController extends Controller
             }
         } else {
             $paymentFrom = $this->paymentService->createPayment(
-                new CreatePaymentData(
-                    account_id: $request->input('account_from_id'),
-                    group: $group,
-                    description: $request->input('description'),
-                    amount: -$amount,
-                    currency: Currency::from($request->input('currency')),
-                    date: $date,
-                )
+                new CreatePaymentData([
+                    ...$request->validated(),
+                    'account_id' => $request->input('account_from_id'),
+                    'group' => $group,
+                    'amount' => -$amount,
+                    'currency' => Currency::from($request->input('currency')),
+                    'date' => $date,
+                ])
             );
 
             $paymentTo = $this->paymentService->createPayment(
-                new CreatePaymentData(
-                    account_id: $request->input('account_to_id'),
-                    group: $group,
-                    description: $request->input('description'),
-                    amount: $amount,
-                    currency: Currency::from($request->input('currency')),
-                    date: $date,
-                )
+                new CreatePaymentData([
+                    ...$request->validated(),
+                    'account_id' => $request->input('account_to_id'),
+                    'group' => $group,
+                    'amount' => $amount,
+                    'currency' => Currency::from($request->input('currency')),
+                    'date' => $date,
+                ])
             );
 
             Transfer::create([

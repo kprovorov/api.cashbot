@@ -21,4 +21,6 @@ class UpdatePaymentData extends DataTransferObject
     public ?Carbon $ends_on = null;
 
     public bool $hidden;
+
+    public bool $auto_apply;
 }

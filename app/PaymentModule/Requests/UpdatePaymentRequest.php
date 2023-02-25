@@ -33,6 +33,7 @@ class UpdatePaymentRequest extends FormRequest
             'currency' => ['required', new Enum(Currency::class)],
             'date' => 'required|date',
             'hidden' => 'required|boolean',
+            'auto_apply' => 'required|boolean',
             'ends_on' => 'nullable|date',
         ];
     }

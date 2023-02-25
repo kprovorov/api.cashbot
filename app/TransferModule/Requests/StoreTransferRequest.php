@@ -2,9 +2,10 @@
 
 namespace App\TransferModule\Requests;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreTransferRequest extends FormRequest
 {
@@ -36,6 +37,13 @@ class StoreTransferRequest extends FormRequest
                 'integer',
                 Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
+            'description' => 'required|string|max:255',
+            'amount' => 'required|integer',
+            'currency' => ['required', new Enum(Currency::class)],
+            'date' => 'required|date',
+            'hidden' => 'required|boolean',
+            'auto_apply' => 'required|boolean',
+            'repeat' => 'required|string|in:none,weekly,monthly,quarterly',
         ];
     }
 }
