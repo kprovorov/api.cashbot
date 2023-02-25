@@ -170,6 +170,8 @@ class PaymentController extends Controller
         }
     }
 
+    
+
     /**
      * Remove the specified resource from storage.
      */

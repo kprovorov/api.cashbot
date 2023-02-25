@@ -120,9 +120,6 @@ class PaymentServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        
-        
-
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
             'account_id' => $account->id,
@@ -154,6 +151,7 @@ class PaymentServiceTest extends TestCase
                 'created_at',
                 'updated_at',
             ]),
+            'auto_apply'=> false,
             'date' => $res->date->toDateTimeString(),
         ]);
         $this->assertDatabaseHas('payments', $data->toArray());

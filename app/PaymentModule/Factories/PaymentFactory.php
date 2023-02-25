@@ -28,6 +28,7 @@ class PaymentFactory extends Factory
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
             'hidden' => false,
             'group' => $this->faker->uuid(),
+            'auto_apply' => false,
         ];
     }
 
