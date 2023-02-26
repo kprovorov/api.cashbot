@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -92,6 +93,16 @@ class Account extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'parent_id');
+    }
+
+    public function jars(): HasMany
+    {
+        return $this->hasMany(Account::class, 'parent_id');
     }
 
     /**

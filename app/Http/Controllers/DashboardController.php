@@ -28,6 +28,7 @@ class DashboardController extends Controller
         $this->accountService->updateAccountBalances();
 
         return Account::where('user_id', $request->user()->id)->with([
+            'jars',
             'payments' => function (HasMany $query) {
                 $selectBalance = DB::raw(
                     'accounts.balance + sum(payments.amount_converted) over (partition by payments.account_id order by payments.date, payments.created_at, payments.amount_converted rows between unbounded preceding and current row) as balance'
