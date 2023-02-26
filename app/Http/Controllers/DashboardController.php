@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AccountModule\Models\Account;
 use App\AccountModule\Services\AccountService;
+use App\Monobank\Services\MonobankService;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __construct(protected readonly AccountService $accountService)
+    public function __construct(protected readonly AccountService $accountService, protected readonly MonobankService $monobankService)
     {
     }
 
@@ -20,6 +21,9 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request): Collection
     {
+        // Cache currency rates
+        $this->monobankService->getRates();
+
         // Refresh balances
         $this->accountService->updateAccountBalances();
 

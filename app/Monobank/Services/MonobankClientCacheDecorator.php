@@ -10,7 +10,7 @@ use Str;
 
 class MonobankClientCacheDecorator extends MonobankClient
 {
-    final const TTL = 60; // 60 minutes
+    final const TTL = 60; // 60 seconds
 
     public function __construct(protected readonly Mutex $mutex, Client $client)
     {
