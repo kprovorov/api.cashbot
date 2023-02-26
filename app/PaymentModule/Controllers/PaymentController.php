@@ -184,4 +184,9 @@ class PaymentController extends Controller
             $payment->delete();
         }
     }
+
+    public function deleteGroup(string $group): void
+    {
+        $this->paymentService->deleteGroup($group);
+    }
 }

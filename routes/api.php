@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'update',
     ]);
     Route::apiResource('payments', PaymentController::class);
+    Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
+
     Route::apiResource('transfers', TransferController::class)->only([
         'store',
     ]);

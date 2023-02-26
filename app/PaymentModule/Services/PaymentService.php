@@ -197,4 +197,9 @@ class PaymentService
             ])
         );
     }
+
+    public function deleteGroup(string $group): void
+    {
+        Payment::where('group', $group)->delete();
+    }
 }
