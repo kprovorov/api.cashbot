@@ -48,19 +48,15 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request): void
     {
-        $date = Carbon::parse(Carbon::parse($request->input('date')));
-        $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
-        $group = Str::orderedUuid();
-
         $this->paymentService->createPayment(
                 new CreatePaymentData([
                     ...$request->validated(),
-                    'group' => $group,
                     'amount' => (int) $request->input('amount'),
                     'currency' => Currency::from($request->input('currency')),
                     'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'date' => $date,
-                    'ends_on' => $endsOn,
+                    'date' => Carbon::parse($request->input('date')),
+                    'ends_on' => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
+                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
     }
@@ -97,6 +93,7 @@ class PaymentController extends Controller
                 'date' => Carbon::parse($request->input('date')),
                 'ends_on' => $endsOn,
                 'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
 
@@ -111,6 +108,7 @@ class PaymentController extends Controller
                     'date' => Carbon::parse($request->input('date')),
                     'ends_on' => $endsOn,
                     'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
         }
@@ -126,6 +124,7 @@ class PaymentController extends Controller
                     'date' => Carbon::parse($request->input('date')),
                     'ends_on' => $endsOn,
                     'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
         }

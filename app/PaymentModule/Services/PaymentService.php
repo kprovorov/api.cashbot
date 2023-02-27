@@ -15,6 +15,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use Str;
 
 class PaymentService
 {
@@ -81,6 +82,7 @@ class PaymentService
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
+            'group' => $data->group ?? Str::orderedUuid(),
             'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,

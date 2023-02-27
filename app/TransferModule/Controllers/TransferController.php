@@ -67,6 +67,7 @@ class TransferController extends Controller
                     'currency' => Currency::from($request->input('currency')),
                     'date' => $date,
                     'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
 
@@ -79,6 +80,7 @@ class TransferController extends Controller
                     'currency' => Currency::from($request->input('currency')),
                     'date' => $date,
                     'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
 

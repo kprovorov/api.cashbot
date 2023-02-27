@@ -37,6 +37,8 @@ class UpdatePaymentRequest extends FormRequest
             'auto_apply' => 'required|boolean',
             'ends_on' => 'nullable|date',
             'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
+            'repeat_interval' => 'required|integer',
+            'repeat_ends_on' => 'nullable|date',
         ];
     }
 }

@@ -18,4 +18,6 @@ class UpdatePaymentData extends DataTransferObject
     public bool $hidden;
     public bool $auto_apply;
     public RepeatUnit $repeat_unit;
+    public int $repeat_interval;
+    public ?Carbon $repeat_ends_on = null;
 }

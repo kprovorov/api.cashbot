@@ -73,6 +73,8 @@ class Payment extends Model
         'hidden',
         'ends_on',
         'repeat_unit',
+        'repeat_interval',
+        'repeat_ends_on',
     ];
 
     /**
@@ -86,6 +88,7 @@ class Payment extends Model
         'date' => 'date',
         'ends_on' => 'date',
         'repeat_unit' => RepeatUnit::class,
+        'repeat_ends_on' => 'date',
     ];
 
     /**

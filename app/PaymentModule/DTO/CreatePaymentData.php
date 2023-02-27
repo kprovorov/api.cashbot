@@ -15,7 +15,9 @@ class CreatePaymentData extends DataTransferObject
     public Currency $currency;
     public Carbon $date;
     public ?Carbon $ends_on = null;
-    public string $group;
+    public ?string $group;
     public bool $auto_apply;
     public RepeatUnit $repeat_unit;
+    public int $repeat_interval;
+    public ?Carbon $repeat_ends_on = null;
 }
