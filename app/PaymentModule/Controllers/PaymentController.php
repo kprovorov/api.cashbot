@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Controllers;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
@@ -47,64 +48,21 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request): void
     {
-        $repeat = $request->input('repeat', 'none');
-
         $date = Carbon::parse(Carbon::parse($request->input('date')));
         $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
-
         $group = Str::orderedUuid();
 
-        if ($repeat === 'quarterly') {
-            for ($i = 0; $i < 4; $i++) {
-                $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'group' => $group,
-                        'amount' => (int) $request->input('amount'),
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i * 3),
-                        'ends_on' => $endsOn?->clone()->addMonthsNoOverflow($i * 3),
-                    ])
-                );
-            }
-        } elseif ($repeat === 'monthly') {
-            for ($i = 0; $i < 12; $i++) {
-                $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'group' => $group,
-                        'amount' => (int) $request->input('amount'),
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i),
-                        'ends_on' => $endsOn?->clone()->addMonthsNoOverflow($i),
-                    ])
-                );
-            }
-        } elseif ($repeat === 'weekly') {
-            for ($i = 0; $i < 52; $i++) {
-                $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'group' => $group,
-                        'amount' => (int) $request->input('amount'),
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addWeeks($i),
-                        'ends_on' => $endsOn?->clone()->addWeeks($i * 3),
-                    ])
-                );
-            }
-        } else {
-            $this->paymentService->createPayment(
+        $this->paymentService->createPayment(
                 new CreatePaymentData([
                     ...$request->validated(),
                     'group' => $group,
                     'amount' => (int) $request->input('amount'),
                     'currency' => Currency::from($request->input('currency')),
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                     'date' => $date,
                     'ends_on' => $endsOn,
                 ])
             );
-        }
     }
 
     /**
@@ -138,6 +96,7 @@ class PaymentController extends Controller
                 'currency' => Currency::from($request->input('currency')),
                 'date' => Carbon::parse($request->input('date')),
                 'ends_on' => $endsOn,
+                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
             ])
         );
 
@@ -151,6 +110,7 @@ class PaymentController extends Controller
                     'currency' => Currency::from($request->input('currency')),
                     'date' => Carbon::parse($request->input('date')),
                     'ends_on' => $endsOn,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 ])
             );
         }
@@ -165,6 +125,7 @@ class PaymentController extends Controller
                     'currency' => Currency::from($request->input('currency')),
                     'date' => Carbon::parse($request->input('date')),
                     'ends_on' => $endsOn,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 ])
             );
         }

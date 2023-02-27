@@ -4,6 +4,7 @@ namespace App\PaymentModule\Models;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\PaymentModule\Factories\PaymentFactory;
 use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,6 +72,7 @@ class Payment extends Model
         'date',
         'hidden',
         'ends_on',
+        'repeat_unit',
     ];
 
     /**
@@ -83,6 +85,7 @@ class Payment extends Model
         'currency' => Currency::class,
         'date' => 'date',
         'ends_on' => 'date',
+        'repeat_unit' => RepeatUnit::class,
     ];
 
     /**

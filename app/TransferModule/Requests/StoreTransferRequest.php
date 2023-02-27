@@ -3,6 +3,7 @@
 namespace App\TransferModule\Requests;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -43,7 +44,7 @@ class StoreTransferRequest extends FormRequest
             'date' => 'required|date',
             'hidden' => 'required|boolean',
             'auto_apply' => 'required|boolean',
-            'repeat' => 'required|string|in:none,weekly,monthly,quarterly',
+            'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
         ];
     }
 }

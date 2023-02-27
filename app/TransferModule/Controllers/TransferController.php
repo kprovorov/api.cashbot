@@ -3,6 +3,7 @@
 namespace App\TransferModule\Controllers;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\Services\PaymentService;
@@ -52,102 +53,12 @@ class TransferController extends Controller
      */
     public function store(StoreTransferRequest $request): void
     {
-        $repeat = $request->input('repeat', 'none');
-
         $date = Carbon::parse($request->input('date'));
         $amount = $request->input('amount');
 
         $group = Str::orderedUuid();
 
-        if ($repeat === 'quarterly') {
-            for ($i = 0; $i < 4; $i++) {
-                $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_from_id'),
-                        'group' => $group,
-                        'amount' => -$amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i * 3),
-                    ])
-                );
-
-                $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_to_id'),
-                        'group' => $group,
-                        'amount' => $amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i * 3),
-                    ])
-                );
-
-                Transfer::create([
-                    'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
-                ]);
-            }
-        } elseif ($repeat === 'monthly') {
-            for ($i = 0; $i < 12; $i++) {
-                $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_from_id'),
-                        'group' => $group,
-                        'amount' => -$amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i),
-                    ])
-                );
-
-                $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_to_id'),
-                        'group' => $group,
-                        'amount' => $amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addMonthsNoOverflow($i),
-                    ])
-                );
-
-                Transfer::create([
-                    'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
-                ]);
-            }
-        } elseif ($repeat === 'weekly') {
-            for ($i = 0; $i < 52; $i++) {
-                $paymentFrom = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_from_id'),
-                        'group' => $group,
-                        'amount' => -$amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addWeeks($i),
-                    ])
-                );
-
-                $paymentTo = $this->paymentService->createPayment(
-                    new CreatePaymentData([
-                        ...$request->validated(),
-                        'account_id' => $request->input('account_to_id'),
-                        'group' => $group,
-                        'amount' => $amount,
-                        'currency' => Currency::from($request->input('currency')),
-                        'date' => $date->clone()->addWeeks($i),
-                    ])
-                );
-
-                Transfer::create([
-                    'from_payment_id' => $paymentFrom->id,
-                    'to_payment_id' => $paymentTo->id,
-                ]);
-            }
-        } else {
-            $paymentFrom = $this->paymentService->createPayment(
+         $paymentFrom = $this->paymentService->createPayment(
                 new CreatePaymentData([
                     ...$request->validated(),
                     'account_id' => $request->input('account_from_id'),
@@ -155,6 +66,7 @@ class TransferController extends Controller
                     'amount' => -$amount,
                     'currency' => Currency::from($request->input('currency')),
                     'date' => $date,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 ])
             );
 
@@ -166,6 +78,7 @@ class TransferController extends Controller
                     'amount' => $amount,
                     'currency' => Currency::from($request->input('currency')),
                     'date' => $date,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 ])
             );
 
@@ -173,7 +86,6 @@ class TransferController extends Controller
                 'from_payment_id' => $paymentFrom->id,
                 'to_payment_id' => $paymentTo->id,
             ]);
-        }
     }
 
     /**

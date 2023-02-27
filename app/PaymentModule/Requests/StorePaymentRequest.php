@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Requests;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -35,7 +36,7 @@ class StorePaymentRequest extends FormRequest
             'hidden' => 'required|boolean',
             'auto_apply' => 'required|boolean',
             'ends_on' => 'nullable|date',
-            'repeat' => 'required|string|in:none,weekly,monthly,quarterly',
+            'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
         ];
     }
 }
