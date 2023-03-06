@@ -7,8 +7,10 @@ use App\Enums\RepeatUnit;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
+use App\PaymentModule\DTO\UpdatePaymentGeneralData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Requests\StorePaymentRequest;
+use App\PaymentModule\Requests\UpdatePaymentGeneralRequest;
 use App\PaymentModule\Requests\UpdatePaymentRequest;
 use App\PaymentModule\Services\PaymentService;
 use Carbon\Carbon;
@@ -49,16 +51,16 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request): void
     {
         $this->paymentService->createPayment(
-                new CreatePaymentData([
-                    ...$request->validated(),
-                    'amount' => (int) $request->input('amount'),
-                    'currency' => Currency::from($request->input('currency')),
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'date' => Carbon::parse($request->input('date')),
-                    'ends_on' => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
-                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
-                ])
-            );
+            new CreatePaymentData([
+                ...$request->validated(),
+                'amount'         => (int) $request->input('amount'),
+                'currency'       => Currency::from($request->input('currency')),
+                'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
+                'date'           => Carbon::parse($request->input('date')),
+                'ends_on'        => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
+                'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
+            ])
+        );
     }
 
     /**
@@ -71,6 +73,18 @@ class PaymentController extends Controller
             'from_transfer.payment_from.account',
             'to_transfer.payment_to.account',
         ]);
+    }
+
+    public function updateGeneral(UpdatePaymentGeneralRequest $request, Payment $payment): void
+    {
+        $this->paymentService->updatePaymentGeneral(
+            $payment,
+            Carbon::parse($request->input('fromDate')),
+            new UpdatePaymentGeneralData([
+                ...$request->validated(),
+                'currency' => Currency::from($request->input('currency'))
+            ])
+        );
     }
 
     /**
@@ -88,11 +102,11 @@ class PaymentController extends Controller
             $payment,
             new UpdatePaymentData([
                 ...$request->validated(),
-                'amount' => $amount,
-                'currency' => Currency::from($request->input('currency')),
-                'date' => Carbon::parse($request->input('date')),
-                'ends_on' => $endsOn,
-                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                'amount'         => $amount,
+                'currency'       => Currency::from($request->input('currency')),
+                'date'           => Carbon::parse($request->input('date')),
+                'ends_on'        => $endsOn,
+                'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
                 'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
@@ -102,12 +116,12 @@ class PaymentController extends Controller
                 $payment->from_transfer->payment_from,
                 new UpdatePaymentData([
                     ...$request->validated(),
-                    'account_id' => $payment->from_transfer->payment_from->account_id,
-                    'amount' => -$amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => Carbon::parse($request->input('date')),
-                    'ends_on' => $endsOn,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'account_id'     => $payment->from_transfer->payment_from->account_id,
+                    'amount'         => -$amount,
+                    'currency'       => Currency::from($request->input('currency')),
+                    'date'           => Carbon::parse($request->input('date')),
+                    'ends_on'        => $endsOn,
+                    'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
                     'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
@@ -118,12 +132,12 @@ class PaymentController extends Controller
                 $payment->to_transfer->payment_to,
                 new UpdatePaymentData([
                     ...$request->validated(),
-                    'account_id' => $payment->to_transfer->payment_to->account_id,
-                    'amount' => -$amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => Carbon::parse($request->input('date')),
-                    'ends_on' => $endsOn,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                    'account_id'     => $payment->to_transfer->payment_to->account_id,
+                    'amount'         => -$amount,
+                    'currency'       => Currency::from($request->input('currency')),
+                    'date'           => Carbon::parse($request->input('date')),
+                    'ends_on'        => $endsOn,
+                    'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
                     'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
@@ -140,7 +154,8 @@ class PaymentController extends Controller
             $transfer->payment_from->delete();
             $transfer->payment_to->delete();
             $transfer->delete();
-        } else {
+        }
+        else {
             $payment->delete();
         }
     }

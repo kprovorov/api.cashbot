@@ -20,12 +20,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request)
+{
     return $request->user();
 });
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-//    Route::apiResource('users', UserController::class);
+Route::group(['middleware' => 'auth:sanctum'], function ()
+{
+    //    Route::apiResource('users', UserController::class);
 
     Route::apiResource('accounts', AccountController::class)->only([
         'index',
@@ -33,6 +35,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     ]);
     Route::apiResource('payments', PaymentController::class);
     Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
+    Route::put('payments/{payment}/general', [PaymentController::class, 'updateGeneral']);
 
     Route::apiResource('transfers', TransferController::class)->only([
         'store',
