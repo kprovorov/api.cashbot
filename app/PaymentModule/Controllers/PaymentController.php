@@ -76,14 +76,43 @@ class PaymentController extends Controller
 
     public function updateGeneral(UpdatePaymentGeneralRequest $request, Payment $payment): void
     {
+        $fromDate = Carbon::parse($request->input('fromDate'));
+        $amount = (int) $request->input('amount');
+
+        $dataToUpdate = [
+            ...$request->validated(),
+            'currency' => Currency::from($request->input('currency')),
+        ];
+
         $this->paymentService->updatePaymentGeneral(
             $payment,
-            Carbon::parse($request->input('fromDate')),
-            new UpdatePaymentGeneralData([
-                ...$request->validated(),
-                'currency' => Currency::from($request->input('currency')),
-            ])
+            $fromDate,
+            new UpdatePaymentGeneralData($dataToUpdate)
         );
+
+        if ($payment->from_transfer) {
+            $this->paymentService->updatePaymentGeneral(
+                $payment->from_transfer->payment_from,
+                $fromDate,
+                new UpdatePaymentGeneralData([
+                    ...$dataToUpdate,
+                    'account_id' => $payment->from_transfer->payment_from->account_id,
+                    'amount' => -$amount,
+                ])
+            );
+        }
+
+        if ($payment->to_transfer) {
+            $this->paymentService->updatePaymentGeneral(
+                $payment->to_transfer->payment_to,
+                $fromDate,
+                new UpdatePaymentGeneralData([
+                    ...$dataToUpdate,
+                    'account_id' => $payment->to_transfer->payment_to->account_id,
+                    'amount' => -$amount,
+                ])
+            );
+        }
     }
 
     /**
@@ -97,16 +126,20 @@ class PaymentController extends Controller
         $amount = (int) $request->input('amount');
         $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
+        $dataToUpdate = [
+            ...$request->validated(),
+            'currency' => Currency::from($request->input('currency')),
+            'date' => Carbon::parse($request->input('date')),
+            'ends_on' => $endsOn,
+            'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+            'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
+        ];
+
         $this->paymentService->updatePayment(
             $payment,
             new UpdatePaymentData([
-                ...$request->validated(),
+                ...$dataToUpdate,
                 'amount' => $amount,
-                'currency' => Currency::from($request->input('currency')),
-                'date' => Carbon::parse($request->input('date')),
-                'ends_on' => $endsOn,
-                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
 
@@ -114,14 +147,9 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->from_transfer->payment_from,
                 new UpdatePaymentData([
-                    ...$request->validated(),
+                    ...$dataToUpdate,
                     'account_id' => $payment->from_transfer->payment_from->account_id,
                     'amount' => -$amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => Carbon::parse($request->input('date')),
-                    'ends_on' => $endsOn,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
         }
@@ -130,14 +158,9 @@ class PaymentController extends Controller
             $this->paymentService->updatePayment(
                 $payment->to_transfer->payment_to,
                 new UpdatePaymentData([
-                    ...$request->validated(),
+                    ...$dataToUpdate,
                     'account_id' => $payment->to_transfer->payment_to->account_id,
                     'amount' => -$amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => Carbon::parse($request->input('date')),
-                    'ends_on' => $endsOn,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
         }
