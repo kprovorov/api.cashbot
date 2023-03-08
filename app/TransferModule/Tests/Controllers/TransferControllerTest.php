@@ -112,14 +112,7 @@ class TransferControllerTest extends TestCase
         ]);
 
         $payload = [
-            ...$paymentData->only([
-                'amount',
-                'date',
-                'description',
-                'hidden',
-                'auto_apply',
-            ]),
-            'repeat' => 'none',
+            ...$paymentData->toArray(),
             'currency' => $paymentData->currency->name,
             'account_from_id' => $accountFrom->id,
             'account_to_id' => $accountTo->id,

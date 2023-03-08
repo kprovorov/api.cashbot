@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Factories;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,6 +30,8 @@ class PaymentFactory extends Factory
             'hidden' => false,
             'group' => $this->faker->uuid(),
             'auto_apply' => false,
+            'repeat_unit' => RepeatUnit::NONE,
+            'repeat_interval' => 1,
         ];
     }
 

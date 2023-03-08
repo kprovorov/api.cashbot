@@ -4,6 +4,7 @@ namespace App\PaymentModule\Tests\Services;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
@@ -40,7 +41,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPayments();
 
         $this->assertCount(3, $res);
-        $payments->each(fn (Payment $payment) => $this->assertContains(
+        $payments->each(fn(Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -67,7 +68,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPaymentsPaginated();
 
         $this->assertCount(3, $res);
-        $payments->each(fn (Payment $payment) => $this->assertContains(
+        $payments->each(fn(Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -112,21 +113,19 @@ class PaymentServiceTest extends TestCase
         ]);
 
         /** @var Payment $paymentData */
-        $paymentData = Payment::factory()->make([
-            'account_id' => $account->id,
-            'currency' => Currency::EUR,
-        ]);
+        $paymentData = Payment::factory()->make(['account_id' => $account->id, 'currency' => Currency::EUR, 'repeat_unit' => RepeatUnit::NONE,]);
 
         $data = new CreatePaymentData([
             ...$paymentData->toArray(),
             'date' => $paymentData->date,
             'currency' => $paymentData->currency,
+            'repeat_unit' => $paymentData->repeat_unit,
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($paymentData->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $service = $this->app->make(PaymentService::class);
         $res = $service->createPayment($data);
@@ -136,15 +135,16 @@ class PaymentServiceTest extends TestCase
             'amount_converted' => $data->amount * 2,
             'date' => $data->date->toDateTimeString(),
             'currency' => $data->currency->name,
+            'repeat_unit' => $data->repeat_unit->value,
         ], [
-            ...Arr::except($res->toArray(), [
-                'id',
-                'created_at',
-                'updated_at',
-            ]),
-            'auto_apply' => false,
-            'date' => $res->date->toDateTimeString(),
-        ]);
+                ...Arr::except($res->toArray(), [
+                    'id',
+                    'created_at',
+                    'updated_at',
+                ]),
+                'auto_apply' => false,
+                'date' => $res->date->toDateTimeString(),
+            ]);
         $this->assertDatabaseHas('payments', $data->toArray());
     }
 
@@ -180,12 +180,13 @@ class PaymentServiceTest extends TestCase
             ...$paymentData->toArray(),
             'date' => $paymentData->date,
             'currency' => $paymentData->currency,
+            'repeat_unit' => $paymentData->repeat_unit,
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($paymentData->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $service = $this->app->make(PaymentService::class);
         $res = $service->updatePayment($payment->id, $data);
@@ -246,9 +247,9 @@ class PaymentServiceTest extends TestCase
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($payment->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($payment->amount * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
 
@@ -289,9 +290,9 @@ class PaymentServiceTest extends TestCase
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn(80 * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn(80 * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
         $paymentService->updateReducingPayment($payment);
