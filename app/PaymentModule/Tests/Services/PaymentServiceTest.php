@@ -41,7 +41,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPayments();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -68,7 +68,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPaymentsPaginated();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -113,7 +113,7 @@ class PaymentServiceTest extends TestCase
         ]);
 
         /** @var Payment $paymentData */
-        $paymentData = Payment::factory()->make(['account_id' => $account->id, 'currency' => Currency::EUR, 'repeat_unit' => RepeatUnit::NONE,]);
+        $paymentData = Payment::factory()->make(['account_id' => $account->id, 'currency' => Currency::EUR, 'repeat_unit' => RepeatUnit::NONE]);
 
         $data = new CreatePaymentData([
             ...$paymentData->toArray(),
@@ -137,14 +137,14 @@ class PaymentServiceTest extends TestCase
             'currency' => $data->currency->name,
             'repeat_unit' => $data->repeat_unit->value,
         ], [
-                ...Arr::except($res->toArray(), [
-                    'id',
-                    'created_at',
-                    'updated_at',
-                ]),
-                'auto_apply' => false,
-                'date' => $res->date->toDateTimeString(),
-            ]);
+            ...Arr::except($res->toArray(), [
+                'id',
+                'created_at',
+                'updated_at',
+            ]),
+            'auto_apply' => false,
+            'date' => $res->date->toDateTimeString(),
+        ]);
         $this->assertDatabaseHas('payments', $data->toArray());
     }
 

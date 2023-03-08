@@ -28,8 +28,7 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    )
-    {
+    ) {
     }
 
     /**
@@ -49,8 +48,7 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection
-    {
+    ): Collection {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -62,8 +60,7 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
@@ -149,8 +146,7 @@ class PaymentService
 
         if ($payment->repeat_unit === RepeatUnit::NONE) {
             $this->deletePayment($payment->id);
-        }
-        else {
+        } else {
             [$payment, $newPayment] = $this->splitPayment($payment, $date);
 
             // If this is the same day as the payment date then delete the payment
@@ -215,10 +211,8 @@ class PaymentService
         Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
             ->where('payments.currency', '!=', 'accounts.currency')
             ->select('payments.*')
-            ->chunk(1000, function (Collection $payments)
-            {
-                $payments->each(function (Payment $payment)
-                {
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
                     dispatch(new UpdatePaymentCurrencyAmountJob($payment));
                 }
                 );
@@ -253,10 +247,8 @@ class PaymentService
     public function updateReducingPayments(): void
     {
         Payment::whereNotNull('ends_on')
-            ->chunk(1000, function (Collection $payments)
-            {
-                $payments->each(function (Payment $payment)
-                {
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
                     dispatch(new UpdateReducingPaymentJob($payment));
                 }
                 );
