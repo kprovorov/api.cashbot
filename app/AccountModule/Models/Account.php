@@ -32,7 +32,6 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property-read Account|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
  * @property-read int|null $payments_count
- *
  * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
