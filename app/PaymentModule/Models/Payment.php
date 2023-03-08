@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $group
  * @property int $auto_apply
  * @property string|null $applied_at
+ * @property RepeatUnit $repeat_unit
+ * @property int $repeat_interval
+ * @property \Illuminate\Support\Carbon|null $repeat_ends_on
  * @property-read Account|null $account
  * @property-read Transfer|null $from_transfer
  * @property-read Transfer|null $to_transfer
@@ -50,6 +53,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatEndsOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @mixin \Eloquent
  */

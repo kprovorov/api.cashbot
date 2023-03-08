@@ -18,7 +18,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
-use Str;
 
 class PaymentController extends Controller
 {
@@ -53,11 +52,11 @@ class PaymentController extends Controller
         $this->paymentService->createPayment(
             new CreatePaymentData([
                 ...$request->validated(),
-                'amount'         => (int) $request->input('amount'),
-                'currency'       => Currency::from($request->input('currency')),
-                'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
-                'date'           => Carbon::parse($request->input('date')),
-                'ends_on'        => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
+                'amount' => (int) $request->input('amount'),
+                'currency' => Currency::from($request->input('currency')),
+                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                'date' => Carbon::parse($request->input('date')),
+                'ends_on' => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
                 'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
@@ -82,7 +81,7 @@ class PaymentController extends Controller
             Carbon::parse($request->input('fromDate')),
             new UpdatePaymentGeneralData([
                 ...$request->validated(),
-                'currency' => Currency::from($request->input('currency'))
+                'currency' => Currency::from($request->input('currency')),
             ])
         );
     }
@@ -102,11 +101,11 @@ class PaymentController extends Controller
             $payment,
             new UpdatePaymentData([
                 ...$request->validated(),
-                'amount'         => $amount,
-                'currency'       => Currency::from($request->input('currency')),
-                'date'           => Carbon::parse($request->input('date')),
-                'ends_on'        => $endsOn,
-                'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
+                'amount' => $amount,
+                'currency' => Currency::from($request->input('currency')),
+                'date' => Carbon::parse($request->input('date')),
+                'ends_on' => $endsOn,
+                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
@@ -116,12 +115,12 @@ class PaymentController extends Controller
                 $payment->from_transfer->payment_from,
                 new UpdatePaymentData([
                     ...$request->validated(),
-                    'account_id'     => $payment->from_transfer->payment_from->account_id,
-                    'amount'         => -$amount,
-                    'currency'       => Currency::from($request->input('currency')),
-                    'date'           => Carbon::parse($request->input('date')),
-                    'ends_on'        => $endsOn,
-                    'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
+                    'account_id' => $payment->from_transfer->payment_from->account_id,
+                    'amount' => -$amount,
+                    'currency' => Currency::from($request->input('currency')),
+                    'date' => Carbon::parse($request->input('date')),
+                    'ends_on' => $endsOn,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                     'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
@@ -132,12 +131,12 @@ class PaymentController extends Controller
                 $payment->to_transfer->payment_to,
                 new UpdatePaymentData([
                     ...$request->validated(),
-                    'account_id'     => $payment->to_transfer->payment_to->account_id,
-                    'amount'         => -$amount,
-                    'currency'       => Currency::from($request->input('currency')),
-                    'date'           => Carbon::parse($request->input('date')),
-                    'ends_on'        => $endsOn,
-                    'repeat_unit'    => RepeatUnit::from($request->input('repeat_unit')),
+                    'account_id' => $payment->to_transfer->payment_to->account_id,
+                    'amount' => -$amount,
+                    'currency' => Currency::from($request->input('currency')),
+                    'date' => Carbon::parse($request->input('date')),
+                    'ends_on' => $endsOn,
+                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                     'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
                 ])
             );
@@ -156,19 +155,16 @@ class PaymentController extends Controller
             if ($date) {
                 $this->paymentService->cutoffPayment($transfer->payment_from, $date);
                 $this->paymentService->cutoffPayment($transfer->payment_to, $date);
-            }
-            else {
+            } else {
                 $transfer->payment_from->delete();
                 $transfer->payment_to->delete();
             }
 
             $transfer->delete();
-        }
-        else {
+        } else {
             if ($date) {
                 $this->paymentService->cutoffPayment($payment, $date);
-            }
-            else {
+            } else {
                 $payment->delete();
             }
         }

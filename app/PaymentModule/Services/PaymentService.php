@@ -27,8 +27,7 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    )
-    {
+    ) {
     }
 
     /**
@@ -48,8 +47,7 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection
-    {
+    ): Collection {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -61,8 +59,7 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
@@ -87,8 +84,8 @@ class PaymentService
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
-            'group'            => $data->group ?? Str::orderedUuid(),
-            'amount'           => $data->amount,
+            'group' => $data->group ?? Str::orderedUuid(),
+            'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
                 $account->currency,
@@ -112,7 +109,7 @@ class PaymentService
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
-            'amount'           => $data->amount,
+            'amount' => $data->amount,
             'amount_converted' => $this->currencyConverter->convert(
                 $data->amount,
                 $account->currency,
@@ -138,7 +135,7 @@ class PaymentService
 
         return [
             $payment->refresh(),
-            $newPayment->refresh()
+            $newPayment->refresh(),
         ];
     }
 
@@ -177,14 +174,13 @@ class PaymentService
             ->where('date', '>=', $fromDate)
             ->update([
                 ...$data->toArray(),
-                'amount'           => $data->amount,
+                'amount' => $data->amount,
                 'amount_converted' => $this->currencyConverter->convert(
                     $data->amount,
                     $account->currency,
                     $data->currency,
                 ),
             ]);
-
 
         return true;
     }
@@ -208,10 +204,8 @@ class PaymentService
         Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
             ->where('payments.currency', '!=', 'accounts.currency')
             ->select('payments.*')
-            ->chunk(1000, function (Collection $payments)
-            {
-                $payments->each(function (Payment $payment)
-                {
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
                     dispatch(new UpdatePaymentCurrencyAmountJob($payment));
                 }
                 );
@@ -235,8 +229,8 @@ class PaymentService
                 new UpdatePaymentData([
                     ...$payment->toArray(),
                     'currency' => $payment->currency,
-                    'date'     => $payment->date,
-                    'ends_on'  => $payment->ends_on,
+                    'date' => $payment->date,
+                    'ends_on' => $payment->ends_on,
                 ])
             );
         }
@@ -245,10 +239,8 @@ class PaymentService
     public function updateReducingPayments(): void
     {
         Payment::whereNotNull('ends_on')
-            ->chunk(1000, function (Collection $payments)
-            {
-                $payments->each(function (Payment $payment)
-                {
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
                     dispatch(new UpdateReducingPaymentJob($payment));
                 }
                 );
@@ -263,7 +255,7 @@ class PaymentService
         $payment = $payment instanceof Payment ? $payment->refresh() : Payment::find($payment);
 
         $totalDays = $payment->date->diffInDays($payment->ends_on);
-        $daysLeft  = $payment->ends_on->diffInDays(today());
+        $daysLeft = $payment->ends_on->diffInDays(today());
 
         $amount = round($payment->amount / $totalDays * $daysLeft, 4);
 
@@ -272,9 +264,9 @@ class PaymentService
             new UpdatePaymentData([
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
-                'ends_on'  => $payment->ends_on,
-                'amount'   => $amount,
-                'date'     => today(),
+                'ends_on' => $payment->ends_on,
+                'amount' => $amount,
+                'date' => today(),
             ])
         );
     }

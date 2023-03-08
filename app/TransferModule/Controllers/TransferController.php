@@ -58,36 +58,36 @@ class TransferController extends Controller
 
         $group = Str::orderedUuid();
 
-         $paymentFrom = $this->paymentService->createPayment(
-                new CreatePaymentData([
-                    ...$request->validated(),
-                    'account_id' => $request->input('account_from_id'),
-                    'group' => $group,
-                    'amount' => -$amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => $date,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
-                ])
-            );
+        $paymentFrom = $this->paymentService->createPayment(
+            new CreatePaymentData([
+                ...$request->validated(),
+                'account_id' => $request->input('account_from_id'),
+                'group' => $group,
+                'amount' => -$amount,
+                'currency' => Currency::from($request->input('currency')),
+                'date' => $date,
+                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
+            ])
+        );
 
-            $paymentTo = $this->paymentService->createPayment(
-                new CreatePaymentData([
-                    ...$request->validated(),
-                    'account_id' => $request->input('account_to_id'),
-                    'group' => $group,
-                    'amount' => $amount,
-                    'currency' => Currency::from($request->input('currency')),
-                    'date' => $date,
-                    'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
-                    'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
-                ])
-            );
+        $paymentTo = $this->paymentService->createPayment(
+            new CreatePaymentData([
+                ...$request->validated(),
+                'account_id' => $request->input('account_to_id'),
+                'group' => $group,
+                'amount' => $amount,
+                'currency' => Currency::from($request->input('currency')),
+                'date' => $date,
+                'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
+                'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
+            ])
+        );
 
-            Transfer::create([
-                'from_payment_id' => $paymentFrom->id,
-                'to_payment_id' => $paymentTo->id,
-            ]);
+        Transfer::create([
+            'from_payment_id' => $paymentFrom->id,
+            'to_payment_id' => $paymentTo->id,
+        ]);
     }
 
     /**
