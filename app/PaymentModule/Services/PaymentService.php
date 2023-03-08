@@ -121,6 +121,48 @@ class PaymentService
         ]);
     }
 
+    public function splitPayment(Payment|int $payment, Carbon $fromDate): array
+    {
+        $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
+
+        // Cut off payments before old date
+        $this->paymentRepo->update($payment->id, [
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+
+        // Create new payment which continues the sub-chain
+        $newPayment = Payment::create([
+            ...$payment->toArray(),
+            'date' => $fromDate,
+        ]);
+
+        return [
+            $payment->refresh(),
+            $newPayment->refresh()
+        ];
+    }
+
+    public function cutoffPayment(Payment|int $payment, Carbon $date): void
+    {
+        [$payment, $newPayment] = $this->splitPayment($payment, $date);
+
+        // If this is the same day as the payment date then delete the payment
+        if ($payment->repeat_ends_on && $payment->repeat_ends_on->isBefore($payment->date)) {
+            $this->deletePayment($payment->id);
+        }
+
+        [$paymentToDelete, $restOfChain] = $this->splitPayment(
+            $newPayment,
+            $date->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
+        );
+
+        if ($restOfChain->repeat_ends_on && $restOfChain->repeat_ends_on->isBefore($restOfChain->date)) {
+            $this->deletePayment($restOfChain->id);
+        }
+
+        $this->deletePayment($paymentToDelete->id);
+    }
+
     public function updatePaymentGeneral(Payment|int $payment, Carbon $fromDate, UpdatePaymentGeneralData $data): bool
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
@@ -128,24 +170,7 @@ class PaymentService
         $account = Account::findOrFail($data->account_id);
 
         // If it's NOT the first payment in sub-chain then split it into 2 payments
-        if (!$payment->date->isSameDay($fromDate)) {
-            // Cut off payments before old date
-            $this->paymentRepo->update($payment->id, [
-                'repeat_ends_on' => $fromDate->clone()->subDay(),
-            ]);
-
-            // Create new payment which continues the sub-chain
-            Payment::create([
-                ...$payment->toArray(),
-                'date'             => $fromDate,
-                'amount'           => $data->amount,
-                'amount_converted' => $this->currencyConverter->convert(
-                    $data->amount,
-                    $account->currency,
-                    $data->currency,
-                ),
-            ]);
-        }
+        $this->splitPayment($payment, $fromDate);
 
         // Update current and all future payments by incrementing days diff between old date and new date
         Payment::where('group', $payment->group)

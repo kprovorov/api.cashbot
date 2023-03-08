@@ -147,16 +147,30 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Payment $payment): void
+    public function destroy(Payment $payment, Request $request): void
     {
+        $date = Carbon::parse($request->input('date'));
+
         $transfer = $payment->from_transfer ?? $payment->to_transfer;
         if ($transfer) {
-            $transfer->payment_from->delete();
-            $transfer->payment_to->delete();
+            if ($date) {
+                $this->paymentService->cutoffPayment($transfer->payment_from, $date);
+                $this->paymentService->cutoffPayment($transfer->payment_to, $date);
+            }
+            else {
+                $transfer->payment_from->delete();
+                $transfer->payment_to->delete();
+            }
+
             $transfer->delete();
         }
         else {
-            $payment->delete();
+            if ($date) {
+                $this->paymentService->cutoffPayment($payment, $date);
+            }
+            else {
+                $payment->delete();
+            }
         }
     }
 
