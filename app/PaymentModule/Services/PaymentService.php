@@ -156,7 +156,7 @@ class PaymentService
 
             [$paymentToDelete, $restOfChain] = $this->splitPayment(
                 $newPayment,
-                $date->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
+                $date->clone()->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
             );
 
             if ($restOfChain->repeat_ends_on && $restOfChain->repeat_ends_on->isBefore($restOfChain->date)) {
