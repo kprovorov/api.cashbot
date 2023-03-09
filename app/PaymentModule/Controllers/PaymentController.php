@@ -33,7 +33,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request): Collection
     {
-        $with = ['account'];
+        $with = ['account_to', 'account_from'];
 
         return $request->has('group')
             ? $this->paymentService->getPaymentsWhere('group', '=', $request->input('group'), $with)
@@ -68,51 +68,21 @@ class PaymentController extends Controller
     public function show(Payment $payment): Payment
     {
         return $this->paymentService->getPayment($payment->id, [
-            'account',
-            'from_transfer.payment_from.account',
-            'to_transfer.payment_to.account',
+            'account_to',
+            'account_from'
         ]);
     }
 
     public function updateGeneral(UpdatePaymentGeneralRequest $request, Payment $payment): void
     {
-        $fromDate = Carbon::parse($request->input('fromDate'));
-        $amount = (int) $request->input('amount');
-
-        $dataToUpdate = [
-            ...$request->validated(),
-            'currency' => Currency::from($request->input('currency')),
-        ];
-
         $this->paymentService->updatePaymentGeneral(
             $payment,
-            $fromDate,
-            new UpdatePaymentGeneralData($dataToUpdate)
+            Carbon::parse($request->input('from_date')),
+            new UpdatePaymentGeneralData([
+                ...$request->validated(),
+                'currency' => Currency::from($request->input('currency')),
+            ])
         );
-
-        if ($payment->from_transfer) {
-            $this->paymentService->updatePaymentGeneral(
-                $payment->from_transfer->payment_from,
-                $fromDate,
-                new UpdatePaymentGeneralData([
-                    ...$dataToUpdate,
-                    'account_id' => $payment->from_transfer->payment_from->account_id,
-                    'amount' => -$amount,
-                ])
-            );
-        }
-
-        if ($payment->to_transfer) {
-            $this->paymentService->updatePaymentGeneral(
-                $payment->to_transfer->payment_to,
-                $fromDate,
-                new UpdatePaymentGeneralData([
-                    ...$dataToUpdate,
-                    'account_id' => $payment->to_transfer->payment_to->account_id,
-                    'amount' => -$amount,
-                ])
-            );
-        }
     }
 
     /**

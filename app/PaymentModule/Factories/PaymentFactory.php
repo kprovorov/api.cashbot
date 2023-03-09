@@ -23,8 +23,7 @@ class PaymentFactory extends Factory
     {
         return [
             'description' => $this->faker->sentence(2),
-            'amount' => $this->faker->numberBetween(-10, 10) * 1_000_000,
-            'amount_converted' => $this->faker->numberBetween(-10, 10) * 1_000_000,
+            'amount' => $this->faker->numberBetween(1, 10) * 1_000_000,
             'currency' => $this->faker->randomElement(Currency::cases()),
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
             'hidden' => false,

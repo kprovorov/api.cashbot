@@ -41,7 +41,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPayments();
 
         $this->assertCount(3, $res);
-        $payments->each(fn (Payment $payment) => $this->assertContains(
+        $payments->each(fn(Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -68,7 +68,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPaymentsPaginated();
 
         $this->assertCount(3, $res);
-        $payments->each(fn (Payment $payment) => $this->assertContains(
+        $payments->each(fn(Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -102,7 +102,7 @@ class PaymentServiceTest extends TestCase
      *
      * @throws UnknownProperties
      */
-    public function it_successfully_creates_payment(): void
+    public function it_successfully_creates_income_payment(): void
     {
         $user = User::factory()->create();
 
@@ -113,7 +113,11 @@ class PaymentServiceTest extends TestCase
         ]);
 
         /** @var Payment $paymentData */
-        $paymentData = Payment::factory()->make(['account_id' => $account->id, 'currency' => Currency::EUR, 'repeat_unit' => RepeatUnit::NONE]);
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+            'repeat_unit' => RepeatUnit::NONE
+        ]);
 
         $data = new CreatePaymentData([
             ...$paymentData->toArray(),
@@ -132,19 +136,136 @@ class PaymentServiceTest extends TestCase
 
         $this->assertEquals([
             ...$data->toArray(),
-            'amount_converted' => $data->amount * 2,
+            'amount_to_converted' => $data->amount * 2,
+            'amount_from_converted' => null,
             'date' => $data->date->toDateTimeString(),
             'currency' => $data->currency->name,
             'repeat_unit' => $data->repeat_unit->value,
         ], [
-            ...Arr::except($res->toArray(), [
-                'id',
-                'created_at',
-                'updated_at',
-            ]),
-            'auto_apply' => false,
-            'date' => $res->date->toDateTimeString(),
+                ...Arr::except($res->toArray(), [
+                    'id',
+                    'created_at',
+                    'updated_at',
+                ]),
+                'auto_apply' => false,
+                'date' => $res->date->toDateTimeString(),
+            ]);
+        $this->assertDatabaseHas('payments', $data->toArray());
+    }
+
+    /**
+     * @test
+     *
+     * @throws UnknownProperties
+     */
+    public function it_successfully_creates_expense_payment(): void
+    {
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
         ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_from_id' => $account->id,
+            'currency' => Currency::EUR,
+            'repeat_unit' => RepeatUnit::NONE
+        ]);
+
+        $data = new CreatePaymentData([
+            ...$paymentData->toArray(),
+            'date' => $paymentData->date,
+            'currency' => $paymentData->currency,
+            'repeat_unit' => $paymentData->repeat_unit,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
+
+        $service = $this->app->make(PaymentService::class);
+        $res = $service->createPayment($data);
+
+        $this->assertEquals([
+            ...$data->toArray(),
+            'amount_to_converted' => null,
+            'amount_from_converted' => $data->amount * 2,
+            'date' => $data->date->toDateTimeString(),
+            'currency' => $data->currency->name,
+            'repeat_unit' => $data->repeat_unit->value,
+        ], [
+                ...Arr::except($res->toArray(), [
+                    'id',
+                    'created_at',
+                    'updated_at',
+                ]),
+                'auto_apply' => false,
+                'date' => $res->date->toDateTimeString(),
+            ]);
+        $this->assertDatabaseHas('payments', $data->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_creates_transfer_payment(): void
+    {
+        $user = User::factory()->create();
+
+        /** @var Account $accountTo */
+        $accountTo = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        $accountFrom = Account::factory()->create([
+            'currency' => Currency::EUR,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $accountTo->id,
+            'account_from_id' => $accountFrom->id,
+            'currency' => Currency::EUR,
+            'repeat_unit' => RepeatUnit::NONE
+        ]);
+
+        $data = new CreatePaymentData([
+            ...$paymentData->toArray(),
+            'date' => $paymentData->date,
+            'currency' => $paymentData->currency,
+            'repeat_unit' => $paymentData->repeat_unit,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->twice()
+            ->andReturn($paymentData->amount * 2);
+
+        $service = $this->app->make(PaymentService::class);
+        $res = $service->createPayment($data);
+
+        $this->assertEquals([
+            ...$data->toArray(),
+            'amount_to_converted' => $data->amount * 2,
+            'amount_from_converted' => $data->amount * 2,
+            'date' => $data->date->toDateTimeString(),
+            'currency' => $data->currency->name,
+            'repeat_unit' => $data->repeat_unit->value,
+        ], [
+                ...Arr::except($res->toArray(), [
+                    'id',
+                    'created_at',
+                    'updated_at',
+                ]),
+                'auto_apply' => false,
+                'date' => $res->date->toDateTimeString(),
+            ]);
         $this->assertDatabaseHas('payments', $data->toArray());
     }
 

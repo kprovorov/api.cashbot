@@ -4,7 +4,6 @@ use App\AccountModule\Controllers\AccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RateController;
 use App\PaymentModule\Controllers\PaymentController;
-use App\TransferModule\Controllers\TransferController;
 use App\UserModule\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +34,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
     Route::put('payments/{payment}/general', [PaymentController::class, 'updateGeneral']);
 
-    Route::apiResource('transfers', TransferController::class)->only([
-        'store',
-    ]);
-
-    Route::get('dashboard', DashboardController::class);
     Route::get('rates', RateController::class);
 });

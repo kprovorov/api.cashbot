@@ -28,7 +28,8 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    ) {
+    )
+    {
     }
 
     /**
@@ -48,7 +49,8 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection {
+    ): Collection
+    {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -60,7 +62,8 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator {
+    ): LengthAwarePaginator
+    {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
@@ -81,17 +84,23 @@ class PaymentService
      */
     public function createPayment(CreatePaymentData $data): Payment
     {
-        $account = Account::findOrFail($data->account_id);
+        $accountTo = Account::find($data->account_to_id);
+        $accountFrom = Account::find($data->account_from_id);
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
             'group' => $data->group ?? Str::orderedUuid(),
             'amount' => $data->amount,
-            'amount_converted' => $this->currencyConverter->convert(
+            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
                 $data->amount,
-                $account->currency,
+                $accountTo->currency,
                 $data->currency,
-            ),
+            ) : null,
+            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                -$data->amount,
+                $accountFrom->currency,
+                $data->currency,
+            ) : null,
         ]);
     }
 
@@ -106,16 +115,22 @@ class PaymentService
     {
         $paymentId = $payment instanceof Payment ? $payment->id : $payment;
 
-        $account = Account::findOrFail($data->account_id);
+        $accountTo = Account::find($data->account_to_id);
+        $accountFrom = Account::find($data->account_from_id);
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
             'amount' => $data->amount,
-            'amount_converted' => $this->currencyConverter->convert(
+            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
                 $data->amount,
-                $account->currency,
+                $accountTo->currency,
                 $data->currency,
-            ),
+            ) : null,
+            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                -$data->amount,
+                $accountFrom->currency,
+                $data->currency,
+            ) : null,
         ]);
     }
 
@@ -171,9 +186,10 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
-        $account = Account::findOrFail($data->account_id);
+        $accountFrom = Account::find($data->account_from_id);
+        $accountTo = Account::find($data->account_to_id);
 
-        // If it's NOT the first payment in sub-chain then split it into 2 payments
+        // Cut off payments before date
         $this->splitPayment($payment, $fromDate);
 
         // Update current and all future payments by incrementing days diff between old date and new date
@@ -182,11 +198,16 @@ class PaymentService
             ->update([
                 ...$data->toArray(),
                 'amount' => $data->amount,
-                'amount_converted' => $this->currencyConverter->convert(
+                'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
                     $data->amount,
-                    $account->currency,
+                    $accountTo->currency,
                     $data->currency,
-                ),
+                ) : null,
+                'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                    -$data->amount,
+                    $accountFrom->currency,
+                    $data->currency,
+                ) : null,
             ]);
 
         return true;
@@ -208,7 +229,17 @@ class PaymentService
      */
     public function updateCurrencyAmounts(): void
     {
-        Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
+        Payment::join('accounts', 'payments.account_to_id', '=', 'accounts.id')
+            ->where('payments.currency', '!=', 'accounts.currency')
+            ->select('payments.*')
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
+                    dispatch(new UpdatePaymentCurrencyAmountJob($payment));
+                }
+                );
+            });
+
+        Payment::join('accounts', 'payments.account_from_id', '=', 'accounts.id')
             ->where('payments.currency', '!=', 'accounts.currency')
             ->select('payments.*')
             ->chunk(1000, function (Collection $payments) {
@@ -230,7 +261,22 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
-        if ($payment->currency !== $payment->account->currency) {
+        $payment->load(['account_to', 'account_from']);
+
+        if ($payment->account_to_id && $payment->account_to->currency !== $payment->currency) {
+            $this->updatePayment(
+                $payment,
+                new UpdatePaymentData([
+                    ...$payment->toArray(),
+                    'currency' => $payment->currency,
+                    'date' => $payment->date,
+                    'ends_on' => $payment->ends_on,
+                    'repeat_unit' => $payment->repeat_unit,
+                ])
+            );
+        }
+
+        if ($payment->account_from_id && $payment->account_from->currency !== $payment->currency) {
             $this->updatePayment(
                 $payment,
                 new UpdatePaymentData([

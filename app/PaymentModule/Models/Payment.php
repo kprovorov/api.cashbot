@@ -6,7 +6,6 @@ use App\AccountModule\Models\Account;
 use App\Enums\Currency;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\Factories\PaymentFactory;
-use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,11 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * App\PaymentModule\Models\Payment
  *
  * @property int $id
- * @property int $account_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $account_to_id
+ * @property int|null $account_from_id
  * @property string $description
- * @property int $amount_converted
+ * @property int|null $amount_to_converted
+ * @property int|null $amount_from_converted
  * @property int $amount
  * @property Currency $currency
  * @property \Illuminate\Support\Carbon $date
@@ -32,17 +33,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property RepeatUnit $repeat_unit
  * @property int $repeat_interval
  * @property \Illuminate\Support\Carbon|null $repeat_ends_on
- * @property-read Account|null $account
- * @property-read Transfer|null $from_transfer
- * @property-read Transfer|null $to_transfer
- *
+ * @property-read Account|null $accountFrom
+ * @property-read Account|null $accountTo
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountFromId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountToId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountConverted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountFromConverted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountToConverted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAppliedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAutoApply($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
@@ -69,15 +70,19 @@ class Payment extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'account_id',
-        'group',
+        'account_to_id',
+        'account_from_id',
         'description',
+        'amount_to_converted',
+        'amount_from_converted',
         'amount',
-        'amount_converted',
         'currency',
         'date',
         'hidden',
         'ends_on',
+        'group',
+        'auto_apply',
+        'applied_at',
         'repeat_unit',
         'repeat_interval',
         'repeat_ends_on',
@@ -111,21 +116,16 @@ class Payment extends Model
      */
     protected static function newFactory(): PaymentFactory
     {
-        return PaymentFactory::new();
+        return PaymentFactory::new ();
     }
 
-    public function from_transfer(): HasOne
+    public function account_to(): BelongsTo
     {
-        return $this->hasOne(Transfer::class, 'to_payment_id');
+        return $this->belongsTo(Account::class, 'account_to_id');
     }
 
-    public function to_transfer(): HasOne
+    public function account_from(): BelongsTo
     {
-        return $this->hasOne(Transfer::class, 'from_payment_id');
-    }
-
-    public function account(): BelongsTo
-    {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class, 'account_from_id');
     }
 }

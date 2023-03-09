@@ -23,15 +23,22 @@ class UpdatePaymentGeneralRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_id' => [
-                'required',
+            'account_to_id' => [
+                'nullable',
+                'required_without:account_from_id',
+                'integer',
+                Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
+            ],
+            'account_from_id' => [
+                'nullable',
+                'required_without:account_to_id',
                 'integer',
                 Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
             'description' => 'required|string|max:255',
             'amount' => 'required|integer',
             'currency' => ['required', new Enum(Currency::class)],
-            'fromDate' => 'required|date',
+            'from_date' => 'required|date',
         ];
     }
 }

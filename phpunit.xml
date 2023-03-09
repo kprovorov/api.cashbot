@@ -9,10 +9,6 @@
             <directory suffix="Test.php">./app/UserModule/Tests</directory>
         </testsuite>
 
-        <testsuite name="TransferModule">
-            <directory suffix="Test.php">./app/TransferModule/Tests</directory>
-        </testsuite>
-
         <testsuite name="AccountModule">
             <directory suffix="Test.php">./app/AccountModule/Tests</directory>
         </testsuite>

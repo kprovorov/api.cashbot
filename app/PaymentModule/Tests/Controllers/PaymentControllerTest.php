@@ -53,7 +53,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $res = $this->get("api/payments/{$payment->id}");
@@ -65,7 +65,7 @@ class PaymentControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_successfully_creates_payment(): void
+    public function it_successfully_creates_income_payment(): void
     {
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -78,7 +78,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -88,17 +88,102 @@ class PaymentControllerTest extends TestCase
         ];
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($paymentData->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $res = $this->post('api/payments', $payload);
 
         $res->assertOk();
-//        $res->assertJson($payload);
+        //        $res->assertJson($payload);
         $this->assertDatabaseHas('payments', [
             ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_converted' => $payload['amount'] * 2,
+            'amount_to_converted' => $payload['amount'] * 2,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_creates_expense_payment(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_from_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $payload = [
+            ...$paymentData->toArray(),
+            'repeat' => 'none',
+        ];
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
+
+        $res = $this->post('api/payments', $payload);
+
+        $res->assertOk();
+        //        $res->assertJson($payload);
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($paymentData->toArray(), ['group']),
+            'amount_from_converted' => $payload['amount'] * 2,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_creates_transfer_payment(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $accountTo = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+        $accountFrom = Account::factory()->create([
+            'currency' => Currency::EUR,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $accountTo->id,
+            'account_from_id' => $accountFrom->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $payload = [
+            ...$paymentData->toArray(),
+            'repeat' => 'none',
+        ];
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->twice()
+            ->andReturn($paymentData->amount * 2);
+
+        $res = $this->post('api/payments', $payload);
+
+        $res->assertOk();
+        //        $res->assertJson($payload);
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($paymentData->toArray(), ['group']),
+            'amount_to_converted' => $payload['amount'] * 2,
+            'amount_from_converted' => $payload['amount'] * 2,
         ]);
     }
 
@@ -138,7 +223,7 @@ class PaymentControllerTest extends TestCase
         $res = $this->put("api/payments/{$payment->id}", $payload);
 
         $res->assertSuccessful();
-//        $res->assertJson($payload);
+        //        $res->assertJson($payload);
         $this->assertDatabaseHas('payments', [
             ...$payload,
             'amount_converted' => $payload['amount'] * 2,
