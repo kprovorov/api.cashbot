@@ -24,15 +24,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    //    Route::apiResource('users', UserController::class);
 
+    // Misc
+    Route::get('rates', RateController::class);
+
+
+    // Accounts
     Route::apiResource('accounts', AccountController::class)->only([
         'index',
         'update',
     ]);
-    Route::apiResource('payments', PaymentController::class);
+
+
+    // Payments
+    Route::apiResource('payments', PaymentController::class)->only([
+        'store',
+        'destroy',
+    ]);
     Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
     Route::put('payments/{payment}/general', [PaymentController::class, 'updateGeneral']);
-
-    Route::get('rates', RateController::class);
 });

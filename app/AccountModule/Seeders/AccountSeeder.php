@@ -74,7 +74,7 @@ class AccountSeeder extends Seeder
                 ])->each(function (array $accountData) {
                     $account = Account::create([
                         ...$accountData,
-                        'balance' => $accountData['balance'] * 10000,
+                        'balance' => $accountData['balance'] * 100,
                         'user_id' => 1,
                     ]);
 

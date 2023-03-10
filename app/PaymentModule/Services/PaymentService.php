@@ -101,7 +101,7 @@ class PaymentService
                 $accountFrom->currency,
                 $data->currency,
             ) : null,
-        ]);
+        ])->refresh();
     }
 
     /**
@@ -134,7 +134,7 @@ class PaymentService
         ]);
     }
 
-    public function splitPayment(Payment|int $payment, Carbon $fromDate): array
+    protected function splitPayment(Payment|int $payment, Carbon $fromDate): array
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
@@ -186,38 +186,50 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
-        $accountFrom = Account::find($data->account_from_id);
-        $accountTo = Account::find($data->account_to_id);
-
-        // Cut off payments before date
-        $this->splitPayment($payment, $fromDate);
-
-        // Update current and all future payments by incrementing days diff between old date and new date
-        Payment::where('group', $payment->group)
-            ->where('date', '>=', $fromDate)
-            ->update([
+        if ($payment->repeat_unit === RepeatUnit::NONE) {
+            return $this->updatePayment($payment, new UpdatePaymentData([
+                ...$payment->toArray(),
                 ...$data->toArray(),
-                'amount' => $data->amount,
-                'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                    $data->amount,
-                    $accountTo->currency,
-                    $data->currency,
-                ) : null,
-                'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                    -$data->amount,
-                    $accountFrom->currency,
-                    $data->currency,
-                ) : null,
-            ]);
+                'date' => $payment->date,
+                'repeat_unit' => $payment->repeat_unit,
+                'repeat_ends_on' => $payment->repeat_ends_on,
+            ]));
+        } else {
+            $accountFrom = Account::find($data->account_from_id);
+            $accountTo = Account::find($data->account_to_id);
 
-        return true;
+            // Cut off payments before date
+            $this->splitPayment($payment, $fromDate);
+
+            // Update current and all future payments by incrementing days diff between old date and new date
+            Payment::where('group', $payment->group)
+                ->where('date', '>=', $fromDate)
+                ->update([
+                    ...$data->toArray(),
+                    'amount' => $data->amount,
+                    'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
+                        $data->amount,
+                        $accountTo->currency,
+                        $data->currency,
+                    ) : null,
+                    'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                        -$data->amount,
+                        $accountFrom->currency,
+                        $data->currency,
+                    ) : null,
+                ]);
+
+            return true;
+        }
     }
 
     /**
      * Delete Payment by id
      */
-    public function deletePayment(int $paymentId): bool
+    public function deletePayment(Payment|int $payment): bool
     {
+        $paymentId = $payment instanceof Payment ? $payment->id : $payment;
+
         return $this->paymentRepo->delete($paymentId);
     }
 
@@ -272,6 +284,7 @@ class PaymentService
                     'date' => $payment->date,
                     'ends_on' => $payment->ends_on,
                     'repeat_unit' => $payment->repeat_unit,
+                    'repeat_ends_on' => $payment->repeat_ends_on,
                 ])
             );
         }
@@ -285,6 +298,7 @@ class PaymentService
                     'date' => $payment->date,
                     'ends_on' => $payment->ends_on,
                     'repeat_unit' => $payment->repeat_unit,
+                    'repeat_ends_on' => $payment->repeat_ends_on,
                 ])
             );
         }

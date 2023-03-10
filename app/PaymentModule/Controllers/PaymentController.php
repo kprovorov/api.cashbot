@@ -47,9 +47,9 @@ class PaymentController extends Controller
      * @throws UnknownProperties
      * @throws GuzzleException
      */
-    public function store(StorePaymentRequest $request): void
+    public function store(StorePaymentRequest $request): Payment
     {
-        $this->paymentService->createPayment(
+        return $this->paymentService->createPayment(
             new CreatePaymentData([
                 ...$request->validated(),
                 'amount' => (int) $request->input('amount'),
@@ -112,28 +112,6 @@ class PaymentController extends Controller
                 'amount' => $amount,
             ])
         );
-
-        if ($payment->from_transfer) {
-            $this->paymentService->updatePayment(
-                $payment->from_transfer->payment_from,
-                new UpdatePaymentData([
-                    ...$dataToUpdate,
-                    'account_id' => $payment->from_transfer->payment_from->account_id,
-                    'amount' => -$amount,
-                ])
-            );
-        }
-
-        if ($payment->to_transfer) {
-            $this->paymentService->updatePayment(
-                $payment->to_transfer->payment_to,
-                new UpdatePaymentData([
-                    ...$dataToUpdate,
-                    'account_id' => $payment->to_transfer->payment_to->account_id,
-                    'amount' => -$amount,
-                ])
-            );
-        }
     }
 
     /**
@@ -143,23 +121,10 @@ class PaymentController extends Controller
     {
         $date = Carbon::parse($request->input('date'));
 
-        $transfer = $payment->from_transfer ?? $payment->to_transfer;
-        if ($transfer) {
-            if ($date) {
-                $this->paymentService->cutoffPayment($transfer->payment_from, $date);
-                $this->paymentService->cutoffPayment($transfer->payment_to, $date);
-            } else {
-                $transfer->payment_from->delete();
-                $transfer->payment_to->delete();
-            }
-
-            $transfer->delete();
+        if ($date) {
+            $this->paymentService->cutoffPayment($payment, $date);
         } else {
-            if ($date) {
-                $this->paymentService->cutoffPayment($payment, $date);
-            } else {
-                $payment->delete();
-            }
+            $this->paymentService->deletePayment($payment);
         }
     }
 
