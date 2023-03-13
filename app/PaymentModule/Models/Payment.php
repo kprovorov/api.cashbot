@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Account|null $account_from
  * @property-read Account|null $account_to
  *
- * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
+ * @method static \App\PaymentModule\Factories\PaymentFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
