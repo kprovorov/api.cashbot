@@ -27,15 +27,15 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property int $balance
  * @property string|null $external_id
  * @property string|null $provider
- * @property-read \Illuminate\Database\Eloquent\Collection|Account[] $jars
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Account> $jars
  * @property-read int|null $jars_count
  * @property-read Account|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments_from
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Payment> $payments_from
  * @property-read int|null $payments_from_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments_to
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Payment> $payments_to
  * @property-read int|null $payments_to_count
  *
- * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
+ * @method static \App\AccountModule\Factories\AccountFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Account query()
