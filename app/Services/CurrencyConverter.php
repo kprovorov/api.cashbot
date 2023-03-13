@@ -65,10 +65,6 @@ class CurrencyConverter
     /**
      * Convert amount from one currency to another
      *
-     * @param  int  $amount
-     * @param  Currency  $currencyFrom
-     * @param  Currency  $currencyTo
-     * @return int
      *
      * @throws GuzzleException
      * @throws UnknownProperties

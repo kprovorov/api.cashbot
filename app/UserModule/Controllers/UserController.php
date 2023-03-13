@@ -16,8 +16,6 @@ class UserController extends Controller
 {
     /**
      * UserController constructor.
-     *
-     * @param  UserService  $userService
      */
     public function __construct(protected UserService $userService)
     {
@@ -25,8 +23,6 @@ class UserController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection
      */
     public function index(): Collection
     {
@@ -36,8 +32,6 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreUserRequest  $request
-     * @return User
      *
      * @throws UnknownProperties
      */
@@ -50,9 +44,6 @@ class UserController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  User  $user
-     * @return User
      */
     public function show(User $user): User
     {
@@ -62,9 +53,6 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateUserRequest  $request
-     * @param  User  $user
-     * @return User
      *
      * @throws UnknownProperties
      */
@@ -79,9 +67,6 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  User  $user
-     * @return bool
      */
     public function destroy(User $user): bool
     {

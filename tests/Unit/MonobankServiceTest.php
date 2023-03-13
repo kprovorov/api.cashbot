@@ -20,8 +20,6 @@ class MonobankServiceTest extends TestCase
     /**
      * @test
      *
-     * @return void
-     *
      * @throws GuzzleException
      * @throws UnknownProperties
      */
@@ -59,8 +57,6 @@ class MonobankServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @return void
      *
      * @throws GuzzleException
      * @throws UnknownProperties

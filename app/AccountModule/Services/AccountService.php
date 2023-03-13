@@ -18,9 +18,6 @@ class AccountService
 {
     /**
      * AccountService constructor.
-     *
-     * @param  AccountRepo  $accountRepo
-     * @param  MonobankService  $monobankService
      */
     public function __construct(protected AccountRepo $accountRepo, private readonly MonobankService $monobankService)
     {
@@ -28,10 +25,6 @@ class AccountService
 
     /**
      * Get all Accounts
-     *
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Collection
      */
     public function getAllAccounts(array $with = [], array $columns = ['*']): Collection
     {
@@ -40,11 +33,6 @@ class AccountService
 
     /**
      * Get all Accounts
-     *
-     * @param  User|int  $user
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Collection
      */
     public function getAllUserAccounts(User|int $user, array $with = [], array $columns = ['*']): Collection
     {
@@ -55,12 +43,6 @@ class AccountService
 
     /**
      * Get all Accounts paginated
-     *
-     * @param  int|null  $perPage
-     * @param  int|null  $page
-     * @param  array  $with
-     * @param  array  $columns
-     * @return LengthAwarePaginator
      */
     public function getAllAccountsPaginated(
         ?int $perPage = null,
@@ -73,11 +55,6 @@ class AccountService
 
     /**
      * Get Account by id
-     *
-     * @param  int  $accountId
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Account
      */
     public function getAccount(int $accountId, array $with = [], array $columns = ['*']): Account
     {
@@ -86,9 +63,6 @@ class AccountService
 
     /**
      * Create new Account
-     *
-     * @param  CreateAccountData  $data
-     * @return Account
      */
     public function createAccount(CreateAccountData $data): Account
     {
@@ -97,10 +71,6 @@ class AccountService
 
     /**
      * Update Account by id
-     *
-     * @param  int  $accountId
-     * @param  UpdateAccountData  $data
-     * @return bool
      */
     public function updateAccount(int $accountId, UpdateAccountData $data): bool
     {
@@ -109,9 +79,6 @@ class AccountService
 
     /**
      * Delete Account by id
-     *
-     * @param  int  $accountId
-     * @return bool
      */
     public function deleteAccount(int $accountId): bool
     {

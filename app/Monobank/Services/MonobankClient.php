@@ -12,9 +12,6 @@ class MonobankClient
     {
     }
 
-    /**
-     * @return array
-     */
     protected function parseResponse(ResponseInterface $res): array
     {
         return json_decode($res->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -23,7 +20,6 @@ class MonobankClient
     /**
      * Get currency exchange rates
      *
-     * @return array
      *
      * @throws GuzzleException
      */
@@ -37,7 +33,6 @@ class MonobankClient
     /**
      * Get customer info
      *
-     * @return array
      *
      * @throws GuzzleException
      */
