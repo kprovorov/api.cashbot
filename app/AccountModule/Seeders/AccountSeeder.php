@@ -72,21 +72,21 @@ class AccountSeeder extends Seeder
                 'currency' => Currency::UAH,
             ],
         ])->each(function (array $accountData) {
-                    $account = Account::create([
-                        ...$accountData,
-                        'balance' => $accountData['balance'] * 100,
-                        'user_id' => 1,
-                    ]);
+            $account = Account::create([
+                ...$accountData,
+                'balance' => $accountData['balance'] * 100,
+                'user_id' => 1,
+            ]);
 
-                    if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
-                        Account::create([
-                            ...$accountData,
-                            'parent_id' => $account->id,
-                            'name' => 'Backup',
-                            'balance' => 0,
-                            'user_id' => 1,
-                        ]);
-                    }
-                });
+            if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
+                Account::create([
+                    ...$accountData,
+                    'parent_id' => $account->id,
+                    'name' => 'Backup',
+                    'balance' => 0,
+                    'user_id' => 1,
+                ]);
+            }
+        });
     }
 }
