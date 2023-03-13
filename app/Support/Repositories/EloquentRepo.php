@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @template T of Model
+ *
  * @implements RepoInterface<T>
  */
 abstract class EloquentRepo implements RepoInterface
@@ -65,8 +66,6 @@ abstract class EloquentRepo implements RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     protected function query(
         array $with = [],
@@ -95,8 +94,6 @@ abstract class EloquentRepo implements RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     protected function searchQuery(
         SearchQuery $search,

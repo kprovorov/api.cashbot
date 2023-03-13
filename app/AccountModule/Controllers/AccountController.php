@@ -18,8 +18,6 @@ class AccountController extends Controller
 {
     /**
      * AccountController constructor.
-     *
-     * @param  AccountService  $accountService
      */
     public function __construct(protected AccountService $accountService)
     {
@@ -28,8 +26,6 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  Request  $request
-     * @return Collection
      *
      * @throws GuzzleException
      * @throws UnknownProperties
@@ -51,8 +47,6 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreAccountRequest  $request
-     * @return Account
      *
      * @throws UnknownProperties
      */
@@ -65,9 +59,6 @@ class AccountController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Account  $account
-     * @return Account
      */
     public function show(Account $account): Account
     {
@@ -77,9 +68,6 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateAccountRequest  $request
-     * @param  Account  $account
-     * @return Account
      *
      * @throws UnknownProperties
      */
@@ -94,9 +82,6 @@ class AccountController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  Account  $account
-     * @return bool
      */
     public function destroy(Account $account): bool
     {

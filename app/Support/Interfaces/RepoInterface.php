@@ -31,8 +31,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function getAll(
         array $with = [],
@@ -47,8 +45,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function getBySearch(
         SearchQuery $search,
@@ -64,8 +60,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function getWhere(
         string $column,
@@ -84,8 +78,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function getWhereIn(
         string $column,
@@ -103,8 +95,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function getWhereNotIn(
         string $column,
@@ -121,8 +111,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function paginateAll(
         ?int $perPage = null,
@@ -139,8 +127,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function paginateBySearch(
         SearchQuery $search,
@@ -158,8 +144,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function paginateWhere(
         string $column,
@@ -180,8 +164,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function paginateWhereIn(
         string $column,
@@ -201,8 +183,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function paginateWhereNotIn(
         string $column,
@@ -221,8 +201,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function chunkAll(
         int $count,
@@ -239,8 +217,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function chunkBySearch(
         SearchQuery $search,
@@ -258,8 +234,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function chunkWhere(
         string $column,
@@ -280,8 +254,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function chunkWhereIn(
         string $column,
@@ -301,8 +273,6 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      */
     public function chunkWhereNotIn(
         string $column,
@@ -321,8 +291,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      * @return T|null
      */
     public function first(
@@ -339,8 +307,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      * @return T|null
      */
     public function firstBy(
@@ -358,8 +324,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      * @return T
      */
     public function firstOrFail(
@@ -376,8 +340,6 @@ interface RepoInterface
      *
      * @param  string[]  $with
      * @param  string[]  $columns
-     * @param  string|null  $orderBy
-     * @param  string|null  $orderDirection
      * @return T
      */
     public function firstByOrFail(

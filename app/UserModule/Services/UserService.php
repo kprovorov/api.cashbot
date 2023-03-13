@@ -13,8 +13,6 @@ class UserService
 {
     /**
      * UserService constructor.
-     *
-     * @param  UserRepo  $userRepo
      */
     public function __construct(protected UserRepo $userRepo)
     {
@@ -22,10 +20,6 @@ class UserService
 
     /**
      * Get all Users
-     *
-     * @param  array  $with
-     * @param  array  $columns
-     * @return Collection
      */
     public function getAllUsers(array $with = [], array $columns = ['*']): Collection
     {
@@ -34,12 +28,6 @@ class UserService
 
     /**
      * Get all Users paginated
-     *
-     * @param  int|null  $perPage
-     * @param  int|null  $page
-     * @param  array  $with
-     * @param  array  $columns
-     * @return LengthAwarePaginator
      */
     public function getAllUsersPaginated(?int $perPage = null, ?int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
     {
@@ -48,11 +36,6 @@ class UserService
 
     /**
      * Get User by id
-     *
-     * @param  int  $userId
-     * @param  array  $with
-     * @param  array  $columns
-     * @return User
      */
     public function getUser(int $userId, array $with = [], array $columns = ['*']): User
     {
@@ -61,9 +44,6 @@ class UserService
 
     /**
      * Create new User
-     *
-     * @param  CreateUserData  $data
-     * @return User
      */
     public function createUser(CreateUserData $data): User
     {
@@ -72,10 +52,6 @@ class UserService
 
     /**
      * Update User by id
-     *
-     * @param  int  $userId
-     * @param  UpdateUserData  $data
-     * @return bool
      */
     public function updateUser(int $userId, UpdateUserData $data): bool
     {
@@ -84,9 +60,6 @@ class UserService
 
     /**
      * Delete User by id
-     *
-     * @param  int  $userId
-     * @return bool
      */
     public function deleteUser(int $userId): bool
     {

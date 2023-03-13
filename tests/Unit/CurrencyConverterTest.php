@@ -15,8 +15,6 @@ class CurrencyConverterTest extends TestCase
     /**
      * @test
      *
-     * @return void
-     *
      * @throws UnknownProperties
      */
     public function it_successfully_converts_eur_to_uah_currency(): void
@@ -56,8 +54,6 @@ class CurrencyConverterTest extends TestCase
 
     /**
      * @test
-     *
-     * @return void
      *
      * @throws UnknownProperties
      */

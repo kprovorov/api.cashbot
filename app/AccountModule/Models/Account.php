@@ -49,6 +49,7 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereProvider($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Account extends Model
@@ -87,8 +88,6 @@ class Account extends Model
 
     /**
      * Create a new factory instance for the model.
-     *
-     * @return AccountFactory
      */
     protected static function newFactory(): AccountFactory
     {
@@ -118,7 +117,6 @@ class Account extends Model
     /**
      * Calculate the balance of the account in the UAH currency.
      *
-     * @return Attribute
      *
      * @throws GuzzleException
      * @throws UnknownProperties
