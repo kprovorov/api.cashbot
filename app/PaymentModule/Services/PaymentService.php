@@ -28,8 +28,7 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    )
-    {
+    ) {
     }
 
     /**
@@ -49,8 +48,7 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection
-    {
+    ): Collection {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -62,8 +60,7 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 

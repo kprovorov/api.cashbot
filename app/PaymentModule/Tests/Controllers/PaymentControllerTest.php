@@ -239,7 +239,6 @@ class PaymentControllerTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_successfully_deletes_single_payment(): void
     {
@@ -286,13 +285,13 @@ class PaymentControllerTest extends TestCase
         ]);
 
         $res = $this->delete("api/payments/{$payment->id}", [
-            'date' => $payment->date->format('Y-m-d')
+            'date' => $payment->date->format('Y-m-d'),
         ]);
 
         $res->assertSuccessful();
         $this->assertDatabaseHas('payments', [
             ...Arr::except($payment->toArray(), ['id', 'date', 'created_at', 'updated_at']),
-            'date' => $payment->date->addMonthNoOverflow()->format('Y-m-d')
+            'date' => $payment->date->addMonthNoOverflow()->format('Y-m-d'),
         ]);
     }
 
@@ -318,13 +317,13 @@ class PaymentControllerTest extends TestCase
         ]);
 
         $res = $this->delete("api/payments/{$payment->id}", [
-            'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d')
+            'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
         $res->assertSuccessful();
         $this->assertDatabaseHas('payments', [
             ...Arr::except($payment->toArray(), []),
-            'repeat_ends_on' => now()->addMonthsNoOverflow(4)->subDay()->format('Y-m-d')
+            'repeat_ends_on' => now()->addMonthsNoOverflow(4)->subDay()->format('Y-m-d'),
         ]);
     }
 
@@ -349,17 +348,17 @@ class PaymentControllerTest extends TestCase
         ]);
 
         $res = $this->delete("api/payments/{$payment->id}", [
-            'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d')
+            'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
         $res->assertSuccessful();
         $this->assertDatabaseHas('payments', [
             ...Arr::except($payment->toArray(), []),
-            'repeat_ends_on' => now()->addMonthsNoOverflow(4)->subDay()->format('Y-m-d')
+            'repeat_ends_on' => now()->addMonthsNoOverflow(4)->subDay()->format('Y-m-d'),
         ]);
         $this->assertDatabaseHas('payments', [
             ...Arr::except($payment->toArray(), ['id', 'date', 'created_at', 'updated_at']),
-            'date' => now()->addMonthsNoOverflow(5)->format('Y-m-d')
+            'date' => now()->addMonthsNoOverflow(5)->format('Y-m-d'),
         ]);
     }
 }

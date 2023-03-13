@@ -9,7 +9,6 @@ use App\PaymentModule\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\PaymentModule\Models\Payment
@@ -33,8 +32,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property RepeatUnit $repeat_unit
  * @property int $repeat_interval
  * @property \Illuminate\Support\Carbon|null $repeat_ends_on
- * @property-read Account|null $accountFrom
- * @property-read Account|null $accountTo
+ * @property-read Account|null $account_from
+ * @property-read Account|null $account_to
+ *
  * @method static \App\PaymentModule\Factories\PaymentFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
@@ -116,7 +116,7 @@ class Payment extends Model
      */
     protected static function newFactory(): PaymentFactory
     {
-        return PaymentFactory::new ();
+        return PaymentFactory::new();
     }
 
     public function account_to(): BelongsTo

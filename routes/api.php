@@ -1,10 +1,8 @@
 <?php
 
 use App\AccountModule\Controllers\AccountController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RateController;
 use App\PaymentModule\Controllers\PaymentController;
-use App\UserModule\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,17 +22,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-
     // Misc
     Route::get('rates', RateController::class);
-
 
     // Accounts
     Route::apiResource('accounts', AccountController::class)->only([
         'index',
         'update',
     ]);
-
 
     // Payments
     Route::apiResource('payments', PaymentController::class)->only([

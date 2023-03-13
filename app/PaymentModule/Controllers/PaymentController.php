@@ -69,7 +69,7 @@ class PaymentController extends Controller
     {
         return $this->paymentService->getPayment($payment->id, [
             'account_to',
-            'account_from'
+            'account_from',
         ]);
     }
 

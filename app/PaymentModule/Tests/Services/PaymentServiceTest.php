@@ -4,14 +4,11 @@ namespace App\PaymentModule\Tests\Services;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
-use App\Enums\RepeatUnit;
-use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Services\PaymentService;
 use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
-use Arr;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
@@ -41,7 +38,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPayments();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
@@ -68,7 +65,7 @@ class PaymentServiceTest extends TestCase
         $res = $service->getAllPaymentsPaginated();
 
         $this->assertCount(3, $res);
-        $payments->each(fn(Payment $payment) => $this->assertContains(
+        $payments->each(fn (Payment $payment) => $this->assertContains(
             $payment->id,
             $res->pluck('id')
         ));
