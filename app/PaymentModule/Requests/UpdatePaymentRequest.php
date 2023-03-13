@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Requests;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -35,6 +36,9 @@ class UpdatePaymentRequest extends FormRequest
             'hidden' => 'required|boolean',
             'auto_apply' => 'required|boolean',
             'ends_on' => 'nullable|date',
+            'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
+            'repeat_interval' => 'required|integer',
+            'repeat_ends_on' => 'nullable|date',
         ];
     }
 }

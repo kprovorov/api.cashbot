@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Factories;
 
 use App\Enums\Currency;
+use App\Enums\RepeatUnit;
 use App\PaymentModule\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,13 +23,14 @@ class PaymentFactory extends Factory
     {
         return [
             'description' => $this->faker->sentence(2),
-            'amount' => $this->faker->numberBetween(-10, 10) * 1_000_000,
-            'amount_converted' => $this->faker->numberBetween(-10, 10) * 1_000_000,
+            'amount' => $this->faker->numberBetween(1, 10) * 1_000_000,
             'currency' => $this->faker->randomElement(Currency::cases()),
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
             'hidden' => false,
             'group' => $this->faker->uuid(),
             'auto_apply' => false,
+            'repeat_unit' => RepeatUnit::NONE,
+            'repeat_interval' => 1,
         ];
     }
 

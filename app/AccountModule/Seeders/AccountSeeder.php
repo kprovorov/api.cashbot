@@ -4,8 +4,6 @@ namespace App\AccountModule\Seeders;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
-use App\PaymentModule\Models\Payment;
-use App\TransferModule\Models\Transfer;
 use Illuminate\Database\Seeder;
 
 class AccountSeeder extends Seeder
@@ -74,70 +72,21 @@ class AccountSeeder extends Seeder
                 'currency' => Currency::UAH,
             ],
         ])->each(function (array $accountData) {
-            $account = Account::create([
-                ...$accountData,
-                'balance' => $accountData['balance'] * 10000,
-                'user_id' => 1,
-            ]);
+                    $account = Account::create([
+                        ...$accountData,
+                        'balance' => $accountData['balance'] * 100,
+                        'user_id' => 1,
+                    ]);
 
-            if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
-                Account::create([
-                    ...$accountData,
-                    'parent_id' => $account->id,
-                    'name' => 'Backup',
-                    'balance' => 0,
-                    'user_id' => 1,
-                ]);
-            }
-        });
-
-//        Account::factory()
-//               ->count(10)
-//               ->hasJars(1, [
-//                   'name' => 'Default',
-//                   'default' => true,
-//               ])
-//               ->hasJars(2)
-//               ->create([
-//                   'user_id' => 1,
-//               ]);
-
-//
-//        Payment::factory()
-//               ->count(500)
-//               ->create([
-//                   'jar_id' => function () {
-//                       return Jar::inRandomOrder()->first();
-//                   },
-//               ]);
-//
-//        Payment::factory()
-//            ->count(500)
-//            ->create([
-//                'jar_id' => function () {
-//                    return Jar::inRandomOrder()->first();
-//                },
-//            ]);
-//
-//        Transfer::factory()
-//                ->count(1000)
-//                ->create([
-//                    'from_payment_id' => function () {
-//                        return Payment::factory()
-//                            ->create([
-//                                'jar_id' => function () {
-//                                    return Jar::inRandomOrder()->first();
-//                                },
-//                            ]);
-//                    },
-//                    'to_payment_id' => function () {
-//                        return Payment::factory()
-//                            ->create([
-//                                'jar_id' => function () {
-//                                    return Jar::inRandomOrder()->first();
-//                                },
-//                            ]);
-//                    },
-//                ]);
+                    if ($accountData['name'] === 'Mono FOP' && $accountData['currency'] === Currency::USD) {
+                        Account::create([
+                            ...$accountData,
+                            'parent_id' => $account->id,
+                            'name' => 'Backup',
+                            'balance' => 0,
+                            'user_id' => 1,
+                        ]);
+                    }
+                });
     }
 }

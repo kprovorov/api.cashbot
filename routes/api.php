@@ -1,11 +1,8 @@
 <?php
 
 use App\AccountModule\Controllers\AccountController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RateController;
 use App\PaymentModule\Controllers\PaymentController;
-use App\TransferModule\Controllers\TransferController;
-use App\UserModule\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,19 +22,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-//    Route::apiResource('users', UserController::class);
+    // Misc
+    Route::get('rates', RateController::class);
 
+    // Accounts
     Route::apiResource('accounts', AccountController::class)->only([
         'index',
         'update',
     ]);
-    Route::apiResource('payments', PaymentController::class);
-    Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
 
-    Route::apiResource('transfers', TransferController::class)->only([
+    // Payments
+    Route::apiResource('payments', PaymentController::class)->only([
         'store',
+        'destroy',
     ]);
-
-    Route::get('dashboard', DashboardController::class);
-    Route::get('rates', RateController::class);
+    Route::delete('payments/groups/{group}', [PaymentController::class, 'deleteGroup']);
+    Route::put('payments/{payment}/general', [PaymentController::class, 'updateGeneral']);
 });

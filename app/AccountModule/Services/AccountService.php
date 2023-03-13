@@ -154,7 +154,7 @@ class AccountService
     public function fetchAccountBalance(Account $account): int
     {
         if ($account->provider === 'monobank') {
-            return $this->fetchMonobankAccountData($account)->balance * 100;
+            return $this->fetchMonobankAccountData($account)->balance;
         }
 
         return $account->balance;

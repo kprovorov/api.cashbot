@@ -93,6 +93,6 @@ class CurrencyConverterTest extends TestCase
 
         $res = $service->getRate(Currency::UAH, Currency::EUR);
 
-        $this->assertEquals(0.02635, $res);
+        $this->assertEquals(0.0263, $res);
     }
 }

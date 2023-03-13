@@ -3,18 +3,22 @@
 namespace App\PaymentModule\Services;
 
 use App\AccountModule\Models\Account;
+use App\Enums\RepeatUnit;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
+use App\PaymentModule\DTO\UpdatePaymentGeneralData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;
 use App\PaymentModule\Jobs\UpdateReducingPaymentJob;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Repositories\PaymentRepo;
 use App\Services\CurrencyConverter;
+use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+use Str;
 
 class PaymentService
 {
@@ -77,17 +81,24 @@ class PaymentService
      */
     public function createPayment(CreatePaymentData $data): Payment
     {
-        $account = Account::findOrFail($data->account_id);
+        $accountTo = Account::find($data->account_to_id);
+        $accountFrom = Account::find($data->account_from_id);
 
         return $this->paymentRepo->create([
             ...$data->toArray(),
+            'group' => $data->group ?? Str::orderedUuid(),
             'amount' => $data->amount,
-            'amount_converted' => $this->currencyConverter->convert(
+            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
                 $data->amount,
-                $account->currency,
+                $accountTo->currency,
                 $data->currency,
-            ),
-        ]);
+            ) : null,
+            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                -$data->amount,
+                $accountFrom->currency,
+                $data->currency,
+            ) : null,
+        ])->refresh();
     }
 
     /**
@@ -101,24 +112,121 @@ class PaymentService
     {
         $paymentId = $payment instanceof Payment ? $payment->id : $payment;
 
-        $account = Account::findOrFail($data->account_id);
+        $accountTo = Account::find($data->account_to_id);
+        $accountFrom = Account::find($data->account_from_id);
 
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
             'amount' => $data->amount,
-            'amount_converted' => $this->currencyConverter->convert(
+            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
                 $data->amount,
-                $account->currency,
+                $accountTo->currency,
                 $data->currency,
-            ),
+            ) : null,
+            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                -$data->amount,
+                $accountFrom->currency,
+                $data->currency,
+            ) : null,
         ]);
+    }
+
+    protected function splitPayment(Payment|int $payment, Carbon $fromDate): array
+    {
+        $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
+
+        // Cut off payments before old date
+        $this->paymentRepo->update($payment->id, [
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+
+        // Create new payment which continues the sub-chain
+        $newPayment = Payment::create([
+            ...$payment->toArray(),
+            'date' => $fromDate,
+        ]);
+
+        return [
+            $payment->refresh(),
+            $newPayment->refresh(),
+        ];
+    }
+
+    public function cutoffPayment(Payment|int $payment, Carbon $date): void
+    {
+        $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
+
+        if ($payment->repeat_unit === RepeatUnit::NONE) {
+            $this->deletePayment($payment->id);
+        } else {
+            [$payment, $newPayment] = $this->splitPayment($payment, $date);
+
+            // If this is the same day as the payment date then delete the payment
+            if ($payment->repeat_ends_on && $payment->repeat_ends_on->isBefore($payment->date)) {
+                $this->deletePayment($payment->id);
+            }
+
+            [$paymentToDelete, $restOfChain] = $this->splitPayment(
+                $newPayment,
+                $date->clone()->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
+            );
+
+            if ($restOfChain->repeat_ends_on && $restOfChain->repeat_ends_on->isBefore($restOfChain->date)) {
+                $this->deletePayment($restOfChain->id);
+            }
+
+            $this->deletePayment($paymentToDelete->id);
+        }
+    }
+
+    public function updatePaymentGeneral(Payment|int $payment, Carbon $fromDate, UpdatePaymentGeneralData $data): bool
+    {
+        $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
+
+        if ($payment->repeat_unit === RepeatUnit::NONE) {
+            return $this->updatePayment($payment, new UpdatePaymentData([
+                ...$payment->toArray(),
+                ...$data->toArray(),
+                'date' => $payment->date,
+                'repeat_unit' => $payment->repeat_unit,
+                'repeat_ends_on' => $payment->repeat_ends_on,
+            ]));
+        } else {
+            $accountFrom = Account::find($data->account_from_id);
+            $accountTo = Account::find($data->account_to_id);
+
+            // Cut off payments before date
+            $this->splitPayment($payment, $fromDate);
+
+            // Update current and all future payments by incrementing days diff between old date and new date
+            Payment::where('group', $payment->group)
+                ->where('date', '>=', $fromDate)
+                ->update([
+                    ...$data->toArray(),
+                    'amount' => $data->amount,
+                    'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
+                        $data->amount,
+                        $accountTo->currency,
+                        $data->currency,
+                    ) : null,
+                    'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                        -$data->amount,
+                        $accountFrom->currency,
+                        $data->currency,
+                    ) : null,
+                ]);
+
+            return true;
+        }
     }
 
     /**
      * Delete Payment by id
      */
-    public function deletePayment(int $paymentId): bool
+    public function deletePayment(Payment|int $payment): bool
     {
+        $paymentId = $payment instanceof Payment ? $payment->id : $payment;
+
         return $this->paymentRepo->delete($paymentId);
     }
 
@@ -130,14 +238,25 @@ class PaymentService
      */
     public function updateCurrencyAmounts(): void
     {
-        Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
-               ->where('payments.currency', '!=', 'accounts.currency')
-               ->select('payments.*')
-               ->chunk(1000, function (Collection $payments) {
-                   $payments->each(function (Payment $payment) {
-                       dispatch(new UpdatePaymentCurrencyAmountJob($payment));
-                   });
-               });
+        Payment::join('accounts', 'payments.account_to_id', '=', 'accounts.id')
+            ->where('payments.currency', '!=', 'accounts.currency')
+            ->select('payments.*')
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
+                    dispatch(new UpdatePaymentCurrencyAmountJob($payment));
+                }
+                );
+            });
+
+        Payment::join('accounts', 'payments.account_from_id', '=', 'accounts.id')
+            ->where('payments.currency', '!=', 'accounts.currency')
+            ->select('payments.*')
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
+                    dispatch(new UpdatePaymentCurrencyAmountJob($payment));
+                }
+                );
+            });
     }
 
     /**
@@ -151,7 +270,9 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
-        if ($payment->currency !== $payment->account->currency) {
+        $payment->load(['account_to', 'account_from']);
+
+        if ($payment->account_to_id && $payment->account_to->currency !== $payment->currency) {
             $this->updatePayment(
                 $payment,
                 new UpdatePaymentData([
@@ -159,6 +280,22 @@ class PaymentService
                     'currency' => $payment->currency,
                     'date' => $payment->date,
                     'ends_on' => $payment->ends_on,
+                    'repeat_unit' => $payment->repeat_unit,
+                    'repeat_ends_on' => $payment->repeat_ends_on,
+                ])
+            );
+        }
+
+        if ($payment->account_from_id && $payment->account_from->currency !== $payment->currency) {
+            $this->updatePayment(
+                $payment,
+                new UpdatePaymentData([
+                    ...$payment->toArray(),
+                    'currency' => $payment->currency,
+                    'date' => $payment->date,
+                    'ends_on' => $payment->ends_on,
+                    'repeat_unit' => $payment->repeat_unit,
+                    'repeat_ends_on' => $payment->repeat_ends_on,
                 ])
             );
         }
@@ -167,11 +304,12 @@ class PaymentService
     public function updateReducingPayments(): void
     {
         Payment::whereNotNull('ends_on')
-               ->chunk(1000, function (Collection $payments) {
-                   $payments->each(function (Payment $payment) {
-                       dispatch(new UpdateReducingPaymentJob($payment));
-                   });
-               });
+            ->chunk(1000, function (Collection $payments) {
+                $payments->each(function (Payment $payment) {
+                    dispatch(new UpdateReducingPaymentJob($payment));
+                }
+                );
+            });
     }
 
     /**
@@ -194,6 +332,7 @@ class PaymentService
                 'ends_on' => $payment->ends_on,
                 'amount' => $amount,
                 'date' => today(),
+                'repeat_unit' => $payment->repeat_unit,
             ])
         );
     }

@@ -30,8 +30,10 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @property-read \Illuminate\Database\Eloquent\Collection|Account[] $jars
  * @property-read int|null $jars_count
  * @property-read Account|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments
- * @property-read int|null $payments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments_from
+ * @property-read int|null $payments_from_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Payment[] $payments_to
+ * @property-read int|null $payments_to_count
  *
  * @method static \App\AccountModule\Factories\AccountFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
@@ -60,12 +62,12 @@ class Account extends Model
      */
     protected $fillable = [
         'parent_id',
+        'user_id',
         'name',
         'currency',
         'balance',
         'external_id',
         'provider',
-        'user_id',
     ];
 
     /**
@@ -78,9 +80,9 @@ class Account extends Model
     ];
 
     protected $casts = [
+        'currency' => Currency::class,
         'balance' => 'int',
         'uah_balance' => 'int',
-        'currency' => Currency::class,
     ];
 
     /**
@@ -93,9 +95,14 @@ class Account extends Model
         return AccountFactory::new();
     }
 
-    public function payments(): HasMany
+    public function payments_from(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class, 'account_from_id');
+    }
+
+    public function payments_to(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'account_to_id');
     }
 
     public function parent(): BelongsTo

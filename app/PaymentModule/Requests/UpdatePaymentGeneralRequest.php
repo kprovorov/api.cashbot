@@ -1,18 +1,16 @@
 <?php
 
-namespace App\TransferModule\Requests;
+namespace App\PaymentModule\Requests;
 
 use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
-class StoreTransferRequest extends FormRequest
+class UpdatePaymentGeneralRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -21,29 +19,26 @@ class StoreTransferRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-            'account_from_id' => [
-                'required',
+            'account_to_id' => [
+                'nullable',
+                'required_without:account_from_id',
                 'integer',
                 Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
-            'account_to_id' => [
-                'required',
+            'account_from_id' => [
+                'nullable',
+                'required_without:account_to_id',
                 'integer',
                 Rule::exists('accounts', 'id')->where('user_id', $this->user()->id),
             ],
             'description' => 'required|string|max:255',
             'amount' => 'required|integer',
             'currency' => ['required', new Enum(Currency::class)],
-            'date' => 'required|date',
-            'hidden' => 'required|boolean',
-            'auto_apply' => 'required|boolean',
-            'repeat' => 'required|string|in:none,weekly,monthly,quarterly',
+            'from_date' => 'required|date',
         ];
     }
 }

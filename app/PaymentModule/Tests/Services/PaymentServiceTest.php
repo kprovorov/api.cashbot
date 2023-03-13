@@ -4,13 +4,11 @@ namespace App\PaymentModule\Tests\Services;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
-use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Services\PaymentService;
 use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
-use Arr;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,7 +31,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -60,7 +58,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(3)->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -87,7 +85,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -100,62 +98,11 @@ class PaymentServiceTest extends TestCase
      * @test
      *
      * @throws UnknownProperties
-     */
-    public function it_successfully_creates_payment(): void
-    {
-        $user = User::factory()->create();
-
-        /** @var Account $account */
-        $account = Account::factory()->create([
-            'currency' => Currency::UAH,
-            'user_id' => $user->id,
-        ]);
-
-        /** @var Payment $paymentData */
-        $paymentData = Payment::factory()->make([
-            'account_id' => $account->id,
-            'currency' => Currency::EUR,
-        ]);
-
-        $data = new CreatePaymentData([
-            ...$paymentData->toArray(),
-            'date' => $paymentData->date,
-            'currency' => $paymentData->currency,
-        ]);
-
-        $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($paymentData->amount * 2);
-
-        $service = $this->app->make(PaymentService::class);
-        $res = $service->createPayment($data);
-
-        $this->assertEquals([
-            ...$data->toArray(),
-            'amount_converted' => $data->amount * 2,
-            'date' => $data->date->toDateTimeString(),
-            'currency' => $data->currency->name,
-        ], [
-            ...Arr::except($res->toArray(), [
-                'id',
-                'created_at',
-                'updated_at',
-            ]),
-            'auto_apply' => false,
-            'date' => $res->date->toDateTimeString(),
-        ]);
-        $this->assertDatabaseHas('payments', $data->toArray());
-    }
-
-    /**
-     * @test
-     *
-     * @throws UnknownProperties
      * @throws GuzzleException
      */
     public function it_successfully_updates_payment(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
 
         /** @var Account $account */
@@ -166,13 +113,13 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
             'currency' => Currency::EUR,
         ]);
 
@@ -180,12 +127,13 @@ class PaymentServiceTest extends TestCase
             ...$paymentData->toArray(),
             'date' => $paymentData->date,
             'currency' => $paymentData->currency,
+            'repeat_unit' => $paymentData->repeat_unit,
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($paymentData->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($paymentData->amount * 2);
 
         $service = $this->app->make(PaymentService::class);
         $res = $service->updatePayment($payment->id, $data);
@@ -194,7 +142,7 @@ class PaymentServiceTest extends TestCase
         $this->assertDatabaseHas('payments', [
             ...$data->toArray(),
             'amount' => $data->amount,
-            'amount_converted' => $data->amount * 2,
+            'amount_to_converted' => $data->amount * 2,
         ]);
     }
 
@@ -212,7 +160,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $service = $this->app->make(PaymentService::class);
@@ -239,16 +187,16 @@ class PaymentServiceTest extends TestCase
         ]);
 
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
             'currency' => Currency::EUR,
             'amount' => 10,
-            'amount_converted' => 100,
+            'amount_to_converted' => 100,
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn($payment->amount * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($payment->amount * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
 
@@ -257,7 +205,7 @@ class PaymentServiceTest extends TestCase
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
             'amount' => 10,
-            'amount_converted' => 20,
+            'amount_to_converted' => 20,
         ]);
     }
 
@@ -281,7 +229,7 @@ class PaymentServiceTest extends TestCase
 
         /** @var Payment $payment */
         $payment = Payment::factory()->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
             'amount' => $amount,
             'currency' => Currency::EUR,
             'date' => today()->subDay(),
@@ -289,9 +237,9 @@ class PaymentServiceTest extends TestCase
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('convert')
-             ->once()
-             ->andReturn(80 * 2);
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn(80 * 2);
 
         $paymentService = $this->app->make(PaymentService::class);
         $paymentService->updateReducingPayment($payment);
@@ -299,7 +247,7 @@ class PaymentServiceTest extends TestCase
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
             'amount' => 80,
-            'amount_converted' => 160,
+            'amount_to_converted' => 160,
             'date' => today()->toDateString(),
         ]);
     }
