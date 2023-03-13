@@ -14,7 +14,7 @@
         "laravel/tinker": "^2.7",
         "malkusch/lock": "^2.2",
         "predis/predis": "^2.0",
-        "sentry/sentry-laravel": "^2.13",
+        "sentry/sentry-laravel": "^3.2",
         "spatie/data-transfer-object": "^3.8"
     },
     "require-dev": {
