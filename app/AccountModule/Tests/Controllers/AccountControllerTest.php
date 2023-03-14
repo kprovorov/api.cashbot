@@ -25,11 +25,11 @@ class AccountControllerTest extends TestCase
         ]);
 
         $this->mock(CurrencyConverter::class)
-             ->shouldReceive('getRate')
-             ->times(3)
-             ->andReturn(2);
+            ->shouldReceive('getRate')
+            ->times(3)
+            ->andReturn(2);
 
-        $res = $this->get('api/accounts');
+        $res = $this->get('accounts');
 
         $res->assertSuccessful();
         $res->assertJson($accounts->sortByDesc('id')->values()->toArray());
@@ -49,7 +49,7 @@ class AccountControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $res = $this->get("api/accounts/{$account->id}");
+        $res = $this->get("accounts/{$account->id}");
 
         $res->assertSuccessful();
         $res->assertJson($account->toArray());
@@ -71,7 +71,7 @@ class AccountControllerTest extends TestCase
 
         $payload = $accountData->toArray();
 
-        $res = $this->post('api/accounts', $payload);
+        $res = $this->post('accounts', $payload);
 
         $res->assertCreated();
         $res->assertJson($payload);
@@ -96,7 +96,7 @@ class AccountControllerTest extends TestCase
 
         $payload = $accountData->toArray();
 
-        $res = $this->put("api/accounts/{$account->id}", $payload);
+        $res = $this->put("accounts/{$account->id}", $payload);
 
         $res->assertSuccessful();
         $res->assertJson($payload);
@@ -115,7 +115,7 @@ class AccountControllerTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()->create();
 
-        $res = $this->delete("api/accounts/{$account->id}");
+        $res = $this->delete("accounts/{$account->id}");
 
         $res->assertSuccessful();
         $this->assertDatabaseMissing('accounts', [

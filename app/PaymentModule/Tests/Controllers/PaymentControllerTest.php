@@ -33,7 +33,7 @@ class PaymentControllerTest extends TestCase
             'account_id' => $account->id,
         ]);
 
-        $res = $this->get('api/payments');
+        $res = $this->get('payments');
 
         $res->assertSuccessful();
         $res->assertJson($payments->sortByDesc('id')->values()->toArray());
@@ -58,7 +58,7 @@ class PaymentControllerTest extends TestCase
             'account_to_id' => $account->id,
         ]);
 
-        $res = $this->get("api/payments/{$payment->id}");
+        $res = $this->get("payments/{$payment->id}");
 
         $res->assertSuccessful();
         $res->assertJson($payment->toArray());
@@ -90,7 +90,7 @@ class PaymentControllerTest extends TestCase
             ->once()
             ->andReturn($paymentData->amount * 2);
 
-        $res = $this->post('api/payments', $paymentData->toArray());
+        $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson([
@@ -129,7 +129,7 @@ class PaymentControllerTest extends TestCase
             ->once()
             ->andReturn(-$paymentData->amount * 2);
 
-        $res = $this->post('api/payments', $paymentData->toArray());
+        $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson([
@@ -178,7 +178,7 @@ class PaymentControllerTest extends TestCase
             ->once()
             ->andReturn(-$paymentData->amount * 2);
 
-        $res = $this->post('api/payments', $paymentData->toArray());
+        $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson([
@@ -227,7 +227,7 @@ class PaymentControllerTest extends TestCase
             ->once()
             ->andReturn($paymentData->amount * 2);
 
-        $res = $this->put("api/payments/{$payment->id}", $payload);
+        $res = $this->put("payments/{$payment->id}", $payload);
 
         $res->assertSuccessful();
         //        $res->assertJson($payload);
@@ -256,7 +256,7 @@ class PaymentControllerTest extends TestCase
             'account_to_id' => $account->id,
         ]);
 
-        $res = $this->delete("api/payments/{$payment->id}");
+        $res = $this->delete("payments/{$payment->id}");
 
         $res->assertSuccessful();
         $this->assertDatabaseMissing('payments', [
@@ -284,7 +284,7 @@ class PaymentControllerTest extends TestCase
             'repeat_unit' => RepeatUnit::MONTH,
         ]);
 
-        $res = $this->delete("api/payments/{$payment->id}", [
+        $res = $this->delete("payments/{$payment->id}", [
             'date' => $payment->date->format('Y-m-d'),
         ]);
 
@@ -316,7 +316,7 @@ class PaymentControllerTest extends TestCase
             'repeat_ends_on' => now()->addMonthsNoOverflow(4),
         ]);
 
-        $res = $this->delete("api/payments/{$payment->id}", [
+        $res = $this->delete("payments/{$payment->id}", [
             'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
@@ -347,7 +347,7 @@ class PaymentControllerTest extends TestCase
             'repeat_unit' => RepeatUnit::MONTH,
         ]);
 
-        $res = $this->delete("api/payments/{$payment->id}", [
+        $res = $this->delete("payments/{$payment->id}", [
             'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
