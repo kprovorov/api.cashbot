@@ -16,19 +16,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int|null $account_to_id
  * @property int|null $account_from_id
+ * @property int|null $account_to_id
+ * @property string $group
  * @property string $description
- * @property int|null $amount_to_converted
- * @property int|null $amount_from_converted
+ * @property \Illuminate\Support\Carbon $date
  * @property int $amount
  * @property Currency $currency
- * @property \Illuminate\Support\Carbon $date
- * @property int $hidden
- * @property \Illuminate\Support\Carbon|null $ends_on
- * @property string $group
+ * @property int|null $amount_from_converted
+ * @property int|null $amount_to_converted
  * @property int $auto_apply
  * @property string|null $applied_at
+ * @property int $dynamic
  * @property RepeatUnit $repeat_unit
  * @property int $repeat_interval
  * @property \Illuminate\Support\Carbon|null $repeat_ends_on
@@ -50,9 +49,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereEndsOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDynamic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroup($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatEndsOn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatInterval($value)
@@ -79,8 +77,6 @@ class Payment extends Model
         'amount',
         'currency',
         'date',
-        'hidden',
-        'ends_on',
         'group',
         'auto_apply',
         'applied_at',
@@ -98,7 +94,6 @@ class Payment extends Model
         'balance' => 'integer',
         'currency' => Currency::class,
         'date' => 'date',
-        'ends_on' => 'date',
         'repeat_unit' => RepeatUnit::class,
         'repeat_ends_on' => 'date',
     ];

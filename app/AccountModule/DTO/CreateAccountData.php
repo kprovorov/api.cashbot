@@ -14,7 +14,7 @@ class CreateAccountData extends DataTransferObject
 
     public int $balance;
 
-    public ?string $external_id;
+    public ?string $provider_id;
 
     public ?string $provider;
 }

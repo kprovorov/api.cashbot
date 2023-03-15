@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Requests;
 
 use App\Enums\Currency;
+use App\Enums\PaymentUpdateMode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -39,6 +40,7 @@ class UpdatePaymentGeneralRequest extends FormRequest
             'amount' => 'required|integer',
             'currency' => ['required', new Enum(Currency::class)],
             'from_date' => 'required|date',
+            'mode' => ['required', new Enum(PaymentUpdateMode::class)],
         ];
     }
 }

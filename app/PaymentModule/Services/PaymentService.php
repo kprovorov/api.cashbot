@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Services;
 
 use App\AccountModule\Models\Account;
+use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
@@ -135,6 +136,16 @@ class PaymentService
     {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
+        // If this is the first payment in the chain then just return it
+        if ($payment->date->isSameDay($fromDate)) {
+            return [null, $payment];
+        }
+
+        // If this is the last payment in the chain then just return it
+        if ($payment->repeat_ends_on && $payment->repeat_ends_on->isBefore($fromDate)) {
+            return [$payment, null];
+        }
+
         // Cut off payments before old date
         $this->paymentRepo->update($payment->id, [
             'repeat_ends_on' => $fromDate->clone()->subDay(),
@@ -159,29 +170,25 @@ class PaymentService
         if ($payment->repeat_unit === RepeatUnit::NONE) {
             $this->deletePayment($payment->id);
         } else {
-            [$payment, $newPayment] = $this->splitPayment($payment, $date);
+            [, $paymentB] = $this->splitPayment($payment, $date);
 
-            // If this is the same day as the payment date then delete the payment
-            if ($payment->repeat_ends_on && $payment->repeat_ends_on->isBefore($payment->date)) {
-                $this->deletePayment($payment->id);
-            }
-
-            [$paymentToDelete, $restOfChain] = $this->splitPayment(
-                $newPayment,
-                $date->clone()->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
+            [$paymentToDelete] = $this->splitPayment(
+                $paymentB,
+                $date->clone()->add($paymentB->repeat_interval, $paymentB->repeat_unit->value, false)
             );
-
-            if ($restOfChain->repeat_ends_on && $restOfChain->repeat_ends_on->isBefore($restOfChain->date)) {
-                $this->deletePayment($restOfChain->id);
-            }
 
             $this->deletePayment($paymentToDelete->id);
         }
     }
 
-    public function updatePaymentGeneral(Payment|int $payment, Carbon $fromDate, UpdatePaymentGeneralData $data): bool
-    {
+    public function updatePaymentGeneral(
+        Payment|int $payment,
+        Carbon $fromDate,
+        UpdatePaymentGeneralData $data,
+        PaymentUpdateMode $mode = PaymentUpdateMode::SINGLE
+    ): bool {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
+        $group = $payment->group;
 
         if ($payment->repeat_unit === RepeatUnit::NONE) {
             return $this->updatePayment($payment, new UpdatePaymentData([
@@ -195,26 +202,42 @@ class PaymentService
             $accountFrom = Account::find($data->account_from_id);
             $accountTo = Account::find($data->account_to_id);
 
-            // Cut off payments before date
-            $this->splitPayment($payment, $fromDate);
+            $dataToUpdate = [
+                ...$data->toArray(),
+                'amount' => $data->amount,
+                'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
+                    $data->amount,
+                    $accountTo->currency,
+                    $data->currency,
+                ) : null,
+                'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                    -$data->amount,
+                    $accountFrom->currency,
+                    $data->currency,
+                ) : null,
+            ];
 
-            // Update current and all future payments by incrementing days diff between old date and new date
-            Payment::where('group', $payment->group)
-                ->where('date', '>=', $fromDate)
-                ->update([
-                    ...$data->toArray(),
-                    'amount' => $data->amount,
-                    'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                        $data->amount,
-                        $accountTo->currency,
-                        $data->currency,
-                    ) : null,
-                    'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                        -$data->amount,
-                        $accountFrom->currency,
-                        $data->currency,
-                    ) : null,
-                ]);
+            if ($mode === PaymentUpdateMode::ALL) {
+                Payment::where('group', $payment->group)
+                    ->update($dataToUpdate);
+            } else {
+                // Cut off payments before date
+                [, $paymentB] = $this->splitPayment($payment, $fromDate);
+
+                if ($mode === PaymentUpdateMode::SINGLE) {
+                    [$paymentB] = $this->splitPayment(
+                        $paymentB,
+                        $fromDate->clone()->add($paymentB->repeat_interval, $paymentB->repeat_unit->value)
+                    );
+
+                    $paymentB->update($dataToUpdate);
+                } else {
+                    // Update current and all future payments by incrementing days diff between old date and new date
+                    Payment::where('group', $group)
+                        ->where('date', '>=', $fromDate)
+                        ->update($dataToUpdate);
+                }
+            }
 
             return true;
         }
@@ -279,7 +302,6 @@ class PaymentService
                     ...$payment->toArray(),
                     'currency' => $payment->currency,
                     'date' => $payment->date,
-                    'ends_on' => $payment->ends_on,
                     'repeat_unit' => $payment->repeat_unit,
                     'repeat_ends_on' => $payment->repeat_ends_on,
                 ])
@@ -293,7 +315,6 @@ class PaymentService
                     ...$payment->toArray(),
                     'currency' => $payment->currency,
                     'date' => $payment->date,
-                    'ends_on' => $payment->ends_on,
                     'repeat_unit' => $payment->repeat_unit,
                     'repeat_ends_on' => $payment->repeat_ends_on,
                 ])
@@ -303,7 +324,7 @@ class PaymentService
 
     public function updateReducingPayments(): void
     {
-        Payment::whereNotNull('ends_on')
+        Payment::where('dynamic', true)
             ->chunk(1000, function (Collection $payments) {
                 $payments->each(function (Payment $payment) {
                     dispatch(new UpdateReducingPaymentJob($payment));
@@ -329,7 +350,6 @@ class PaymentService
             new UpdatePaymentData([
                 ...$payment->toArray(),
                 'currency' => $payment->currency,
-                'ends_on' => $payment->ends_on,
                 'amount' => $amount,
                 'date' => today(),
                 'repeat_unit' => $payment->repeat_unit,

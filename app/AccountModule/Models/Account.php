@@ -18,14 +18,14 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * App\AccountModule\Models\Account
  *
  * @property int $id
- * @property int|null $parent_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $user_id
+ * @property int|null $parent_id
  * @property string $name
- * @property Currency $currency
  * @property int $balance
- * @property string|null $external_id
+ * @property Currency $currency
+ * @property string|null $provider_id
  * @property string|null $provider
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Account> $jars
  * @property-read int|null $jars_count
@@ -42,11 +42,11 @@ use Spatie\DataTransferObject\Exceptions\UnknownProperties;
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereBalance($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Account whereExternalId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereProviderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUserId($value)
  *
@@ -67,7 +67,7 @@ class Account extends Model
         'name',
         'currency',
         'balance',
-        'external_id',
+        'provider_id',
         'provider',
     ];
 

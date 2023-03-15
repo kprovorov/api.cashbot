@@ -94,7 +94,7 @@ class AccountService
      */
     public function updateAccountBalances(): void
     {
-        $accounts = Account::whereNotNull('external_id')->get();
+        $accounts = Account::whereNotNull('provider_id')->get();
 
         $accounts->each(function (Account $account) {
             $this->updateAccountBalance($account);
@@ -107,7 +107,7 @@ class AccountService
      */
     public function updateAccountBalance(Account $account): void
     {
-        if ($account->external_id) {
+        if ($account->provider_id) {
             $balance = $this->fetchAccountBalance($account);
 
             $account->update(['balance' => $balance]);
@@ -135,6 +135,6 @@ class AccountService
     {
         $clientInfo = $this->monobankService->getClientInfo();
 
-        return $clientInfo->accounts->where('id', $account->external_id)->first();
+        return $clientInfo->accounts->where('id', $account->provider_id)->first();
     }
 }

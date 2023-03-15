@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Controllers;
 
 use App\Enums\Currency;
+use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
@@ -56,7 +57,6 @@ class PaymentController extends Controller
                 'currency' => Currency::from($request->input('currency')),
                 'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
                 'date' => Carbon::parse($request->input('date')),
-                'ends_on' => $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null,
                 'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
             ])
         );
@@ -81,7 +81,8 @@ class PaymentController extends Controller
             new UpdatePaymentGeneralData([
                 ...$request->validated(),
                 'currency' => Currency::from($request->input('currency')),
-            ])
+            ]),
+            PaymentUpdateMode::from($request->input('mode'))
         );
     }
 
@@ -94,13 +95,11 @@ class PaymentController extends Controller
     public function update(UpdatePaymentRequest $request, Payment $payment): void
     {
         $amount = (int) $request->input('amount');
-        $endsOn = $request->input('ends_on') ? Carbon::parse($request->input('ends_on')) : null;
 
         $dataToUpdate = [
             ...$request->validated(),
             'currency' => Currency::from($request->input('currency')),
             'date' => Carbon::parse($request->input('date')),
-            'ends_on' => $endsOn,
             'repeat_unit' => RepeatUnit::from($request->input('repeat_unit')),
             'repeat_ends_on' => $request->input('repeat_ends_on') ? Carbon::parse($request->input('repeat_ends_on')) : null,
         ];
