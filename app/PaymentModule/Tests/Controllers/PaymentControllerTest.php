@@ -4,6 +4,7 @@ namespace App\PaymentModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
 use App\Enums\Currency;
+use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\Models\Payment;
 use App\Services\CurrencyConverter;
@@ -234,6 +235,626 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseHas('payments', [
             ...$payload,
             'amount_converted' => $payload['amount'] * 2,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_first_payment_in_a_chain_in_single_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $payment->date,
+            'mode' => PaymentUpdateMode::SINGLE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 2);
+        // Assert first payment (the one which was updated)
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => $payment->date->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, overflow: false)->subDay(),
+        ]);
+        // Assert rest of chain
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $payment->date->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, false),
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_middle_payment_in_a_chain_in_single_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::SINGLE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 3);
+        // Assert payment before updated one
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $payment->date,
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $fromDate,
+            'repeat_ends_on' => $fromDate->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, false)->subDay(),
+        ]);
+        // Assert rest of chain
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $fromDate->clone()->add($payment->repeat_interval, $payment->repeat_unit->value),
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_last_payment_in_a_chain_in_single_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+        $repeatEndsOn = $payment->date->clone()->add($payment->repeat_interval * 5, $payment->repeat_unit->value, false);
+        $payment->update([
+            'repeat_ends_on' => $repeatEndsOn,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $repeatEndsOn->clone();
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::SINGLE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 2);
+        // Assert payment before updated one
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $payment->date,
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $fromDate,
+            'repeat_ends_on' => $fromDate,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_first_payment_in_a_chain_in_future_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $payment->date,
+            'mode' => PaymentUpdateMode::FUTURE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 1);
+        // Assert first payment (the one which was updated)
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_middle_payment_in_a_chain_in_future_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::FUTURE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 2);
+        // Assert payment before updated one
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $payment->date,
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $fromDate,
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_last_payment_in_a_chain_in_future_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+        $repeatEndsOn = $payment->date->clone()->add($payment->repeat_interval * 5, $payment->repeat_unit->value, false);
+        $payment->update([
+            'repeat_ends_on' => $repeatEndsOn,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $repeatEndsOn->clone();
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::FUTURE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 2);
+        // Assert payment before updated one
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            'date' => $payment->date,
+            'repeat_ends_on' => $fromDate->clone()->subDay(),
+        ]);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $fromDate,
+            'repeat_ends_on' => $fromDate,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_first_payment_in_a_chain_in_all_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $payment->date,
+            'mode' => PaymentUpdateMode::ALL->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 1);
+        // Assert first payment (the one which was updated)
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_middle_payment_in_a_chain_in_all_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::ALL->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 1);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_last_payment_in_a_chain_in_all_mode(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->repeatable()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+        $repeatEndsOn = $payment->date->clone()->add($payment->repeat_interval * 5, $payment->repeat_unit->value, false);
+        $payment->update([
+            'repeat_ends_on' => $repeatEndsOn,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $fromDate = $repeatEndsOn->clone();
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $fromDate,
+            'mode' => PaymentUpdateMode::ALL->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 1);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => $payment->repeat_ends_on,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_non_repeatable_payment_in_a_chain(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_to_id' => $account->id,
+            'currency' => Currency::USD,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'currency' => Currency::EUR,
+        ]);
+
+        $this->mock(CurrencyConverter::class)
+            ->shouldReceive('convert')
+            ->once()
+            ->andReturn($updateData->amount * 2);
+
+        $res = $this->put("payments/$payment->id/general", [
+            ...$updateData->toArray(),
+            'from_date' => $payment->date,
+            'mode' => PaymentUpdateMode::SINGLE->value,
+        ]);
+
+        $res->assertSuccessful();
+        $this->assertDatabaseCount('payments', 1);
+        // Assert updated payment
+        $this->assertDatabaseHas('payments', [
+            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::only($updateData->toArray(), [
+                'account_to_id',
+                'account_from_id',
+                'description',
+                'amount',
+                'currency',
+            ]),
+            'amount_to_converted' => $updateData->amount * 2,
+            'date' => $payment->date,
+            'repeat_ends_on' => $payment->repeat_ends_on,
         ]);
     }
 

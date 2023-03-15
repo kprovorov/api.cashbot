@@ -26,7 +26,6 @@ class PaymentFactory extends Factory
             'amount' => $this->faker->numberBetween(1, 10) * 1_000_000,
             'currency' => $this->faker->randomElement(Currency::cases()),
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
-            'hidden' => false,
             'group' => $this->faker->uuid(),
             'auto_apply' => false,
             'repeat_unit' => RepeatUnit::NONE,
@@ -34,17 +33,21 @@ class PaymentFactory extends Factory
         ];
     }
 
-//    /**
-//     * Indicate that the Payment is ............
-//     *
-//     * @return Factory
-//     */
-//    public function yourState(): Factory
-//    {
-//        return $this->state(function (array $attributes) {
-//            return [
-//                //
-//            ];
-//        });
-//    }
+    /**
+     * Indicate that the Payment is repeatable
+     */
+    public function repeatable(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'repeat_unit' => $this->faker->randomElement([
+                    RepeatUnit::DAY,
+                    RepeatUnit::WEEK,
+                    RepeatUnit::MONTH,
+                    RepeatUnit::QUARTER,
+                    RepeatUnit::YEAR,
+                ]),
+            ];
+        });
+    }
 }

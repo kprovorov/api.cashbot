@@ -29,6 +29,7 @@ return new class extends Migration
             $table->bigInteger('amount_to_converted')->nullable();
             $table->boolean('auto_apply')->default(false);
             $table->timestamp('applied_at')->nullable();
+            $table->boolean('dynamic')->default(false);
             $table->string('repeat_unit')->default(RepeatUnit::NONE->value);
             $table->integer('repeat_interval')->default(1);
             $table->date('repeat_ends_on')->nullable();
