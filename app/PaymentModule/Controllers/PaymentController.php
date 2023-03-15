@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Controllers;
 
 use App\Enums\Currency;
+use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\Http\Controllers\Controller;
 use App\PaymentModule\DTO\CreatePaymentData;
@@ -81,7 +82,8 @@ class PaymentController extends Controller
             new UpdatePaymentGeneralData([
                 ...$request->validated(),
                 'currency' => Currency::from($request->input('currency')),
-            ])
+            ]),
+            PaymentUpdateMode::from($request->input('mode'))
         );
     }
 

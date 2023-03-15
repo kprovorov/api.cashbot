@@ -3,6 +3,7 @@
 namespace App\PaymentModule\Services;
 
 use App\AccountModule\Models\Account;
+use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
@@ -179,8 +180,12 @@ class PaymentService
         }
     }
 
-    public function updatePaymentGeneral(Payment|int $payment, Carbon $fromDate, UpdatePaymentGeneralData $data): bool
-    {
+    public function updatePaymentGeneral(
+        Payment|int $payment,
+        Carbon $fromDate,
+        UpdatePaymentGeneralData $data,
+        PaymentUpdateMode $mode = PaymentUpdateMode::SINGLE
+    ): bool {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
 
         if ($payment->repeat_unit === RepeatUnit::NONE) {
@@ -195,26 +200,46 @@ class PaymentService
             $accountFrom = Account::find($data->account_from_id);
             $accountTo = Account::find($data->account_to_id);
 
-            // Cut off payments before date
-            $this->splitPayment($payment, $fromDate);
+            $dataToUpdate = [
+                ...$data->toArray(),
+                'amount' => $data->amount,
+                'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
+                    $data->amount,
+                    $accountTo->currency,
+                    $data->currency,
+                ) : null,
+                'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
+                    -$data->amount,
+                    $accountFrom->currency,
+                    $data->currency,
+                ) : null,
+            ];
 
-            // Update current and all future payments by incrementing days diff between old date and new date
-            Payment::where('group', $payment->group)
-                ->where('date', '>=', $fromDate)
-                ->update([
-                    ...$data->toArray(),
-                    'amount' => $data->amount,
-                    'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                        $data->amount,
-                        $accountTo->currency,
-                        $data->currency,
-                    ) : null,
-                    'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                        -$data->amount,
-                        $accountFrom->currency,
-                        $data->currency,
-                    ) : null,
-                ]);
+            if ($mode === PaymentUpdateMode::ALL) {
+                Payment::where('group', $payment->group)
+                    ->update($dataToUpdate);
+            } else {
+                // Cut off payments before date
+                [$payment, $newPayment] = $this->splitPayment($payment, $fromDate);
+
+                if ($mode === PaymentUpdateMode::SINGLE) {
+                    [$paymentToUpdate, $restOfChain] = $this->splitPayment(
+                        $newPayment,
+                        $fromDate->clone()->add($newPayment->repeat_interval, $newPayment->repeat_unit->value)
+                    );
+
+                    $paymentToUpdate->update($dataToUpdate);
+
+                    if ($restOfChain->repeat_ends_on && $restOfChain->repeat_ends_on->isBefore($restOfChain->date)) {
+                        $this->deletePayment($restOfChain->id);
+                    }
+                } else {
+                    // Update current and all future payments by incrementing days diff between old date and new date
+                    Payment::where('group', $payment->group)
+                        ->where('date', '>=', $fromDate)
+                        ->update($dataToUpdate);
+                }
+            }
 
             return true;
         }
