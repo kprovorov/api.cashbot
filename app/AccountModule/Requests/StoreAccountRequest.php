@@ -23,7 +23,7 @@ class StoreAccountRequest extends FormRequest
             'name' => 'required|string|max:255',
             'currency' => 'required|string|max:255',
             'balance' => 'required|integer',
-            'external_id' => 'nullable|string|max:255',
+            'provider_id' => 'nullable|string|max:255',
             'provider' => 'nullable|string|max:255',
         ];
     }
