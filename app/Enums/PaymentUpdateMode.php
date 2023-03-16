@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum PaymentUpdateMode: string
 {
-    case SINGLE = 'single';
-    case FUTURE = 'future';
-    case ALL = 'all';
+    CASE SINGLE = 'SINGLE';
+    CASE FUTURE = 'FUTURE';
+    CASE ALL = 'ALL';
 }

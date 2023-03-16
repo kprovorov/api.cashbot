@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum RepeatUnit: string
 {
-    case NONE = 'none';
-    case DAY = 'day';
-    case WEEK = 'week';
-    case MONTH = 'month';
-    case QUARTER = 'quarter';
-    case YEAR = 'year';
+    case NONE = 'NONE';
+    case DAY = 'DAY';
+    case WEEK = 'WEEK';
+    case MONTH = 'MONTH';
+    case QUARTER = 'QUARTER';
+    case YEAR = 'YEAR';
 }
