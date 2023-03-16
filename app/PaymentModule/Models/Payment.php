@@ -79,6 +79,7 @@ class Payment extends Model
         'date',
         'group',
         'auto_apply',
+        'budget',
         'applied_at',
         'repeat_unit',
         'repeat_interval',

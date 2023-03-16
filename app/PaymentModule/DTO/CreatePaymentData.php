@@ -10,24 +10,15 @@ use Spatie\DataTransferObject\DataTransferObject;
 class CreatePaymentData extends DataTransferObject
 {
     public ?int $account_to_id;
-
     public ?int $account_from_id;
-
     public string $description;
-
     public int $amount;
-
     public Currency $currency;
-
     public Carbon $date;
-
     public ?string $group;
-
     public bool $auto_apply;
-
+    public bool $budget;
     public RepeatUnit $repeat_unit;
-
     public int $repeat_interval;
-
     public ?Carbon $repeat_ends_on = null;
 }
