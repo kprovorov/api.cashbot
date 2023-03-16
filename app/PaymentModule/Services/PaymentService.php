@@ -29,7 +29,8 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    ) {
+    )
+    {
     }
 
     /**
@@ -49,7 +50,8 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection {
+    ): Collection
+    {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -61,7 +63,8 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator {
+    ): LengthAwarePaginator
+    {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
@@ -186,7 +189,8 @@ class PaymentService
         Carbon $fromDate,
         UpdatePaymentGeneralData $data,
         PaymentUpdateMode $mode = PaymentUpdateMode::SINGLE
-    ): bool {
+    ): bool
+    {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
         $group = $payment->group;
 
@@ -320,41 +324,6 @@ class PaymentService
                 ])
             );
         }
-    }
-
-    public function updateReducingPayments(): void
-    {
-        Payment::where('budget', true)
-            ->chunk(1000, function (Collection $payments) {
-                $payments->each(function (Payment $payment) {
-                    dispatch(new UpdateReducingPaymentJob($payment));
-                }
-                );
-            });
-    }
-
-    /**
-     * @throws UnknownProperties
-     */
-    public function updateReducingPayment(Payment|int $payment): void
-    {
-        $payment = $payment instanceof Payment ? $payment->refresh() : Payment::find($payment);
-
-        $totalDays = $payment->date->diffInDays($payment->ends_on);
-        $daysLeft = $payment->ends_on->diffInDays(today());
-
-        $amount = round($payment->amount / $totalDays * $daysLeft, 4);
-
-        $this->updatePayment(
-            $payment,
-            new UpdatePaymentData([
-                ...$payment->toArray(),
-                'currency' => $payment->currency,
-                'amount' => $amount,
-                'date' => today(),
-                'repeat_unit' => $payment->repeat_unit,
-            ])
-        );
     }
 
     public function deleteGroup(string $group): void
