@@ -28,6 +28,7 @@ class PaymentFactory extends Factory
             'date' => $this->faker->dateTimeBetween('now', '1 month'),
             'group' => $this->faker->uuid(),
             'auto_apply' => false,
+            'budget' => false,
             'repeat_unit' => RepeatUnit::NONE,
             'repeat_interval' => 1,
         ];

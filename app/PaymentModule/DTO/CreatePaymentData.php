@@ -25,6 +25,8 @@ class CreatePaymentData extends DataTransferObject
 
     public bool $auto_apply;
 
+    public ?bool $budget = null;
+
     public RepeatUnit $repeat_unit;
 
     public int $repeat_interval;

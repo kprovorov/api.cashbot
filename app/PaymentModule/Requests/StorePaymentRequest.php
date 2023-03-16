@@ -39,6 +39,7 @@ class StorePaymentRequest extends FormRequest
             'currency' => ['required', new Enum(Currency::class)],
             'date' => 'required|date',
             'auto_apply' => 'required|boolean',
+            'budget' => 'required|boolean',
             'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
             'repeat_interval' => 'required|integer',
             'repeat_ends_on' => 'nullable|date',

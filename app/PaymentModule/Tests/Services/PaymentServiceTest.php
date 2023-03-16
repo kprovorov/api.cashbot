@@ -212,48 +212,4 @@ class PaymentServiceTest extends TestCase
             'amount_to_converted' => 20,
         ]);
     }
-
-    /**
-     * @test
-     *
-     * @throws UnknownProperties
-     */
-    public function it_successfully_updates_reducing_payment(): void
-    {
-        $this->markTestSkipped();
-        $amount = 100;
-        $daysLeft = 4;
-
-        $user = User::factory()->create();
-
-        /** @var Account $account */
-        $account = Account::factory()->create([
-            'currency' => Currency::UAH,
-            'user_id' => $user->id,
-        ]);
-
-        /** @var Payment $payment */
-        $payment = Payment::factory()->create([
-            'account_to_id' => $account->id,
-            'amount' => $amount,
-            'currency' => Currency::EUR,
-            'date' => today()->subDay(),
-            'ends_on' => today()->addDays($daysLeft),
-        ]);
-
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn(80 * 2);
-
-        $paymentService = $this->app->make(PaymentService::class);
-        $paymentService->updateReducingPayment($payment);
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'amount' => 80,
-            'amount_to_converted' => 160,
-            'date' => today()->toDateString(),
-        ]);
-    }
 }

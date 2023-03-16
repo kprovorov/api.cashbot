@@ -9,7 +9,6 @@ use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentGeneralData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;
-use App\PaymentModule\Jobs\UpdateReducingPaymentJob;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Repositories\PaymentRepo;
 use App\Services\CurrencyConverter;
@@ -320,41 +319,6 @@ class PaymentService
                 ])
             );
         }
-    }
-
-    public function updateReducingPayments(): void
-    {
-        Payment::where('dynamic', true)
-            ->chunk(1000, function (Collection $payments) {
-                $payments->each(function (Payment $payment) {
-                    dispatch(new UpdateReducingPaymentJob($payment));
-                }
-                );
-            });
-    }
-
-    /**
-     * @throws UnknownProperties
-     */
-    public function updateReducingPayment(Payment|int $payment): void
-    {
-        $payment = $payment instanceof Payment ? $payment->refresh() : Payment::find($payment);
-
-        $totalDays = $payment->date->diffInDays($payment->ends_on);
-        $daysLeft = $payment->ends_on->diffInDays(today());
-
-        $amount = round($payment->amount / $totalDays * $daysLeft, 4);
-
-        $this->updatePayment(
-            $payment,
-            new UpdatePaymentData([
-                ...$payment->toArray(),
-                'currency' => $payment->currency,
-                'amount' => $amount,
-                'date' => today(),
-                'repeat_unit' => $payment->repeat_unit,
-            ])
-        );
     }
 
     public function deleteGroup(string $group): void

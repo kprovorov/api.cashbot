@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $amount_to_converted
  * @property int $auto_apply
  * @property string|null $applied_at
- * @property int $dynamic
+ * @property int $budget
  * @property RepeatUnit $repeat_unit
  * @property int $repeat_interval
  * @property \Illuminate\Support\Carbon|null $repeat_ends_on
@@ -45,11 +45,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountToConverted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAppliedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAutoApply($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereBudget($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDynamic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRepeatEndsOn($value)
@@ -79,6 +79,7 @@ class Payment extends Model
         'date',
         'group',
         'auto_apply',
+        'budget',
         'applied_at',
         'repeat_unit',
         'repeat_interval',
