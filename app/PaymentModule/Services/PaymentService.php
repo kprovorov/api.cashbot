@@ -324,7 +324,7 @@ class PaymentService
 
     public function updateReducingPayments(): void
     {
-        Payment::where('dynamic', true)
+        Payment::where('budget', true)
             ->chunk(1000, function (Collection $payments) {
                 $payments->each(function (Payment $payment) {
                     dispatch(new UpdateReducingPaymentJob($payment));
