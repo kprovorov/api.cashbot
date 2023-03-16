@@ -9,7 +9,6 @@ use App\PaymentModule\DTO\CreatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\DTO\UpdatePaymentGeneralData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;
-use App\PaymentModule\Jobs\UpdateReducingPaymentJob;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Repositories\PaymentRepo;
 use App\Services\CurrencyConverter;
@@ -29,8 +28,7 @@ class PaymentService
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
         protected readonly CurrencyConverter $currencyConverter
-    )
-    {
+    ) {
     }
 
     /**
@@ -50,8 +48,7 @@ class PaymentService
         int|string|float|bool|null $value,
         array $with = [],
         array $columns = ['*']
-    ): Collection
-    {
+    ): Collection {
         return $this->paymentRepo->getWhere($column, $operator, $value, $with, $columns, 'date', 'asc');
     }
 
@@ -63,8 +60,7 @@ class PaymentService
         ?int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         return $this->paymentRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
@@ -189,8 +185,7 @@ class PaymentService
         Carbon $fromDate,
         UpdatePaymentGeneralData $data,
         PaymentUpdateMode $mode = PaymentUpdateMode::SINGLE
-    ): bool
-    {
+    ): bool {
         $payment = $payment instanceof Payment ? $payment : Payment::find($payment);
         $group = $payment->group;
 
