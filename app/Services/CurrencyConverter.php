@@ -65,8 +65,8 @@ class CurrencyConverter
                 $currencyCodeA = Currency::fromNumeric($rate->currencyCodeA);
                 $currencyCodeB = Currency::fromNumeric($rate->currencyCodeB);
 
-                $this->rates[$currencyCodeA->name][$currencyCodeB->name] = round($rate->rateBuy, 4);
-                $this->rates[$currencyCodeB->name][$currencyCodeA->name] = round(1 / $rate->rateSell, 4);
+                $this->rates[$currencyCodeA->name][$currencyCodeB->name] = round(1 / $rate->rateBuy, 4);
+                $this->rates[$currencyCodeB->name][$currencyCodeA->name] = round($rate->rateSell, 4);
             });
     }
 
@@ -79,10 +79,10 @@ class CurrencyConverter
      */
     public function convert(int $amount, Currency $currencyFrom, Currency $currencyTo): int
     {
-        $rate = $amount < 0
+        $rate = $amount > 0
             ? $this->getRate($currencyFrom, $currencyTo)
             : $this->getRate($currencyTo, $currencyFrom);
 
-        return (int) round($amount < 0 ? $amount / $rate : $amount * $rate, 4);
+        return (int) round($amount > 0 ? $amount / $rate : $amount * $rate, 4);
     }
 }
