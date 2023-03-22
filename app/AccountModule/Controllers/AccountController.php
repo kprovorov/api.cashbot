@@ -8,6 +8,7 @@ use App\AccountModule\Models\Account;
 use App\AccountModule\Requests\StoreAccountRequest;
 use App\AccountModule\Requests\UpdateAccountRequest;
 use App\AccountModule\Services\AccountService;
+use App\Enums\Currency;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Collection;
@@ -52,7 +53,11 @@ class AccountController extends Controller
      */
     public function store(StoreAccountRequest $request): Account
     {
-        $data = new CreateAccountData($request->all());
+        $data = new CreateAccountData([
+            ...$request->validated(),
+            'currency' => Currency::from($request->validated('currency')),
+            'user_id' => $request->user()->id,
+        ]);
 
         return $this->accountService->createAccount($data);
     }
@@ -73,9 +78,12 @@ class AccountController extends Controller
      */
     public function update(UpdateAccountRequest $request, Account $account): Account
     {
-        $data = new UpdateAccountData($request->all());
+        $data = new UpdateAccountData([
+            ...$request->validated(),
+            'currency' => Currency::from($request->validated('currency')),
+        ]);
 
-        $this->accountService->updateAccount($account->id, $data);
+        $this->accountService->updateAccount($account, $data);
 
         return $this->accountService->getAccount($account->id);
     }
@@ -85,6 +93,6 @@ class AccountController extends Controller
      */
     public function destroy(Account $account): bool
     {
-        return $this->accountService->deleteAccount($account->id);
+        return $this->accountService->deleteAccount($account);
     }
 }

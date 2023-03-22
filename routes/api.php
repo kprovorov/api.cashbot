@@ -28,7 +28,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Accounts
     Route::apiResource('accounts', AccountController::class)->only([
         'index',
+        'store',
         'update',
+        'destroy',
     ]);
 
     // Payments

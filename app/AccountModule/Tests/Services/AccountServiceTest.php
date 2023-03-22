@@ -90,12 +90,18 @@ class AccountServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $data = new CreateAccountData($accountData->toArray());
+        $data = new CreateAccountData([
+            ...$accountData->toArray(),
+            'currency' => $accountData->currency,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->createAccount($data);
 
-        $this->assertEquals($data->toArray(), Arr::except($res->toArray(), [
+        $this->assertEquals([
+            ...$data->toArray(),
+            'currency' => $data->currency->value,
+        ], Arr::except($res->toArray(), [
             'id',
             'created_at',
             'updated_at',
@@ -120,7 +126,10 @@ class AccountServiceTest extends TestCase
         /** @var Account $accountData */
         $accountData = Account::factory()->make();
 
-        $data = new UpdateAccountData($accountData->toArray());
+        $data = new UpdateAccountData([
+            ...$accountData->toArray(),
+            'currency' => $accountData->currency,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->updateAccount($account->id, $data);

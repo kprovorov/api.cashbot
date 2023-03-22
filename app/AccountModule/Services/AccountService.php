@@ -66,22 +66,32 @@ class AccountService
      */
     public function createAccount(CreateAccountData $data): Account
     {
-        return $this->accountRepo->create($data->toArray());
+        return $this->accountRepo->create([
+            ...$data->toArray(),
+            'currency' => $data->currency->value,
+        ]);
     }
 
     /**
      * Update Account by id
      */
-    public function updateAccount(int $accountId, UpdateAccountData $data): bool
+    public function updateAccount(int|Account $account, UpdateAccountData $data): bool
     {
-        return $this->accountRepo->update($accountId, $data->toArray());
+        $accountId = $account instanceof Account ? $account->id : $account;
+
+        return $this->accountRepo->update($accountId, [
+            ...$data->toArray(),
+            'currency' => $data->currency->value,
+        ]);
     }
 
     /**
      * Delete Account by id
      */
-    public function deleteAccount(int $accountId): bool
+    public function deleteAccount(int|Account $account): bool
     {
+        $accountId = $account instanceof Account ? $account->id : $account;
+
         return $this->accountRepo->delete($accountId);
     }
 

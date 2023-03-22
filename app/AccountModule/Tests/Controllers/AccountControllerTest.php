@@ -54,22 +54,56 @@ class AccountControllerTest extends TestCase
      */
     public function it_successfully_creates_account(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var Account $accountData */
-        $accountData = Account::factory()->make([
+        $accountData = Account::factory()->make();
+
+        $res = $this->post('accounts', $accountData->toArray());
+
+        $res->assertCreated();
+        $res->assertJson([
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+        $this->assertDatabaseHas('accounts', [
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_creates_account_with_parent_id(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $parent */
+        $parent = Account::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        $payload = $accountData->toArray();
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $parent->id,
+        ]);
 
-        $res = $this->post('accounts', $payload);
+        $res = $this->post('accounts', $accountData->toArray());
 
         $res->assertCreated();
-        $res->assertJson($payload);
-        $this->assertDatabaseHas('accounts', $payload);
+        $res->assertJson([
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+        $this->assertDatabaseHas('accounts', [
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
     }
 
     /**
@@ -100,14 +134,76 @@ class AccountControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_successfully_deletes_account(): void
+    public function it_successfully_updates_account_with_parent_id(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $parent */
+        $parent = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $parent->id,
+        ]);
+
+        $payload = $accountData->toArray();
+
+        $res = $this->put("accounts/{$account->id}", $payload);
+
+        $res->assertSuccessful();
+        $res->assertJson($payload);
+        $this->assertDatabaseHas('accounts', $payload);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_account_with_same_parent_id_as_own(): void
+    {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $account->id,
+        ]);
+
+        $payload = $accountData->toArray();
+
+        $res = $this->put("accounts/{$account->id}", $payload);
+
+        $res->assertInvalid();
+        $this->assertDatabaseHas('accounts', $account->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_deletes_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $res = $this->delete("accounts/{$account->id}");
 
