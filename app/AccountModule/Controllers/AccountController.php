@@ -41,7 +41,7 @@ class AccountController extends Controller
             'payments_to',
             'payments_from.account_from', 'payments_from.account_to',
             'payments_to.account_from', 'payments_to.account_to',
-        ])->each->append('uah_balance');
+        ]);
     }
 
     /**

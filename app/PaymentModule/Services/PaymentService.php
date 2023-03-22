@@ -2,7 +2,6 @@
 
 namespace App\PaymentModule\Services;
 
-use App\AccountModule\Models\Account;
 use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\DTO\CreatePaymentData;
@@ -11,7 +10,6 @@ use App\PaymentModule\DTO\UpdatePaymentGeneralData;
 use App\PaymentModule\Jobs\UpdatePaymentCurrencyAmountJob;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Repositories\PaymentRepo;
-use App\Services\CurrencyConverter;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -27,7 +25,6 @@ class PaymentService
      */
     public function __construct(
         protected readonly PaymentRepo $paymentRepo,
-        protected readonly CurrencyConverter $currencyConverter
     ) {
     }
 
@@ -81,23 +78,9 @@ class PaymentService
      */
     public function createPayment(CreatePaymentData $data): Payment
     {
-        $accountTo = Account::find($data->account_to_id);
-        $accountFrom = Account::find($data->account_from_id);
-
         return $this->paymentRepo->create([
             ...$data->toArray(),
             'group' => $data->group ?? Str::orderedUuid(),
-            'amount' => $data->amount,
-            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                $data->amount,
-                $accountTo->currency,
-                $data->currency,
-            ) : null,
-            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                -$data->amount,
-                $accountFrom->currency,
-                $data->currency,
-            ) : null,
         ])->refresh();
     }
 
@@ -112,22 +95,8 @@ class PaymentService
     {
         $paymentId = $payment instanceof Payment ? $payment->id : $payment;
 
-        $accountTo = Account::find($data->account_to_id);
-        $accountFrom = Account::find($data->account_from_id);
-
         return $this->paymentRepo->update($paymentId, [
             ...$data->toArray(),
-            'amount' => $data->amount,
-            'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                $data->amount,
-                $accountTo->currency,
-                $data->currency,
-            ) : null,
-            'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                -$data->amount,
-                $accountFrom->currency,
-                $data->currency,
-            ) : null,
         ]);
     }
 
@@ -198,27 +167,9 @@ class PaymentService
                 'repeat_ends_on' => $payment->repeat_ends_on,
             ]));
         } else {
-            $accountFrom = Account::find($data->account_from_id);
-            $accountTo = Account::find($data->account_to_id);
-
-            $dataToUpdate = [
-                ...$data->toArray(),
-                'amount' => $data->amount,
-                'amount_to_converted' => $accountTo ? $this->currencyConverter->convert(
-                    $data->amount,
-                    $accountTo->currency,
-                    $data->currency,
-                ) : null,
-                'amount_from_converted' => $accountFrom ? -$this->currencyConverter->convert(
-                    -$data->amount,
-                    $accountFrom->currency,
-                    $data->currency,
-                ) : null,
-            ];
-
             if ($mode === PaymentUpdateMode::ALL) {
                 Payment::where('group', $payment->group)
-                    ->update($dataToUpdate);
+                    ->update($data->toArray());
             } else {
                 // Cut off payments before date
                 [, $paymentB] = $this->splitPayment($payment, $fromDate);
@@ -229,12 +180,12 @@ class PaymentService
                         $fromDate->clone()->add($paymentB->repeat_interval, $paymentB->repeat_unit->value)
                     );
 
-                    $paymentB->update($dataToUpdate);
+                    $paymentB->update($data->toArray());
                 } else {
                     // Update current and all future payments by incrementing days diff between old date and new date
                     Payment::where('group', $group)
                         ->where('date', '>=', $fromDate)
-                        ->update($dataToUpdate);
+                        ->update($data->toArray());
                 }
             }
 
