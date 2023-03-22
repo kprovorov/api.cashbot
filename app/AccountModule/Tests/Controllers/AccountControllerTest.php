@@ -3,7 +3,6 @@
 namespace App\AccountModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\Enums\Currency;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
