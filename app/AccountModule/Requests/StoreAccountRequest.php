@@ -2,7 +2,9 @@
 
 namespace App\AccountModule\Requests;
 
+use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreAccountRequest extends FormRequest
 {
@@ -21,10 +23,8 @@ class StoreAccountRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'currency' => 'required|string|max:255',
+            'currency' => ['required', new Enum(Currency::class)],
             'balance' => 'required|integer',
-            'provider_id' => 'nullable|string|max:255',
-            'provider' => 'nullable|string|max:255',
         ];
     }
 }

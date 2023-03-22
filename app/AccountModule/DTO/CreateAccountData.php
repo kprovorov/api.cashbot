@@ -2,6 +2,7 @@
 
 namespace App\AccountModule\DTO;
 
+use App\Enums\Currency;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class CreateAccountData extends DataTransferObject
@@ -10,7 +11,7 @@ class CreateAccountData extends DataTransferObject
 
     public string $name;
 
-    public string $currency;
+    public Currency $currency;
 
     public int $balance;
 

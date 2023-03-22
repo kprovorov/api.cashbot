@@ -66,7 +66,10 @@ class AccountService
      */
     public function createAccount(CreateAccountData $data): Account
     {
-        return $this->accountRepo->create($data->toArray());
+        return $this->accountRepo->create([
+            ...$data->toArray(),
+            'currency' => $data->currency->value,
+        ]);
     }
 
     /**

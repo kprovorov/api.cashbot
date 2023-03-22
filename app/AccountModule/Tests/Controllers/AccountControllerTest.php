@@ -3,6 +3,7 @@
 namespace App\AccountModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
+use App\Enums\Currency;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
@@ -54,22 +55,24 @@ class AccountControllerTest extends TestCase
      */
     public function it_successfully_creates_account(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var Account $accountData */
-        $accountData = Account::factory()->make([
-            'user_id' => $user->id,
-        ]);
+        $accountData = Account::factory()->make();
 
-        $payload = $accountData->toArray();
-
-        $res = $this->post('accounts', $payload);
+        $res = $this->post('accounts', $accountData->toArray());
 
         $res->assertCreated();
-        $res->assertJson($payload);
-        $this->assertDatabaseHas('accounts', $payload);
+        $res->assertJson([
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+        $this->assertDatabaseHas('accounts', [
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
     }
 
     /**
