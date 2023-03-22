@@ -57,7 +57,7 @@ class CurrencyConverter
             ->getRates()
 
             // Filter out unsupported currencies
-            ->filter(fn(RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
+            ->filter(fn (RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
                 && in_array($rate->currencyCodeB, Currency::getNumericCodes()))
 
             // Map to rates
