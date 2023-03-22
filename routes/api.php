@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'index',
         'store',
         'update',
-        'destroy'
+        'destroy',
     ]);
 
     // Payments

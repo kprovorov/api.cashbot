@@ -5,7 +5,6 @@ namespace App\AccountModule\Tests\Controllers;
 use App\AccountModule\Models\Account;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class AccountControllerTest extends TestCase

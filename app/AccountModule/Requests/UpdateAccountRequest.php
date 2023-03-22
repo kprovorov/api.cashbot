@@ -6,7 +6,6 @@ use App\Enums\Currency;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Validation\Rules\NotIn;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -23,8 +22,6 @@ class UpdateAccountRequest extends FormRequest
      */
     public function rules(): array
     {
-
-
         return [
             'name' => 'required|string|max:255',
             'currency' => ['required', new Enum(Currency::class)],
