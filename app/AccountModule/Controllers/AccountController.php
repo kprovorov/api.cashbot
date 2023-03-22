@@ -93,6 +93,6 @@ class AccountController extends Controller
      */
     public function destroy(Account $account): bool
     {
-        return $this->accountService->deleteAccount($account->id);
+        return $this->accountService->deleteAccount($account);
     }
 }

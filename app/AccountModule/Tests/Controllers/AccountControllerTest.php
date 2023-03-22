@@ -197,12 +197,14 @@ class AccountControllerTest extends TestCase
      */
     public function it_successfully_deletes_account(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var Account $account */
-        $account = Account::factory()->create();
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $res = $this->delete("accounts/{$account->id}");
 
