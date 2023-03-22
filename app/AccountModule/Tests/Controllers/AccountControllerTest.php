@@ -5,6 +5,7 @@ namespace App\AccountModule\Tests\Controllers;
 use App\AccountModule\Models\Account;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class AccountControllerTest extends TestCase
@@ -129,6 +130,66 @@ class AccountControllerTest extends TestCase
         $res->assertSuccessful();
         $res->assertJson($payload);
         $this->assertDatabaseHas('accounts', $payload);
+    }
+
+    /**
+     * @test
+     */
+    public function it_successfully_updates_account_with_parent_id(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $parent */
+        $parent = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $parent->id,
+        ]);
+
+        $payload = $accountData->toArray();
+
+        $res = $this->put("accounts/{$account->id}", $payload);
+
+        $res->assertSuccessful();
+        $res->assertJson($payload);
+        $this->assertDatabaseHas('accounts', $payload);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_account_with_same_parent_id_as_own(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $account->id,
+        ]);
+
+        $payload = $accountData->toArray();
+
+        $res = $this->put("accounts/{$account->id}", $payload);
+
+        $res->assertInvalid();
+        $this->assertDatabaseHas('accounts', $account->toArray());
     }
 
     /**

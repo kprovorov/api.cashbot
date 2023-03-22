@@ -78,9 +78,12 @@ class AccountController extends Controller
      */
     public function update(UpdateAccountRequest $request, Account $account): Account
     {
-        $data = new UpdateAccountData($request->all());
+        $data = new UpdateAccountData([
+            ...$request->validated(),
+            'currency' => Currency::from($request->validated('currency')),
+        ]);
 
-        $this->accountService->updateAccount($account->id, $data);
+        $this->accountService->updateAccount($account, $data);
 
         return $this->accountService->getAccount($account->id);
     }
