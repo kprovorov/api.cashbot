@@ -78,6 +78,38 @@ class AccountControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_successfully_creates_account_with_parent_id(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var Account $parent */
+        $parent = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make([
+            'parent_id' => $parent->id,
+        ]);
+
+        $res = $this->post('accounts', $accountData->toArray());
+
+        $res->assertCreated();
+        $res->assertJson([
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+        $this->assertDatabaseHas('accounts', [
+            ...$accountData->toArray(),
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_updates_account(): void
     {
         $user = User::factory()->create();
