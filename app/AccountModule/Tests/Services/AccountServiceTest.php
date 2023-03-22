@@ -30,17 +30,13 @@ class AccountServiceTest extends TestCase
         $res = $service->getAllAccounts();
 
         $this->assertCount(3, $res);
-        $accounts->each(fn (Account $account) => $this->assertContains(
+        $accounts->each(fn(Account $account) => $this->assertContains(
             $account->id,
             $res->pluck('id')
-        ));
-    }
-
-    /**
-     * @test
-     */
-    public function it_successfully_gets_all_accounts_paginated(): void
-    {
+        )); } /**
+           * @test
+           */
+    public function it_successfully_gets_all_accounts_paginated(): void {
         $user = User::factory()->create();
 
         /** @var Collection $accounts */
@@ -52,17 +48,13 @@ class AccountServiceTest extends TestCase
         $res = $service->getAllAccountsPaginated();
 
         $this->assertCount(3, $res);
-        $accounts->each(fn (Account $account) => $this->assertContains(
+        $accounts->each(fn(Account $account) => $this->assertContains(
             $account->id,
             $res->pluck('id')
-        ));
-    }
-
-    /**
-     * @test
-     */
-    public function it_successfully_gets_account(): void
-    {
+        )); } /**
+           * @test
+           */
+    public function it_successfully_gets_account(): void {
         $user = User::factory()->create();
 
         /** @var Account $account */
@@ -90,16 +82,22 @@ class AccountServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $data = new CreateAccountData($accountData->toArray());
+        $data = new CreateAccountData([
+            ...$accountData->toArray(),
+            'currency' => $accountData->currency,
+        ]);
 
         $service = $this->app->make(AccountService::class);
         $res = $service->createAccount($data);
 
-        $this->assertEquals($data->toArray(), Arr::except($res->toArray(), [
-            'id',
-            'created_at',
-            'updated_at',
-        ]));
+        $this->assertEquals([
+            ...$data->toArray(),
+            'currency' => $data->currency->value,
+        ], Arr::except($res->toArray(), [
+                'id',
+                'created_at',
+                'updated_at',
+            ]));
         $this->assertDatabaseHas('accounts', $data->toArray());
     }
 
