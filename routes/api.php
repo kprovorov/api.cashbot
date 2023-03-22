@@ -1,7 +1,7 @@
 <?php
 
 use App\AccountModule\Controllers\AccountController;
-use App\Http\Controllers\RateController;
+use App\Http\Controllers\RatesController;
 use App\PaymentModule\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Misc
-    Route::get('rates', RateController::class);
+    Route::get('rates', RatesController::class);
 
     // Accounts
     Route::apiResource('accounts', AccountController::class)->only([

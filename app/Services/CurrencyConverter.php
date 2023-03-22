@@ -25,15 +25,23 @@ class CurrencyConverter
      */
     public function getRate(Currency $from, Currency $to): float
     {
-        if (count($this->rates) === 0) {
-            $this->fetchMonobankRates();
-        }
-
         if ($from === $to) {
             return 1;
         }
 
-        return $this->rates[$from->name][$to->name];
+        return $this->getRates()[$from->name][$to->name];
+    }
+
+    /**
+     * Get all currency exchange rates
+     */
+    public function getRates(): array
+    {
+        if (count($this->rates) === 0) {
+            $this->fetchMonobankRates();
+        }
+
+        return $this->rates;
     }
 
     /**

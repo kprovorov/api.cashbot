@@ -3,7 +3,6 @@
 namespace App\AccountModule\Tests\Controllers;
 
 use App\AccountModule\Models\Account;
-use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
@@ -23,11 +22,6 @@ class AccountControllerTest extends TestCase
         $accounts = Account::factory()->count(3)->create([
             'user_id' => $user->id,
         ]);
-
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('getRate')
-            ->times(3)
-            ->andReturn(2);
 
         $res = $this->get('accounts');
 

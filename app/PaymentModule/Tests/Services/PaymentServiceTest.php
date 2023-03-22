@@ -7,7 +7,6 @@ use App\Enums\Currency;
 use App\PaymentModule\DTO\UpdatePaymentData;
 use App\PaymentModule\Models\Payment;
 use App\PaymentModule\Services\PaymentService;
-use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -130,20 +129,11 @@ class PaymentServiceTest extends TestCase
             'repeat_unit' => $paymentData->repeat_unit,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($paymentData->amount * 2);
-
         $service = $this->app->make(PaymentService::class);
         $res = $service->updatePayment($payment->id, $data);
 
         $this->assertTrue($res);
-        $this->assertDatabaseHas('payments', [
-            ...$data->toArray(),
-            'amount' => $data->amount,
-            'amount_to_converted' => $data->amount * 2,
-        ]);
+        $this->assertDatabaseHas('payments', $data->toArray());
     }
 
     /**
@@ -191,16 +181,7 @@ class PaymentServiceTest extends TestCase
             'account_to_id' => $account->id,
             'currency' => Currency::EUR,
             'amount' => 10,
-            'amount_to_converted' => 100,
         ]);
-
-        $mock = $this->mock(CurrencyConverter::class);
-        $mock->shouldReceive('convert')
-            ->once()
-            ->andReturn($payment->amount * 2);
-        $mock->shouldReceive(methodNames: 'getRate')
-            ->once()
-            ->andReturn(2);
 
         $paymentService = $this->app->make(PaymentService::class);
 
@@ -209,7 +190,6 @@ class PaymentServiceTest extends TestCase
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
             'amount' => 10,
-            'amount_to_converted' => 20,
         ]);
     }
 }

@@ -23,8 +23,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon $date
  * @property int $amount
  * @property Currency $currency
- * @property int|null $amount_from_converted
- * @property int|null $amount_to_converted
  * @property int $auto_apply
  * @property string|null $applied_at
  * @property int $budget
@@ -41,8 +39,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountFromId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAccountToId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountFromConverted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmountToConverted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAppliedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAutoApply($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereBudget($value)
@@ -72,8 +68,6 @@ class Payment extends Model
         'account_to_id',
         'account_from_id',
         'description',
-        'amount_to_converted',
-        'amount_from_converted',
         'amount',
         'currency',
         'date',

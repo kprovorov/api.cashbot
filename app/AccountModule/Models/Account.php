@@ -5,14 +5,10 @@ namespace App\AccountModule\Models;
 use App\AccountModule\Factories\AccountFactory;
 use App\Enums\Currency;
 use App\PaymentModule\Models\Payment;
-use App\Services\CurrencyConverter;
-use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 /**
  * App\AccountModule\Models\Account
@@ -83,7 +79,6 @@ class Account extends Model
     protected $casts = [
         'currency' => Currency::class,
         'balance' => 'int',
-        'uah_balance' => 'int',
     ];
 
     /**
@@ -112,24 +107,5 @@ class Account extends Model
     public function jars(): HasMany
     {
         return $this->hasMany(Account::class, 'parent_id');
-    }
-
-    /**
-     * Calculate the balance of the account in the UAH currency.
-     *
-     *
-     * @throws GuzzleException
-     * @throws UnknownProperties
-     */
-    protected function uahBalance(): Attribute
-    {
-        $rate = $this->currency ? app(CurrencyConverter::class)->getRate(
-            $this->currency,
-            Currency::UAH
-        ) : 1;
-
-        return Attribute::make(
-            get: fn () => round($this->balance * $rate),
-        );
     }
 }

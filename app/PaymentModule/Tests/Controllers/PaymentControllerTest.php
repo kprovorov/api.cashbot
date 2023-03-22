@@ -7,7 +7,6 @@ use App\Enums\Currency;
 use App\Enums\PaymentUpdateMode;
 use App\Enums\RepeatUnit;
 use App\PaymentModule\Models\Payment;
-use App\Services\CurrencyConverter;
 use App\UserModule\Models\User;
 use Arr;
 use Illuminate\Database\Eloquent\Collection;
@@ -85,23 +84,11 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->with($paymentData->amount, $account->currency, $paymentData->currency)
-            ->once()
-            ->andReturn($paymentData->amount * 2);
-
         $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
-        $res->assertJson([
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_to_converted' => $paymentData->amount * 2,
-        ]);
-        $this->assertDatabaseHas('payments', [
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_to_converted' => $paymentData->amount * 2,
-        ]);
+        $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
+        $this->assertDatabaseHas('payments', Arr::except($paymentData->toArray(), ['group']));
     }
 
     /**
@@ -124,23 +111,11 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->with(-$paymentData->amount, $account->currency, $paymentData->currency)
-            ->once()
-            ->andReturn(-$paymentData->amount * 2);
-
         $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
-        $res->assertJson([
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_from_converted' => $paymentData->amount * 2,
-        ]);
-        $this->assertDatabaseHas('payments', [
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_from_converted' => $paymentData->amount * 2,
-        ]);
+        $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
+        $this->assertDatabaseHas('payments', Arr::except($paymentData->toArray(), ['group']));
     }
 
     /**
@@ -167,31 +142,11 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $currencyConverter = $this->mock(CurrencyConverter::class);
-
-        $currencyConverter->shouldReceive('convert')
-            ->with($paymentData->amount, $accountTo->currency, $paymentData->currency)
-            ->once()
-            ->andReturn($paymentData->amount * 2);
-
-        $currencyConverter->shouldReceive('convert')
-            ->with(-$paymentData->amount, $accountFrom->currency, $paymentData->currency)
-            ->once()
-            ->andReturn(-$paymentData->amount * 2);
-
         $res = $this->post('payments', $paymentData->toArray());
 
         $res->assertCreated();
-        $res->assertJson([
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_to_converted' => $paymentData->amount * 2,
-            'amount_from_converted' => $paymentData->amount * 2,
-        ]);
-        $this->assertDatabaseHas('payments', [
-            ...Arr::except($paymentData->toArray(), ['group']),
-            'amount_to_converted' => $paymentData->amount * 2,
-            'amount_from_converted' => $paymentData->amount * 2,
-        ]);
+        $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
+        $this->assertDatabaseHas('payments', Arr::except($paymentData->toArray(), ['group']));
     }
 
     /**
@@ -223,19 +178,11 @@ class PaymentControllerTest extends TestCase
 
         $payload = Arr::except($paymentData->toArray(), ['group']);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($paymentData->amount * 2);
-
         $res = $this->put("payments/{$payment->id}", $payload);
 
         $res->assertSuccessful();
         //        $res->assertJson($payload);
-        $this->assertDatabaseHas('payments', [
-            ...$payload,
-            'amount_converted' => $payload['amount'] * 2,
-        ]);
+        $this->assertDatabaseHas('payments', $payload);
     }
 
     /**
@@ -265,11 +212,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $res = $this->put("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
@@ -288,7 +230,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => $payment->date->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, overflow: false)->subDay(),
         ]);
@@ -327,11 +268,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
         $res = $this->put("payments/$payment->id/general", [
@@ -358,7 +294,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $fromDate,
             'repeat_ends_on' => $fromDate->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, false)->subDay(),
         ]);
@@ -401,11 +336,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $repeatEndsOn->clone();
 
         $res = $this->put("payments/$payment->id/general", [
@@ -432,7 +362,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $fromDate,
             'repeat_ends_on' => $fromDate,
         ]);
@@ -465,11 +394,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $res = $this->put("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
@@ -488,7 +412,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => null,
         ]);
@@ -521,11 +444,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
         $res = $this->put("payments/$payment->id/general", [
@@ -552,7 +470,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $fromDate,
             'repeat_ends_on' => null,
         ]);
@@ -589,11 +506,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $repeatEndsOn->clone();
 
         $res = $this->put("payments/$payment->id/general", [
@@ -620,7 +532,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $fromDate,
             'repeat_ends_on' => $fromDate,
         ]);
@@ -653,11 +564,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $res = $this->put("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
@@ -676,7 +582,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => null,
         ]);
@@ -709,11 +614,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
         $res = $this->put("payments/$payment->id/general", [
@@ -734,7 +634,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => null,
         ]);
@@ -771,11 +670,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $fromDate = $repeatEndsOn->clone();
 
         $res = $this->put("payments/$payment->id/general", [
@@ -796,7 +690,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => $payment->repeat_ends_on,
         ]);
@@ -829,11 +722,6 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $this->mock(CurrencyConverter::class)
-            ->shouldReceive('convert')
-            ->once()
-            ->andReturn($updateData->amount * 2);
-
         $res = $this->put("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
@@ -852,7 +740,6 @@ class PaymentControllerTest extends TestCase
                 'amount',
                 'currency',
             ]),
-            'amount_to_converted' => $updateData->amount * 2,
             'date' => $payment->date,
             'repeat_ends_on' => $payment->repeat_ends_on,
         ]);
