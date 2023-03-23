@@ -8,25 +8,18 @@ use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->markTestSkipped();
-    }
-
     /**
      * @test
      */
-    public function it_successfully_lists_users(): void
+    public function it_successfully_lists_users_as_admin(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
 
         /** @var Collection $users */
         $users = User::factory()->count(3)->create();
 
-        $res = $this->get('api/users');
+        $res = $this->get('users');
 
         $res->assertSuccessful();
         $res->assertJson($users->sortByDesc('id')->values()->toArray());
@@ -35,15 +28,32 @@ class UserControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_lists_users_as_non_admin(): void
+    {
+        $customer = User::factory()->create();
+        $this->actingAs($customer);
+
+        /** @var Collection $users */
+        $users = User::factory()->count(3)->create();
+
+        $res = $this->get('users');
+
+        $res->assertUnauthorized();
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_shows_user(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var User $user */
         $user = User::factory()->create();
 
-        $res = $this->get("api/users/{$user->id}");
+        $res = $this->get("users/{$user->id}");
 
         $res->assertSuccessful();
         $res->assertJson($user->toArray());
@@ -52,24 +62,38 @@ class UserControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_successfully_creates_user(): void
+    public function it_successfully_creates_user_as_admin(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
 
         /** @var User $userData */
         $userData = User::factory()->make();
 
-        $payload = [
-            ...$userData->toArray(),
-            'password' => 'secret',
-        ];
-
-        $res = $this->post('api/users', $payload);
+        $res = $this->post('users', $userData->toArray());
 
         $res->assertCreated();
         $res->assertJson($userData->toArray());
-        $this->assertDatabaseHas('users', $payload);
+        $this->assertDatabaseHas('users', $userData->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_user_as_non_admin(): void
+    {
+        $customer = User::factory()->create();
+        $this->actingAs($customer);
+
+        /** @var User $userData */
+        $userData = User::factory()->make();
+
+        $res = $this->post('users', $userData->toArray());
+
+        $res->assertUnauthorized();
+        $this->assertDatabaseMissing('users', [
+            'email' => $userData->email,
+        ]);
     }
 
     /**
@@ -77,6 +101,7 @@ class UserControllerTest extends TestCase
      */
     public function it_successfully_updates_user(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -91,7 +116,7 @@ class UserControllerTest extends TestCase
             'password' => 'secret',
         ];
 
-        $res = $this->put("api/users/{$user->id}", $payload);
+        $res = $this->put("users/{$user->id}", $payload);
 
         $res->assertSuccessful();
         $res->assertJson($userData->toArray());
@@ -103,13 +128,14 @@ class UserControllerTest extends TestCase
      */
     public function it_successfully_deletes_user(): void
     {
+        $this->markTestSkipped();
         $user = User::factory()->create();
         $this->actingAs($user);
 
         /** @var User $user */
         $user = User::factory()->create();
 
-        $res = $this->delete("api/users/{$user->id}");
+        $res = $this->delete("users/{$user->id}");
 
         $res->assertSuccessful();
         $this->assertDatabaseMissing('users', [

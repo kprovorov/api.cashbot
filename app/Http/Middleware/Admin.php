@@ -15,7 +15,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()->admin) {
+        if (! $request->user()->admin) {
             return response('Unauthorized.', 401);
         }
 

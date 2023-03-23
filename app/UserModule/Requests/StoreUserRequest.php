@@ -2,9 +2,9 @@
 
 namespace App\UserModule\Requests;
 
+use App\UserModule\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\UserModule\Models\User;
 
 class StoreUserRequest extends FormRequest
 {
