@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
             'name' => 'Kirill Provorov',
             'email' => 'kirill@provorov.dev',
             'password' => Hash::make('secret'),
+            'admin' => true,
         ]);
     }
 }
