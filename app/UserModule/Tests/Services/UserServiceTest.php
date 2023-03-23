@@ -76,7 +76,7 @@ class UserServiceTest extends TestCase
 
         $data = new CreateUserData([
             ...$userData->toArray(),
-            'password' => Hash::make('secret'),
+            'password' => 'secret',
         ]);
 
         $service = $this->app->make(UserService::class);
@@ -90,7 +90,7 @@ class UserServiceTest extends TestCase
                 'updated_at',
             ])
         );
-        $this->assertDatabaseHas('users', $data->toArray());
+        $this->assertDatabaseHas('users', $data->except('password')->toArray());
     }
 
     /**

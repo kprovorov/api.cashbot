@@ -10,5 +10,5 @@ class CreateUserData extends DataTransferObject
 
     public string $email;
 
-    public string $password;
+    public ?string $password;
 }
