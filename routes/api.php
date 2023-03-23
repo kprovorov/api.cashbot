@@ -1,6 +1,7 @@
 <?php
 
 use App\AccountModule\Controllers\AccountController;
+use App\UserModule\Controllers\UserController;
 use App\Http\Controllers\RatesController;
 use App\PaymentModule\Controllers\PaymentController;
 use App\UserModule\Models\User;
@@ -43,6 +44,16 @@ Route::post('/sanctum/token', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    // Admin
+    Route::group(['middleware' => 'admin'], function () {
+        // Users
+        Route::apiResource('users', UserController::class)->only([
+            'index',
+            'store',
+        ]);
+    });
+
     // Misc
     Route::get('rates', RatesController::class);
 

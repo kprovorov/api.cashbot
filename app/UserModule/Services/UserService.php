@@ -6,8 +6,10 @@ use App\UserModule\DTO\CreateUserData;
 use App\UserModule\DTO\UpdateUserData;
 use App\UserModule\Models\User;
 use App\UserModule\Repositories\UserRepo;
+use Hash;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Str;
 
 class UserService
 {
@@ -47,7 +49,10 @@ class UserService
      */
     public function createUser(CreateUserData $data): User
     {
-        return $this->userRepo->create($data->toArray());
+        return $this->userRepo->create([
+            ...$data->toArray(),
+            'password' => Hash::make($data->password ?? Str::random()),
+        ]);
     }
 
     /**

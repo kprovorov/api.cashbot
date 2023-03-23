@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): User
     {
-        $data = new CreateUserData($request->all());
+        $data = new CreateUserData($request->validated());
 
         return $this->userService->createUser($data);
     }
@@ -58,7 +58,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): User
     {
-        $data = new UpdateUserData($request->all());
+        $data = new UpdateUserData($request->validated());
 
         $this->userService->updateUser($user->id, $data);
 
