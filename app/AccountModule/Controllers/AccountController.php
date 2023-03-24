@@ -22,6 +22,7 @@ class AccountController extends Controller
      */
     public function __construct(protected AccountService $accountService)
     {
+        $this->authorizeResource(Account::class, 'account');
     }
 
     /**
@@ -67,7 +68,13 @@ class AccountController extends Controller
      */
     public function show(Account $account): Account
     {
-        return $this->accountService->getAccount($account->id);
+        return $this->accountService->getAccount($account->id, [
+            'jars',
+            'payments_from',
+            'payments_to',
+            'payments_from.account_from', 'payments_from.account_to',
+            'payments_to.account_from', 'payments_to.account_to',
+        ]);
     }
 
     /**
