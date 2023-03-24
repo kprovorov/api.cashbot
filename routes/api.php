@@ -57,12 +57,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('rates', RatesController::class);
 
     // Accounts
-    Route::apiResource('accounts', AccountController::class)->only([
-        'index',
-        'store',
-        'update',
-        'destroy',
-    ]);
+    Route::apiResource('accounts', AccountController::class);
 
     // Payments
     Route::apiResource('payments', PaymentController::class)->only([
