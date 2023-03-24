@@ -162,7 +162,7 @@ class AccountControllerTest extends TestCase
         $res->assertJson($payload);
         $this->assertDatabaseHas('accounts', [
             ...$payload,
-            ...$providerData
+            ...$providerData,
         ]);
     }
 
