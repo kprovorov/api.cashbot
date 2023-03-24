@@ -102,9 +102,11 @@ class AccountService
      * @throws UnknownProperties
      * @throws GuzzleException
      */
-    public function updateAccountBalances(): void
+    public function updateAccountBalancesForUser(int $userId): void
     {
-        $accounts = Account::whereNotNull('provider_id')->get();
+        $accounts = Account::where('user_id', $userId)
+            ->whereNotNull('provider_id')
+            ->get();
 
         $accounts->each(function (Account $account) {
             $this->updateAccountBalance($account);

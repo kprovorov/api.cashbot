@@ -13,9 +13,9 @@ class AccountControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_successfully_lists_accounts(): void
+    public function it_successfully_lists_user_accounts(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -28,6 +28,29 @@ class AccountControllerTest extends TestCase
 
         $res->assertSuccessful();
         $res->assertJson($accounts->sortByDesc('id')->values()->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_lists_other_user_accounts(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        /** @var User $anotherUser */
+        $anotherUser = User::factory()->create();
+
+        /** @var Collection $anotherUserAccounts */
+        $anotherUserAccounts = Account::factory()->count(3)->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        $res = $this->get('accounts');
+
+        $res->assertSuccessful();
+        $res->assertExactJson([]);
     }
 
     /**
