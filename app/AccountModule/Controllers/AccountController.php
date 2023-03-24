@@ -79,6 +79,7 @@ class AccountController extends Controller
     public function update(UpdateAccountRequest $request, Account $account): Account
     {
         $data = new UpdateAccountData([
+            ...$account->toArray(),
             ...$request->validated(),
             'currency' => Currency::from($request->validated('currency')),
         ]);

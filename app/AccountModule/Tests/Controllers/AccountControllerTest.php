@@ -5,6 +5,7 @@ namespace App\AccountModule\Tests\Controllers;
 use App\AccountModule\Models\Account;
 use App\UserModule\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Str;
 use Tests\TestCase;
 
 class AccountControllerTest extends TestCase
@@ -129,6 +130,40 @@ class AccountControllerTest extends TestCase
         $res->assertSuccessful();
         $res->assertJson($payload);
         $this->assertDatabaseHas('accounts', $payload);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_account_provider_data(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $providerData = [
+            'provider_id' => Str::random(),
+            'provider' => 'monobank',
+        ];
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+            ...$providerData,
+        ]);
+
+        /** @var Account $accountData */
+        $accountData = Account::factory()->make();
+
+        $payload = $accountData->toArray();
+
+        $res = $this->put("accounts/{$account->id}", $payload);
+
+        $res->assertSuccessful();
+        $res->assertJson($payload);
+        $this->assertDatabaseHas('accounts', [
+            ...$payload,
+            ...$providerData
+        ]);
     }
 
     /**
