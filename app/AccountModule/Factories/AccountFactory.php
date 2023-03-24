@@ -28,17 +28,16 @@ class AccountFactory extends Factory
         ];
     }
 
-//    /**
-//     * Indicate that the Account is ............
-//     *
-//     * @return Factory
-//     */
-//    public function yourState(): Factory
-//    {
-//        return $this->state(function (array $attributes) {
-//            return [
-//                //
-//            ];
-//        });
-//    }
+    /**
+     * Indicate that the Account has provider
+     */
+    public function withProvider(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'provider_id' => $this->faker->uuid(),
+                'provider' => 'monobank',
+            ];
+        });
+    }
 }

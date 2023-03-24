@@ -34,7 +34,7 @@ class AccountController extends Controller
     public function index(Request $request): Collection
     {
         // Refresh balances
-        $this->accountService->updateAccountBalances();
+        $this->accountService->updateAccountBalancesForUser($request->user()->id);
 
         return $this->accountService->getAllUserAccounts($request->user()->id, [
             'jars',
