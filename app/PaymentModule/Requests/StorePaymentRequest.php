@@ -41,8 +41,8 @@ class StorePaymentRequest extends FormRequest
             'auto_apply' => 'required|boolean',
             'budget' => 'required|boolean',
             'repeat_unit' => ['required', new Enum(RepeatUnit::class)],
-            'repeat_interval' => 'required|integer',
-            'repeat_ends_on' => 'nullable|date',
+            'repeat_interval' => 'required|integer|min:1',
+            'repeat_ends_on' => 'nullable|date|after:date',
         ];
     }
 }

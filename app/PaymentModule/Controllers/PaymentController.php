@@ -27,6 +27,7 @@ class PaymentController extends Controller
      */
     public function __construct(protected PaymentService $paymentService)
     {
+        $this->authorizeResource(Payment::class, 'payment');
     }
 
     /**

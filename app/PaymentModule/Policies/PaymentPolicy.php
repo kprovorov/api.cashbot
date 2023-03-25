@@ -13,7 +13,7 @@ class PaymentPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function index(User $user): bool
+    public function viewAny(User $user): bool
     {
         return true;
     }
@@ -23,7 +23,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment): bool
     {
-        return $payment->jar->account->user_id === $user->id;
+        return $payment->account_to?->user_id === $user->id || $payment->account_from?->user_id === $user->id;
     }
 
     /**
@@ -39,7 +39,7 @@ class PaymentPolicy
      */
     public function update(User $user, Payment $payment): bool
     {
-        return $payment->jar->account->user_id === $user->id;
+        return $payment->account_to?->user_id === $user->id || $payment->account_from?->user_id === $user->id;
     }
 
     /**
@@ -47,7 +47,7 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment): bool
     {
-        return $payment->jar->account->user_id === $user->id;
+        return $payment->account_to?->user_id === $user->id || $payment->account_from?->user_id === $user->id;
     }
 
     /**
@@ -55,7 +55,7 @@ class PaymentPolicy
      */
     public function restore(User $user, Payment $payment): bool
     {
-        return $payment->jar->account->user_id === $user->id;
+        return $payment->account_to?->user_id === $user->id || $payment->account_from?->user_id === $user->id;
     }
 
     /**
@@ -63,6 +63,6 @@ class PaymentPolicy
      */
     public function forceDelete(User $user, Payment $payment): bool
     {
-        return $payment->jar->account->user_id === $user->id;
+        return $payment->account_to?->user_id === $user->id || $payment->account_from?->user_id === $user->id;
     }
 }

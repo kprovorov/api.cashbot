@@ -20,8 +20,8 @@ class PaymentControllerTest extends TestCase
     public function it_successfully_lists_payments(): void
     {
         $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -30,10 +30,10 @@ class PaymentControllerTest extends TestCase
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(2)->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
-        $res = $this->get('payments');
+        $res = $this->actingAs($user)->getJson('payments');
 
         $res->assertSuccessful();
         $res->assertJson($payments->sortByDesc('id')->values()->toArray());
@@ -44,9 +44,8 @@ class PaymentControllerTest extends TestCase
      */
     public function it_successfully_shows_payment(): void
     {
-        $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -58,7 +57,7 @@ class PaymentControllerTest extends TestCase
             'account_to_id' => $account->id,
         ]);
 
-        $res = $this->get("payments/{$payment->id}");
+        $res = $this->actingAs($user)->getJson("payments/{$payment->id}");
 
         $res->assertSuccessful();
         $res->assertJson($payment->toArray());
@@ -67,24 +66,45 @@ class PaymentControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_shows_foreign_payment(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->getJson("payments/{$payment->id}");
+
+        $res->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_creates_income_payment(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
-            'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
             'account_to_id' => $account->id,
-            'currency' => Currency::EUR,
         ]);
 
-        $res = $this->post('payments', $paymentData->toArray());
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
@@ -96,8 +116,8 @@ class PaymentControllerTest extends TestCase
      */
     public function it_successfully_creates_expense_payment(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -111,7 +131,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->post('payments', $paymentData->toArray());
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
@@ -123,13 +143,15 @@ class PaymentControllerTest extends TestCase
      */
     public function it_successfully_creates_transfer_payment(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
+        /** @var Account $accountTo */
         $accountTo = Account::factory()->create([
             'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
+        /** @var Account $accountFrom */
         $accountFrom = Account::factory()->create([
             'currency' => Currency::EUR,
             'user_id' => $user->id,
@@ -142,7 +164,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->post('payments', $paymentData->toArray());
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
 
         $res->assertCreated();
         $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
@@ -152,11 +174,88 @@ class PaymentControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_creates_payment_to_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_to_id']);
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_payment_from_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_from_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_from_id']);
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_payment_when_repeat_ends_is_before_date(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'date' => now()->addDay(),
+            'repeat_ends_on' => now(),
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['repeat_ends_on']);
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_updates_payment(): void
     {
         $this->markTestSkipped();
+        /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -178,7 +277,7 @@ class PaymentControllerTest extends TestCase
 
         $payload = Arr::except($paymentData->toArray(), ['group']);
 
-        $res = $this->put("payments/{$payment->id}", $payload);
+        $res = $this->actingAs($user)->putJson("payments/{$payment->id}", $payload);
 
         $res->assertSuccessful();
         //        $res->assertJson($payload);
@@ -192,7 +291,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -212,7 +310,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
             'mode' => PaymentUpdateMode::SINGLE->value,
@@ -248,7 +346,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -270,7 +367,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::SINGLE->value,
@@ -312,7 +409,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -338,7 +434,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $repeatEndsOn->clone();
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::SINGLE->value,
@@ -374,7 +470,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -394,7 +489,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
             'mode' => PaymentUpdateMode::FUTURE->value,
@@ -424,7 +519,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -446,7 +540,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::FUTURE->value,
@@ -482,7 +576,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -508,7 +601,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $repeatEndsOn->clone();
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::FUTURE->value,
@@ -544,7 +637,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -564,7 +656,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
             'mode' => PaymentUpdateMode::ALL->value,
@@ -594,7 +686,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -616,7 +707,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $payment->date->clone()->add(2, $payment->repeat_unit->value, false);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::ALL->value,
@@ -646,7 +737,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -672,7 +762,7 @@ class PaymentControllerTest extends TestCase
 
         $fromDate = $repeatEndsOn->clone();
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $fromDate,
             'mode' => PaymentUpdateMode::ALL->value,
@@ -702,7 +792,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -722,7 +811,7 @@ class PaymentControllerTest extends TestCase
             'currency' => Currency::EUR,
         ]);
 
-        $res = $this->put("payments/$payment->id/general", [
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", [
             ...$updateData->toArray(),
             'from_date' => $payment->date,
             'mode' => PaymentUpdateMode::SINGLE->value,
@@ -748,11 +837,82 @@ class PaymentControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_updates_payment_to_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_to_id' => $account->id,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", $updateData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_to_id']);
+        $this->assertDatabaseHas('payments', $payment->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_payment_from_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_from_id' => $account->id,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_from_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", $updateData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_from_id']);
+        $this->assertDatabaseHas('payments', $payment->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_deletes_single_payment(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -764,7 +924,7 @@ class PaymentControllerTest extends TestCase
             'account_to_id' => $account->id,
         ]);
 
-        $res = $this->delete("payments/{$payment->id}");
+        $res = $this->actingAs($user)->deleteJson("payments/{$payment->id}");
 
         $res->assertSuccessful();
         $this->assertDatabaseMissing('payments', [
@@ -779,7 +939,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -792,7 +951,7 @@ class PaymentControllerTest extends TestCase
             'repeat_unit' => RepeatUnit::MONTH,
         ]);
 
-        $res = $this->delete("payments/{$payment->id}", [
+        $res = $this->actingAs($user)->deleteJson("payments/{$payment->id}", [
             'date' => $payment->date->format('Y-m-d'),
         ]);
 
@@ -810,7 +969,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -824,7 +982,7 @@ class PaymentControllerTest extends TestCase
             'repeat_ends_on' => now()->addMonthsNoOverflow(4),
         ]);
 
-        $res = $this->delete("payments/{$payment->id}", [
+        $res = $this->actingAs($user)->deleteJson("payments/{$payment->id}", [
             'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
@@ -842,7 +1000,6 @@ class PaymentControllerTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         /** @var Account $account */
         $account = Account::factory()->create([
@@ -855,7 +1012,7 @@ class PaymentControllerTest extends TestCase
             'repeat_unit' => RepeatUnit::MONTH,
         ]);
 
-        $res = $this->delete("payments/{$payment->id}", [
+        $res = $this->actingAs($user)->deleteJson("payments/{$payment->id}", [
             'date' => now()->addMonthsNoOverflow(4)->format('Y-m-d'),
         ]);
 
