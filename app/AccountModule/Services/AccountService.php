@@ -6,8 +6,8 @@ use App\AccountModule\DTO\CreateAccountData;
 use App\AccountModule\DTO\UpdateAccountData;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Repositories\AccountRepo;
+use App\Http\Integrations\Monobank\Monobank;
 use App\Monobank\DTO\AccountData;
-use App\Monobank\Services\MonobankService;
 use App\UserModule\Models\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -19,7 +19,7 @@ class AccountService
     /**
      * AccountService constructor.
      */
-    public function __construct(protected AccountRepo $accountRepo, private readonly MonobankService $monobankService)
+    public function __construct(protected AccountRepo $accountRepo, private readonly Monobank $monobank)
     {
     }
 
@@ -145,8 +145,8 @@ class AccountService
      */
     public function fetchMonobankAccountData(Account $account): AccountData
     {
-        $clientInfo = $this->monobankService->getClientInfo();
+        $res = $this->monobank->getClientInfo();
 
-        return $clientInfo->accounts->where('id', $account->provider_id)->first();
+        return $res->dto()->accounts->where('id', $account->provider_id)->first();
     }
 }
