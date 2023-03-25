@@ -18,8 +18,6 @@ class Monobank extends Connector
 
     /**
      * The Base URL of the API
-     *
-     * @return string
      */
     public function resolveBaseUrl(): string
     {
@@ -34,7 +32,7 @@ class Monobank extends Connector
     protected function defaultHeaders(): array
     {
         return [
-            'X-Token' => $this->token
+            'X-Token' => $this->token,
         ];
     }
 

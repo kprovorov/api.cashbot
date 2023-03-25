@@ -16,6 +16,7 @@ class RateDataCollection extends Collection
     public static function fromResponse(Response $response): self
     {
         return new static(
-            array_map(fn(array $rate) => new RateData($rate), $response->json())
-        ); }
+            array_map(fn (array $rate) => new RateData($rate), $response->json())
+        );
+    }
 }

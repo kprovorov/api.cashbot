@@ -3,9 +3,6 @@
 namespace Tests\Unit;
 
 use App\Enums\Currency;
-use App\Http\Integrations\Monobank\Monobank;
-use App\Monobank\DTO\Collections\RateDataCollection;
-use App\Monobank\DTO\RateData;
 use App\Services\CurrencyConverter;
 use Saloon\Http\Faking\MockResponse;
 use Saloon\Laravel\Saloon;
@@ -43,7 +40,7 @@ class CurrencyConverterTest extends TestCase
                     'date' => 1663861209,
                     'rateBuy' => 0.982,
                     'rateSell' => 1,
-                ]
+                ],
             ], 200),
         ]);
 
@@ -61,7 +58,6 @@ class CurrencyConverterTest extends TestCase
      */
     public function it_successfully_converts_uah_to_eur_currency(): void
     {
-
         Saloon::fake([
             MockResponse::make([
                 [
@@ -84,7 +80,7 @@ class CurrencyConverterTest extends TestCase
                     'date' => 1663861209,
                     'rateBuy' => 0.982,
                     'rateSell' => 1,
-                ]
+                ],
             ], 200),
         ]);
 
