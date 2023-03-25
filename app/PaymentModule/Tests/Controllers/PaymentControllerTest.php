@@ -30,7 +30,7 @@ class PaymentControllerTest extends TestCase
 
         /** @var Collection $payments */
         $payments = Payment::factory()->count(2)->create([
-            'account_id' => $account->id,
+            'account_to_id' => $account->id,
         ]);
 
         $res = $this->actingAs($user)->getJson('payments');
@@ -44,7 +44,6 @@ class PaymentControllerTest extends TestCase
      */
     public function it_successfully_shows_payment(): void
     {
-        $this->markTestSkipped();
         /** @var User $user */
         $user = User::factory()->create();
 
@@ -67,6 +66,29 @@ class PaymentControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_shows_foreign_payment(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->getJson("payments/{$payment->id}");
+
+        $res->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
     public function it_successfully_creates_income_payment(): void
     {
         /** @var User $user */
@@ -74,14 +96,12 @@ class PaymentControllerTest extends TestCase
 
         /** @var Account $account */
         $account = Account::factory()->create([
-            'currency' => Currency::UAH,
             'user_id' => $user->id,
         ]);
 
         /** @var Payment $paymentData */
         $paymentData = Payment::factory()->make([
             'account_to_id' => $account->id,
-            'currency' => Currency::EUR,
         ]);
 
         $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
@@ -149,6 +169,83 @@ class PaymentControllerTest extends TestCase
         $res->assertCreated();
         $res->assertJson(Arr::except($paymentData->toArray(), ['group']));
         $this->assertDatabaseHas('payments', Arr::except($paymentData->toArray(), ['group']));
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_payment_to_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_to_id']);
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_payment_from_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_from_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_from_id']);
+        $this->assertDatabaseCount('payments', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_creates_payment_when_repeat_ends_is_before_date(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Payment $paymentData */
+        $paymentData = Payment::factory()->make([
+            'account_to_id' => $account->id,
+            'date' => now()->addDay(),
+            'repeat_ends_on' => now(),
+        ]);
+
+        $res = $this->actingAs($user)->postJson('payments', $paymentData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['repeat_ends_on']);
+        $this->assertDatabaseCount('payments', 0);
     }
 
     /**
@@ -735,6 +832,78 @@ class PaymentControllerTest extends TestCase
             'date' => $payment->date,
             'repeat_ends_on' => $payment->repeat_ends_on,
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_payment_to_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_to_id' => $account->id,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_to_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", $updateData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_to_id']);
+        $this->assertDatabaseHas('payments', $payment->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_doesnt_updates_payment_from_foreign_account(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        /** @var Account $account */
+        $account = Account::factory()->create([
+            'currency' => Currency::UAH,
+            'user_id' => $user->id,
+        ]);
+
+        /** @var Account $foreignAccount */
+        $foreignAccount = Account::factory()->create([
+            'user_id' => User::factory(),
+        ]);
+
+        /** @var Payment $payment */
+        $payment = Payment::factory()->create([
+            'account_from_id' => $account->id,
+        ]);
+
+        /** @var Payment $updateData */
+        $updateData = Payment::factory()->make([
+            'account_from_id' => $foreignAccount->id,
+        ]);
+
+        $res = $this->actingAs($user)->putJson("payments/$payment->id/general", $updateData->toArray());
+
+        $res->assertUnprocessable();
+        $res->assertJsonValidationErrors(['account_from_id']);
+        $this->assertDatabaseHas('payments', $payment->toArray());
     }
 
     /**
