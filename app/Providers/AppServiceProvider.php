@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\AccountModule\AccountServiceProvider;
+use App\Http\Integrations\Monobank\Monobank;
 use App\Monobank\MonobankServiceProvider;
 use App\PaymentModule\PaymentServiceProvider;
 use App\Services\CurrencyConverter;
@@ -26,6 +27,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(MonobankServiceProvider::class);
 
         $this->app->singleton(CurrencyConverter::class);
+
+        $this->app->bind(Monobank::class, function () {
+            return new Monobank(
+                config('services.monobank.token'),
+                config('services.monobank.base_url')
+            );
+        });
     }
 
     /**
