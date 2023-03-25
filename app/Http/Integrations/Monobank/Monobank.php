@@ -3,6 +3,7 @@
 namespace App\Http\Integrations\Monobank;
 
 use App\Http\Integrations\Monobank\Requests\ClientInfo;
+use App\Http\Integrations\Monobank\Requests\GetRates;
 use Saloon\Http\Connector;
 use Saloon\Http\Response;
 use Saloon\Traits\Plugins\AcceptsJson;
@@ -53,5 +54,10 @@ class Monobank extends Connector
     public function getClientInfo(): Response
     {
         return $this->send(new ClientInfo());
+    }
+
+    public function getRates(): Response
+    {
+        return $this->send(new GetRates());
     }
 }

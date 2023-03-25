@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Enums\Currency;
+use App\Http\Integrations\Monobank\Monobank;
 use App\Monobank\DTO\RateData;
-use App\Monobank\Services\MonobankService;
 use GuzzleHttp\Exception\GuzzleException;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
@@ -12,7 +12,7 @@ class CurrencyConverter
 {
     protected array $rates = [];
 
-    public function __construct(protected readonly MonobankService $monobankService)
+    public function __construct(protected readonly Monobank $monobank)
     {
     }
 
@@ -53,8 +53,9 @@ class CurrencyConverter
      */
     protected function fetchMonobankRates(): void
     {
-        $this->monobankService
+        $this->monobank
             ->getRates()
+            ->dto()
 
             // Filter out unsupported currencies
             ->filter(fn (RateData $rate) => in_array($rate->currencyCodeA, Currency::getNumericCodes())
