@@ -4487,16 +4487,16 @@
         },
         {
             "name": "sammyjo20/saloon-cache-plugin",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammyjo20/saloon-cache-plugin.git",
-                "reference": "330ba774adfeb987a7381ff9552a814bce550cca"
+                "reference": "a5d85b07dd560463dcbbb72ec8a000ff1137d33f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/saloon-cache-plugin/zipball/330ba774adfeb987a7381ff9552a814bce550cca",
-                "reference": "330ba774adfeb987a7381ff9552a814bce550cca",
+                "url": "https://api.github.com/repos/Sammyjo20/saloon-cache-plugin/zipball/a5d85b07dd560463dcbbb72ec8a000ff1137d33f",
+                "reference": "a5d85b07dd560463dcbbb72ec8a000ff1137d33f",
                 "shasum": ""
             },
             "require": {
@@ -4507,7 +4507,7 @@
                 "friendsofphp/php-cs-fixer": "^3.13",
                 "league/flysystem": "^3.12.2",
                 "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^1.21.2",
+                "pestphp/pest": "^2.3",
                 "psr/simple-cache": "^3.0",
                 "spatie/ray": "^1.34.2"
             },
@@ -4531,9 +4531,9 @@
             "description": "Official plugin for caching Saloon responses",
             "support": {
                 "issues": "https://github.com/Sammyjo20/saloon-cache-plugin/issues",
-                "source": "https://github.com/Sammyjo20/saloon-cache-plugin/tree/v2.0.0"
+                "source": "https://github.com/Sammyjo20/saloon-cache-plugin/tree/v2.1.0"
             },
-            "time": "2023-02-20T20:07:29+00:00"
+            "time": "2023-04-02T10:24:25+00:00"
         },
         {
             "name": "sammyjo20/saloon-http-sender",
