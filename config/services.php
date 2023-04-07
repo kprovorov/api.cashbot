@@ -36,4 +36,10 @@ return [
         'token' => env('MONOBANK_TOKEN'),
     ],
 
+    'logsnag' => [
+        'base_url' => env('LOGSNAG_BASE_URL', 'https://api.logsnag.com/v1'),
+        'token' => env('LOGSNAG_TOKEN'),
+        'project' => env('LOGSNAG_PROJECT'),
+    ],
+
 ];
