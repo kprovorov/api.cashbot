@@ -4,8 +4,8 @@ namespace App\Http\Integrations\LogSnag;
 
 use App\Http\Integrations\LogSnag\Requests\Log;
 use Saloon\Http\Connector;
-use Saloon\Traits\Plugins\AcceptsJson;
 use Saloon\Http\Response;
+use Saloon\Traits\Plugins\AcceptsJson;
 
 class LogSnag extends Connector
 {
@@ -18,8 +18,6 @@ class LogSnag extends Connector
 
     /**
      * The Base URL of the API
-     *
-     * @return string
      */
     public function resolveBaseUrl(): string
     {
@@ -51,7 +49,7 @@ class LogSnag extends Connector
         $request = new Log();
         $request->body()->merge([
             'project' => $this->project,
-            ...$body
+            ...$body,
         ]);
 
         return $this->send($request);
