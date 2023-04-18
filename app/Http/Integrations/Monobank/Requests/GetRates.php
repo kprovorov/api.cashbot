@@ -4,14 +4,18 @@ namespace App\Http\Integrations\Monobank\Requests;
 
 use App\Monobank\DTO\Collections\RateDataCollection;
 use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Contracts\Driver;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
+use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetRates extends Request
+class GetRates extends Request implements Cacheable
 {
+    use HasCaching;
+
     /**
      * Define the HTTP method
      */
