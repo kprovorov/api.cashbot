@@ -4401,16 +4401,16 @@
         },
         {
             "name": "sammyjo20/saloon",
-            "version": "v2.6.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammyjo20/Saloon.git",
-                "reference": "e6cfb32f728e91eaebc062a86f20bb632ff40cd1"
+                "reference": "ed0206e3f7e451c846fa0647155220016a65a952"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/e6cfb32f728e91eaebc062a86f20bb632ff40cd1",
-                "reference": "e6cfb32f728e91eaebc062a86f20bb632ff40cd1",
+                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/ed0206e3f7e451c846fa0647155220016a65a952",
+                "reference": "ed0206e3f7e451c846fa0647155220016a65a952",
                 "shasum": ""
             },
             "require": {
@@ -4461,7 +4461,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Sammyjo20/Saloon/issues",
-                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.6.0"
+                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.6.1"
             },
             "funding": [
                 {
@@ -4473,7 +4473,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2023-04-23T11:51:53+00:00"
+            "time": "2023-04-25T16:34:00+00:00"
         },
         {
             "name": "sammyjo20/saloon-cache-plugin",
