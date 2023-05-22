@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5a21ae5c8d751422be2ade446fbb3b3",
+    "content-hash": "949c487b464b9e722e060bdf00295fad",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4587,16 +4587,16 @@
         },
         {
             "name": "sammyjo20/saloon-http-sender",
-            "version": "v0.3.2",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Sammyjo20/saloon-http-sender.git",
-                "reference": "5ccae27bed383807cbb1c66fa6f947f1528ed873"
+                "url": "https://github.com/saloonphp/laravel-http-sender.git",
+                "reference": "c1070fd1c2eda976336cfc61a3adb013eae04eea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/saloon-http-sender/zipball/5ccae27bed383807cbb1c66fa6f947f1528ed873",
-                "reference": "5ccae27bed383807cbb1c66fa6f947f1528ed873",
+                "url": "https://api.github.com/repos/saloonphp/laravel-http-sender/zipball/c1070fd1c2eda976336cfc61a3adb013eae04eea",
+                "reference": "c1070fd1c2eda976336cfc61a3adb013eae04eea",
                 "shasum": ""
             },
             "require": {
@@ -4629,13 +4629,14 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Laravel HTTP Client Sender for Saloon v2",
+            "description": "Laravel HTTP Client Sender for Saloon v2+",
             "homepage": "https://github.com/sammyjo20",
             "support": {
-                "issues": "https://github.com/Sammyjo20/saloon-http-sender/issues",
-                "source": "https://github.com/Sammyjo20/saloon-http-sender/tree/v0.3.2"
+                "issues": "https://github.com/saloonphp/laravel-http-sender/issues",
+                "source": "https://github.com/saloonphp/laravel-http-sender/tree/v1.2.0"
             },
-            "time": "2023-03-14T18:11:07+00:00"
+            "abandoned": "saloonphp/laravel-http-sender",
+            "time": "2023-05-21T17:15:23+00:00"
         },
         {
             "name": "sammyjo20/saloon-laravel",

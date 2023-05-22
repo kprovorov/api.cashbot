@@ -19,7 +19,7 @@
         "predis/predis": "^2.0",
         "sammyjo20/saloon": "^2.0",
         "sammyjo20/saloon-cache-plugin": "^2.0",
-        "sammyjo20/saloon-http-sender": "^0.3.2",
+        "sammyjo20/saloon-http-sender": "^1.2.0",
         "sammyjo20/saloon-laravel": "^2.0",
         "sentry/sentry-laravel": "^3.2",
         "spatie/data-transfer-object": "^3.8",
