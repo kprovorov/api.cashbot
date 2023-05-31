@@ -1023,7 +1023,7 @@ class PaymentControllerTest extends TestCase
         ]);
         $this->assertDatabaseHas('payments', [
             ...Arr::except($payment->toArray(), ['id', 'date', 'created_at', 'updated_at']),
-            'date' => now()->addMonthsNoOverflow(5)->format('Y-m-d'),
+            'date' => now()->addMonthsNoOverflow(4)->addMonthsNoOverflow(1)->format('Y-m-d'),
         ]);
     }
 }
