@@ -4573,16 +4573,16 @@
         },
         {
             "name": "sammyjo20/saloon",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammyjo20/Saloon.git",
-                "reference": "54bfd3cd5d47eefa5737603b99074b83951af36c"
+                "reference": "99c74f986a370fed0f34a8a610d07b94a48e99b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/54bfd3cd5d47eefa5737603b99074b83951af36c",
-                "reference": "54bfd3cd5d47eefa5737603b99074b83951af36c",
+                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/99c74f986a370fed0f34a8a610d07b94a48e99b0",
+                "reference": "99c74f986a370fed0f34a8a610d07b94a48e99b0",
                 "shasum": ""
             },
             "require": {
@@ -4633,7 +4633,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Sammyjo20/Saloon/issues",
-                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.8.0"
+                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.8.1"
             },
             "funding": [
                 {
@@ -4645,7 +4645,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2023-06-23T20:03:25+00:00"
+            "time": "2023-07-04T18:00:27+00:00"
         },
         {
             "name": "sammyjo20/saloon-laravel",
