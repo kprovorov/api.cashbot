@@ -272,8 +272,8 @@ abstract class EloquentRepo implements RepoInterface
      * {@inheritDoc}
      */
     public function paginateAll(
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -296,8 +296,8 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function paginateBySearch(
         SearchQuery $search,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -323,8 +323,8 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         string $operator,
         int|string|float|bool|null $value,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -349,8 +349,8 @@ abstract class EloquentRepo implements RepoInterface
     public function paginateWhereIn(
         string $column,
         array $values,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -375,8 +375,8 @@ abstract class EloquentRepo implements RepoInterface
     public function paginateWhereNotIn(
         string $column,
         array $values,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,

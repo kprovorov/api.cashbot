@@ -45,8 +45,8 @@ class AccountService
      * Get all Accounts paginated
      */
     public function getAllAccountsPaginated(
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*']
     ): LengthAwarePaginator {
