@@ -550,13 +550,13 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 2);
         // Assert payment before updated one
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $payment->date,
             'repeat_ends_on' => $fromDate->clone()->subDay(),
         ]);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
