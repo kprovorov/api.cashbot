@@ -113,8 +113,8 @@ interface RepoInterface
      * @param  string[]  $columns
      */
     public function paginateAll(
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -130,8 +130,8 @@ interface RepoInterface
      */
     public function paginateBySearch(
         SearchQuery $search,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -149,8 +149,8 @@ interface RepoInterface
         string $column,
         string $operator,
         int|string|float|bool|null $value,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -168,8 +168,8 @@ interface RepoInterface
     public function paginateWhereIn(
         string $column,
         array $values,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,
@@ -187,8 +187,8 @@ interface RepoInterface
     public function paginateWhereNotIn(
         string $column,
         array $values,
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*'],
         string $orderBy = null,

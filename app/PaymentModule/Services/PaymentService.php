@@ -53,8 +53,8 @@ class PaymentService
      * Get all Payments paginated
      */
     public function getAllPaymentsPaginated(
-        ?int $perPage = null,
-        ?int $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*']
     ): LengthAwarePaginator {

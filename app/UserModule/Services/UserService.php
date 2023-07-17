@@ -31,7 +31,7 @@ class UserService
     /**
      * Get all Users paginated
      */
-    public function getAllUsersPaginated(?int $perPage = null, ?int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
+    public function getAllUsersPaginated(int $perPage = null, int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
     {
         return $this->userRepo->paginateAll($perPage, $page, $with, $columns);
     }
