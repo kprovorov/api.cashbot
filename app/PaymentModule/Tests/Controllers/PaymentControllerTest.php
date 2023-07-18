@@ -320,7 +320,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 2);
         // Assert first payment (the one which was updated)
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -333,7 +333,7 @@ class PaymentControllerTest extends TestCase
         ]);
         // Assert rest of chain
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $payment->date->clone()->add($payment->repeat_interval, $payment->repeat_unit->value, false),
             'repeat_ends_on' => null,
         ]);
@@ -377,13 +377,13 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 3);
         // Assert payment before updated one
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $payment->date,
             'repeat_ends_on' => $fromDate->clone()->subDay(),
         ]);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -396,7 +396,7 @@ class PaymentControllerTest extends TestCase
         ]);
         // Assert rest of chain
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $fromDate->clone()->add($payment->repeat_interval, $payment->repeat_unit->value),
             'repeat_ends_on' => null,
         ]);
@@ -444,13 +444,13 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 2);
         // Assert payment before updated one
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $payment->date,
             'repeat_ends_on' => $fromDate->clone()->subDay(),
         ]);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -499,7 +499,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         // Assert first payment (the one which was updated)
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -611,13 +611,13 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 2);
         // Assert payment before updated one
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             'date' => $payment->date,
             'repeat_ends_on' => $fromDate->clone()->subDay(),
         ]);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -666,7 +666,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         // Assert first payment (the one which was updated)
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -717,7 +717,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -772,7 +772,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
@@ -821,7 +821,7 @@ class PaymentControllerTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         // Assert updated payment
         $this->assertDatabaseHas('payments', [
-            ...Arr::except($payment->toArray(), ['id']),
+            ...Arr::except($payment->toArray(), ['id', 'created_at', 'updated_at']),
             ...Arr::only($updateData->toArray(), [
                 'account_to_id',
                 'account_from_id',
