@@ -24,8 +24,7 @@ class AccountService
         protected AccountRepo $accountRepo,
         protected PaymentRepo $paymentRepo,
         private readonly Monobank $monobank
-    )
-    {
+    ) {
     }
 
     /**
@@ -50,12 +49,11 @@ class AccountService
      * Get all Accounts paginated
      */
     public function getAllAccountsPaginated(
-        int   $perPage = null,
-        int   $page = null,
+        int $perPage = null,
+        int $page = null,
         array $with = [],
         array $columns = ['*']
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         return $this->accountRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
