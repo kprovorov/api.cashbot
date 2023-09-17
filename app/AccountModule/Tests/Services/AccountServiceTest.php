@@ -6,6 +6,7 @@ use App\AccountModule\DTO\CreateAccountData;
 use App\AccountModule\DTO\UpdateAccountData;
 use App\AccountModule\Models\Account;
 use App\AccountModule\Services\AccountService;
+use App\PaymentModule\Models\Payment;
 use App\UserModule\Models\User;
 use Arr;
 use Illuminate\Database\Eloquent\Collection;
@@ -150,12 +151,47 @@ class AccountServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
+        // Create test payments
+        Payment::factory()->create([
+            'account_from_id' => $account->id,
+        ]);
+        Payment::factory()->create([
+            'account_to_id' => $account->id,
+        ]);
+
+        // Create test jars
+        $jar = Account::factory()->create([
+            'user_id' => $user->id,
+            'parent_id' => $account->id,
+        ]);
+        Payment::factory()->create([
+            'account_from_id' => $jar->id,
+        ]);
+        Payment::factory()->create([
+            'account_to_id' => $jar->id,
+        ]);
+
         $service = $this->app->make(AccountService::class);
         $res = $service->deleteAccount($account->id);
 
         $this->assertTrue($res);
         $this->assertDatabaseMissing('accounts', [
             'id' => $account->id,
+        ]);
+        $this->assertDatabaseMissing('accounts', [
+            'parent_id' => $account->id,
+        ]);
+        $this->assertDatabaseMissing('payments', [
+            'account_from_id' => $account->id,
+        ]);
+        $this->assertDatabaseMissing('payments', [
+            'account_to_id' => $account->id,
+        ]);
+        $this->assertDatabaseMissing('payments', [
+            'account_from_id' => $jar->id,
+        ]);
+        $this->assertDatabaseMissing('payments', [
+            'account_to_id' => $jar->id,
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\AccountModule\Models\Account;
 use App\AccountModule\Repositories\AccountRepo;
 use App\Http\Integrations\Monobank\Monobank;
 use App\Monobank\DTO\AccountData;
+use App\PaymentModule\Repositories\PaymentRepo;
 use App\UserModule\Models\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -19,8 +20,11 @@ class AccountService
     /**
      * AccountService constructor.
      */
-    public function __construct(protected AccountRepo $accountRepo, private readonly Monobank $monobank)
-    {
+    public function __construct(
+        protected AccountRepo $accountRepo,
+        protected PaymentRepo $paymentRepo,
+        private readonly Monobank $monobank
+    ) {
     }
 
     /**
@@ -91,6 +95,18 @@ class AccountService
     public function deleteAccount(int|Account $account): bool
     {
         $accountId = $account instanceof Account ? $account->id : $account;
+
+        // Delete account payments
+        $this->paymentRepo->deleteWhere('account_from_id', '=', $accountId);
+        $this->paymentRepo->deleteWhere('account_to_id', '=', $accountId);
+
+        // Find jars
+        $jars = $this->accountRepo->getWhere('parent_id', '=', $accountId);
+
+        // Delete jars with payments
+        $jars->each(function (Account $jar) {
+            $this->deleteAccount($jar->id);
+        });
 
         return $this->accountRepo->delete($accountId);
     }
