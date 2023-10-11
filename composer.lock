@@ -1666,16 +1666,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.26.2",
+            "version": "v10.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "6e5440f7c518f26b4495e5d7e4796ec239e26df9"
+                "reference": "09137f50f715c1efc649788a26092dcb1ec4ab6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/6e5440f7c518f26b4495e5d7e4796ec239e26df9",
-                "reference": "6e5440f7c518f26b4495e5d7e4796ec239e26df9",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/09137f50f715c1efc649788a26092dcb1ec4ab6e",
+                "reference": "09137f50f715c1efc649788a26092dcb1ec4ab6e",
                 "shasum": ""
             },
             "require": {
@@ -1862,7 +1862,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-10-03T14:24:20+00:00"
+            "time": "2023-10-10T13:01:37+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -4678,6 +4678,82 @@
             "time": "2023-05-21T17:15:23+00:00"
         },
         {
+            "name": "saloonphp/saloon",
+            "version": "v2.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saloonphp/saloon.git",
+                "reference": "ee27b60ae5ea964d330060600320b8996c3344c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/ee27b60ae5ea964d330060600320b8996c3344c6",
+                "reference": "ee27b60ae5ea964d330060600320b8996c3344c6",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.5",
+                "guzzlehttp/promises": "^1.5 || ^2.0",
+                "php": "^8.1",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "require-dev": {
+                "ext-simplexml": "*",
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "illuminate/collections": "^9.39 || ^10.0",
+                "league/flysystem": "^3.0",
+                "pestphp/pest": "^2.2.3",
+                "phpstan/phpstan": "^1.9",
+                "spatie/ray": "^1.33",
+                "symfony/dom-crawler": "^6.0"
+            },
+            "suggest": {
+                "illuminate/collections": "Required for the response collect() method.",
+                "symfony/dom-crawler": "Required for the response dom() method."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saloon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Carré",
+                    "email": "29132017+Sammyjo20@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Build beautiful API integrations and SDKs with Saloon",
+            "homepage": "https://github.com/saloonphp/saloon",
+            "keywords": [
+                "api",
+                "api-integrations",
+                "saloon",
+                "sammyjo20",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/saloonphp/saloon/issues",
+                "source": "https://github.com/saloonphp/saloon/tree/v2.11.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sammyjo20",
+                    "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/sammyjo20",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2023-09-20T17:02:17+00:00"
+        },
+        {
             "name": "sammyjo20/saloon",
             "version": "v2.12.0",
             "source": {
@@ -4756,16 +4832,16 @@
         },
         {
             "name": "sammyjo20/saloon-laravel",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Sammyjo20/saloon-laravel.git",
-                "reference": "70454879de8083cf36b3e6bc01b33790f1e62423"
+                "url": "https://github.com/saloonphp/laravel-plugin.git",
+                "reference": "82ed968641f429cd2a5a1972eb80ac8e29bb85a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/saloon-laravel/zipball/70454879de8083cf36b3e6bc01b33790f1e62423",
-                "reference": "70454879de8083cf36b3e6bc01b33790f1e62423",
+                "url": "https://api.github.com/repos/saloonphp/laravel-plugin/zipball/82ed968641f429cd2a5a1972eb80ac8e29bb85a6",
+                "reference": "82ed968641f429cd2a5a1972eb80ac8e29bb85a6",
                 "shasum": ""
             },
             "require": {
@@ -4773,7 +4849,7 @@
                 "illuminate/http": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
                 "php": "^8.1",
-                "sammyjo20/saloon": "^2.0"
+                "saloonphp/saloon": "^2.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.5",
@@ -4807,8 +4883,8 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Laravel package for Sammyjo20/Saloon",
-            "homepage": "https://github.com/sammyjo20/saloon-laravel",
+            "description": "Laravel plugin for Saloon",
+            "homepage": "https://github.com/saloonphp/laravel-plugin",
             "keywords": [
                 "api",
                 "api-integrations",
@@ -4817,10 +4893,11 @@
                 "sdk"
             ],
             "support": {
-                "issues": "https://github.com/Sammyjo20/saloon-laravel/issues",
-                "source": "https://github.com/Sammyjo20/saloon-laravel/tree/v2.0.1"
+                "issues": "https://github.com/saloonphp/laravel-plugin/issues",
+                "source": "https://github.com/saloonphp/laravel-plugin/tree/v2.1.0"
             },
-            "time": "2023-03-09T23:17:10+00:00"
+            "abandoned": "saloonphp/laravel-plugin",
+            "time": "2023-09-17T11:20:48+00:00"
         },
         {
             "name": "sentry/sdk",
