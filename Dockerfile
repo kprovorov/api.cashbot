@@ -6,5 +6,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Run Composer install
 RUN composer install --no-interaction --no-scripts --no-progress
