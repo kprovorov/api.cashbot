@@ -1,5 +1,6 @@
 FROM serversideup/php:8.2-fpm-nginx
 
+ENV SSL_MODE=off
 
 ### ---------- Lunix packages ------------------------------------------- ###
 # # Install Linux packages
