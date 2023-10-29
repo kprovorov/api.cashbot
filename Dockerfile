@@ -1,26 +1,50 @@
-FROM dunglas/frankenphp
+FROM serversideup/php:8.2-fpm-nginx
 
-# Set the working directory to /app
-WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app/public
+### ---------- Lunix packages ------------------------------------------- ###
+# # Install Linux packages
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     git \
+#     mariadb-client \
+#     vim \
+#     libicu-dev \
+#     wget \
+#     libzip-dev \
+#     zip \
+#     htop \
+#     procps \
+#     libatk1.0-0 \
+#     libxdamage1 \
+#     libatk-bridge2.0-0 \
+#     libcups2 \
+#     libxcomposite1 \
+#     libdrm2 \
+#     libxkbcommon0 \
+#     libxfixes3 \
+#     libxrandr2 \
+#     libgbm1 \
+#     libasound2 \
+#     libcairo2 \
+#     libpango-1.0-0 \
+#     libnss3 \
+#     imagemagick \
+#     php7.4-imagick
+# ### --------------------------------------------------------------------- ###
 
-# Install any needed packages
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Copy composer.json and composer.lock files
+COPY ./app/composer.* ./app/
 
-# Run Composer install
-RUN composer install --no-interaction --no-scripts --no-progress
+# Install composer dependencies
+RUN composer install --no-scripts --no-interaction --no-plugins --no-dev
+
+# Copy project files
+COPY . .
+
+# http
+EXPOSE 80
+# https
+EXPOSE 443
+# php-fpm
+EXPOSE 9000
