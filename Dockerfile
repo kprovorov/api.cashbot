@@ -34,7 +34,7 @@ FROM serversideup/php:8.2-fpm-nginx
 
 
 # Copy composer.json and composer.lock files
-COPY ./app/composer.* ./app/
+COPY ./composer.* ./
 
 # Install composer dependencies
 RUN composer install --no-scripts --no-interaction --no-plugins --no-dev
