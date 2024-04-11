@@ -1,8 +1,11 @@
-FROM serversideup/php:beta-8.2-fpm-nginx
+FROM serversideup/php:8.2-fpm-nginx
 
 # ENV AUTORUN_LARAVEL_MIGRATION=true
 ENV SSL_MODE=off
 ENV APP_ENV=production
+
+# Install postgress extensions
+RUN apt-get update && apt-get install -y php8.2-pgsql
 
 # Copy composer.json and composer.lock files
 COPY --chown=$PUID:$PGID ./composer.* ./
