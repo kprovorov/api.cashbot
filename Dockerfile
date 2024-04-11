@@ -1,6 +1,6 @@
 FROM serversideup/php:beta-8.2-fpm-nginx
 
-ENV AUTORUN_LARAVEL_MIGRATION=true
+# ENV AUTORUN_LARAVEL_MIGRATION=true
 ENV SSL_MODE=off
 ENV APP_ENV=production
 
