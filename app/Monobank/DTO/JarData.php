@@ -18,5 +18,5 @@ class JarData extends DataTransferObject
 
     public int $balance;
 
-    public int $goal;
+    public ?int $goal;
 }
