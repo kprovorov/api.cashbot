@@ -4663,21 +4663,21 @@
         },
         {
             "name": "saloonphp/cache-plugin",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/saloonphp/cache-plugin.git",
-                "reference": "423b581ae64a4f9e597c3aa134965f77d2c8393a"
+                "reference": "cba27ba48cc1bec359bd1353c7b6a8998cee94ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/saloonphp/cache-plugin/zipball/423b581ae64a4f9e597c3aa134965f77d2c8393a",
-                "reference": "423b581ae64a4f9e597c3aa134965f77d2c8393a",
+                "url": "https://api.github.com/repos/saloonphp/cache-plugin/zipball/cba27ba48cc1bec359bd1353c7b6a8998cee94ea",
+                "reference": "cba27ba48cc1bec359bd1353c7b6a8998cee94ea",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
-                "sammyjo20/saloon": "^2.0"
+                "saloonphp/saloon": "^2.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.13",
@@ -4707,9 +4707,9 @@
             "description": "Official plugin for caching Saloon responses",
             "support": {
                 "issues": "https://github.com/saloonphp/cache-plugin/issues",
-                "source": "https://github.com/saloonphp/cache-plugin/tree/v2.3.0"
+                "source": "https://github.com/saloonphp/cache-plugin/tree/v2.3.1"
             },
-            "time": "2023-05-21T17:24:59+00:00"
+            "time": "2023-08-10T17:48:38+00:00"
         },
         {
             "name": "saloonphp/laravel-http-sender",
