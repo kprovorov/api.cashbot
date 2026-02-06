@@ -23,45 +23,64 @@ class AccountService
     public function __construct(
         protected AccountRepo $accountRepo,
         protected PaymentRepo $paymentRepo,
-        private readonly Monobank $monobank
-    ) {
-    }
+        private readonly Monobank $monobank,
+    ) {}
 
     /**
      * Get all Accounts
      */
-    public function getAllAccounts(array $with = [], array $columns = ['*']): Collection
-    {
+    public function getAllAccounts(
+        array $with = [],
+        array $columns = ["*"],
+    ): Collection {
         return $this->accountRepo->getAll($with, $columns);
     }
 
     /**
      * Get all Accounts
      */
-    public function getAllUserAccounts(User|int $user, array $with = [], array $columns = ['*']): Collection
-    {
+    public function getAllUserAccounts(
+        User|int $user,
+        array $with = [],
+        array $columns = ["*"],
+    ): Collection {
         $userId = $user instanceof User ? $user->id : $user;
 
-        return $this->accountRepo->getWhere('user_id', '=', $userId, $with, $columns);
+        return $this->accountRepo->getWhere(
+            "user_id",
+            "=",
+            $userId,
+            $with,
+            $columns,
+            "name",
+        );
     }
 
     /**
      * Get all Accounts paginated
      */
     public function getAllAccountsPaginated(
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*']
+        array $columns = ["*"],
     ): LengthAwarePaginator {
-        return $this->accountRepo->paginateAll($perPage, $page, $with, $columns);
+        return $this->accountRepo->paginateAll(
+            $perPage,
+            $page,
+            $with,
+            $columns,
+        );
     }
 
     /**
      * Get Account by id
      */
-    public function getAccount(int $accountId, array $with = [], array $columns = ['*']): Account
-    {
+    public function getAccount(
+        int $accountId,
+        array $with = [],
+        array $columns = ["*"],
+    ): Account {
         return $this->accountRepo->firstOrFail($accountId, $with, $columns);
     }
 
@@ -72,20 +91,22 @@ class AccountService
     {
         return $this->accountRepo->create([
             ...$data->toArray(),
-            'currency' => $data->currency->value,
+            "currency" => $data->currency->value,
         ]);
     }
 
     /**
      * Update Account by id
      */
-    public function updateAccount(int|Account $account, UpdateAccountData $data): bool
-    {
+    public function updateAccount(
+        int|Account $account,
+        UpdateAccountData $data,
+    ): bool {
         $accountId = $account instanceof Account ? $account->id : $account;
 
         return $this->accountRepo->update($accountId, [
             ...$data->toArray(),
-            'currency' => $data->currency->value,
+            "currency" => $data->currency->value,
         ]);
     }
 
@@ -97,11 +118,11 @@ class AccountService
         $accountId = $account instanceof Account ? $account->id : $account;
 
         // Delete account payments
-        $this->paymentRepo->deleteWhere('account_from_id', '=', $accountId);
-        $this->paymentRepo->deleteWhere('account_to_id', '=', $accountId);
+        $this->paymentRepo->deleteWhere("account_from_id", "=", $accountId);
+        $this->paymentRepo->deleteWhere("account_to_id", "=", $accountId);
 
         // Find jars
-        $jars = $this->accountRepo->getWhere('parent_id', '=', $accountId);
+        $jars = $this->accountRepo->getWhere("parent_id", "=", $accountId);
 
         // Delete jars with payments
         $jars->each(function (Account $jar) {
@@ -120,8 +141,8 @@ class AccountService
      */
     public function updateAccountBalancesForUser(int $userId): void
     {
-        $accounts = Account::where('user_id', $userId)
-            ->whereNotNull('provider_id')
+        $accounts = Account::where("user_id", $userId)
+            ->whereNotNull("provider_id")
             ->get();
 
         $accounts->each(function (Account $account) {
@@ -138,7 +159,7 @@ class AccountService
         if ($account->provider_id) {
             $balance = $this->fetchAccountBalance($account);
 
-            $account->update(['balance' => $balance]);
+            $account->update(["balance" => $balance]);
         }
     }
 
@@ -148,7 +169,7 @@ class AccountService
      */
     public function fetchAccountBalance(Account $account): int
     {
-        if ($account->provider === 'monobank') {
+        if ($account->provider === "monobank") {
             return $this->fetchMonobankAccountData($account)->balance;
         }
 
@@ -163,6 +184,9 @@ class AccountService
     {
         $res = $this->monobank->getClientInfo();
 
-        return $res->dto()->accounts->where('id', $account->provider_id)->first();
+        return $res
+            ->dto()
+            ->accounts->where("id", $account->provider_id)
+            ->first();
     }
 }

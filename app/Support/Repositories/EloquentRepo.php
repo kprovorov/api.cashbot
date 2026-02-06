@@ -69,16 +69,18 @@ abstract class EloquentRepo implements RepoInterface
      */
     protected function query(
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Builder {
         // @phpstan-ignore-next-line
-        $query = $this
-            ->model
+        $query = $this->model
             ->with($with)
-            ->orderBy($orderBy ?? $this->getOrderBy(), $orderDirection ?? $this->getOrderDirection())
+            ->orderBy(
+                $orderBy ?? $this->getOrderBy(),
+                $orderDirection ?? $this->getOrderDirection(),
+            )
             ->select($columns);
 
         // Ensure model uses SoftDeletes
@@ -98,20 +100,18 @@ abstract class EloquentRepo implements RepoInterface
     protected function searchQuery(
         SearchQuery $search,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Builder {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->tap(fn (Builder $query) => $search->apply($query));
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->tap(fn(Builder $query) => $search->apply($query));
     }
 
     /**
@@ -119,7 +119,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function getOrderBy(): string
     {
-        return config('repo.order_by');
+        return config("repo.order_by");
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function getOrderDirection(): string
     {
-        return config('repo.order_direction');
+        return config("repo.order_direction");
     }
 
     /**
@@ -156,20 +156,18 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function getAll(
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->get();
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->get();
     }
 
     /**
@@ -178,21 +176,19 @@ abstract class EloquentRepo implements RepoInterface
     public function getBySearch(
         SearchQuery $search,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection {
-        return $this
-            ->searchQuery(
-                $search,
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->get();
+        return $this->searchQuery(
+            $search,
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->get();
     }
 
     /**
@@ -203,19 +199,18 @@ abstract class EloquentRepo implements RepoInterface
         string $operator,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->where($column, $operator, $value)
             ->get();
     }
@@ -227,19 +222,18 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         array $values,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereIn($column, $values)
             ->get();
     }
@@ -251,19 +245,18 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         array $values,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereNotIn($column, $values)
             ->get();
     }
@@ -272,23 +265,21 @@ abstract class EloquentRepo implements RepoInterface
      * {@inheritDoc}
      */
     public function paginateAll(
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->paginate($perPage, $columns, 'page', $page);
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->paginate($perPage, $columns, "page", $page);
     }
 
     /**
@@ -296,24 +287,22 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function paginateBySearch(
         SearchQuery $search,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator {
-        return $this
-            ->searchQuery(
-                $search,
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->paginate($perPage, $columns, 'page', $page);
+        return $this->searchQuery(
+            $search,
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->paginate($perPage, $columns, "page", $page);
     }
 
     /**
@@ -323,24 +312,23 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         string $operator,
         int|string|float|bool|null $value,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->where($column, $operator, $value)
-            ->paginate($perPage, $columns, 'page', $page);
+            ->paginate($perPage, $columns, "page", $page);
     }
 
     /**
@@ -349,22 +337,21 @@ abstract class EloquentRepo implements RepoInterface
     public function paginateWhereIn(
         string $column,
         array $values,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereIn($column, $values)
             ->paginate();
     }
@@ -375,22 +362,21 @@ abstract class EloquentRepo implements RepoInterface
     public function paginateWhereNotIn(
         string $column,
         array $values,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereNotIn($column, $values)
             ->paginate();
     }
@@ -402,20 +388,18 @@ abstract class EloquentRepo implements RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->chunk($count, $callback);
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->chunk($count, $callback);
     }
 
     /**
@@ -426,21 +410,19 @@ abstract class EloquentRepo implements RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool {
-        return $this
-            ->searchQuery(
-                $search,
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->chunk($count, $callback);
+        return $this->searchQuery(
+            $search,
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )->chunk($count, $callback);
     }
 
     /**
@@ -453,19 +435,18 @@ abstract class EloquentRepo implements RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->where($column, $operator, $value)
             ->chunk($count, $callback);
     }
@@ -479,19 +460,18 @@ abstract class EloquentRepo implements RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereIn($column, $values)
             ->chunk($count, $callback);
     }
@@ -505,19 +485,18 @@ abstract class EloquentRepo implements RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
             ->whereNotIn($column, $values)
             ->chunk($count, $callback);
     }
@@ -528,13 +507,12 @@ abstract class EloquentRepo implements RepoInterface
     public function first(
         int|string $id,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ) {
-        return $this
-            ->firstBy($this->model->getKeyName(), $id, $with, $columns);
+        return $this->firstBy($this->model->getKeyName(), $id, $with, $columns);
     }
 
     /**
@@ -544,20 +522,19 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ) {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->where($column, '=', $value)
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
+            ->where($column, "=", $value)
             ->first();
     }
 
@@ -567,13 +544,17 @@ abstract class EloquentRepo implements RepoInterface
     public function firstOrFail(
         int|string $id,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ) {
-        return $this
-            ->firstByOrFail($this->model->getKeyName(), $id, $with, $columns);
+        return $this->firstByOrFail(
+            $this->model->getKeyName(),
+            $id,
+            $with,
+            $columns,
+        );
     }
 
     /**
@@ -583,20 +564,19 @@ abstract class EloquentRepo implements RepoInterface
         string $column,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ) {
-        return $this
-            ->query(
-                $with,
-                $columns,
-                $orderBy,
-                $orderDirection,
-                $withTrashed
-            )
-            ->where($column, '=', $value)
+        return $this->query(
+            $with,
+            $columns,
+            $orderBy,
+            $orderDirection,
+            $withTrashed,
+        )
+            ->where($column, "=", $value)
             ->firstOrFail();
     }
 
@@ -605,8 +585,12 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function update(int|string $id, array $data): bool
     {
-        return (bool) $this
-            ->updateWhere($this->model->getKeyName(), '=', $id, $data);
+        return (bool) $this->updateWhere(
+            $this->model->getKeyName(),
+            "=",
+            $id,
+            $data,
+        );
     }
 
     /**
@@ -614,8 +598,11 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function updateMany(array $ids, array $data): bool
     {
-        return (bool) $this
-            ->updateWhereIn($this->model->getKeyName(), $ids, $data);
+        return (bool) $this->updateWhereIn(
+            $this->model->getKeyName(),
+            $ids,
+            $data,
+        );
     }
 
     /**
@@ -623,18 +610,19 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function updateBySearch(SearchQuery $search, array $data): bool
     {
-        return (bool) $this
-            ->searchQuery($search)
-            ->update($data);
+        return (bool) $this->searchQuery($search)->update($data);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function updateWhere(string $column, string $operator, int|string|float|bool|null $value, array $data): bool
-    {
-        return (bool) $this
-            ->query()
+    public function updateWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+        array $data,
+    ): bool {
+        return (bool) $this->query()
             ->where($column, $operator, $value)
             ->update($data);
     }
@@ -642,21 +630,23 @@ abstract class EloquentRepo implements RepoInterface
     /**
      * {@inheritDoc}
      */
-    public function updateWhereIn(string $column, array $values, array $data): bool
-    {
-        return (bool) $this
-            ->query()
-            ->whereIn($column, $values)
-            ->update($data);
+    public function updateWhereIn(
+        string $column,
+        array $values,
+        array $data,
+    ): bool {
+        return (bool) $this->query()->whereIn($column, $values)->update($data);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function updateWhereNotIn(string $column, array $values, array $data): bool
-    {
-        return (bool) $this
-            ->query()
+    public function updateWhereNotIn(
+        string $column,
+        array $values,
+        array $data,
+    ): bool {
+        return (bool) $this->query()
             ->whereNotIn($column, $values)
             ->update($data);
     }
@@ -666,8 +656,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function delete(int|string $id): bool
     {
-        return $this
-            ->deleteWhere($this->model->getKeyName(), '=', $id);
+        return $this->deleteWhere($this->model->getKeyName(), "=", $id);
     }
 
     /**
@@ -675,8 +664,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function deleteMany(array $ids): bool
     {
-        return $this
-            ->deleteWhereIn($this->model->getKeyName(), $ids);
+        return $this->deleteWhereIn($this->model->getKeyName(), $ids);
     }
 
     /**
@@ -684,20 +672,18 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function deleteBySearch(SearchQuery $search): bool
     {
-        return $this
-            ->searchQuery($search)
-            ->delete();
+        return $this->searchQuery($search)->delete();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function deleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool
-    {
-        return $this
-            ->query()
-            ->where($column, $operator, $value)
-            ->delete();
+    public function deleteWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool {
+        return $this->query()->where($column, $operator, $value)->delete();
     }
 
     /**
@@ -705,10 +691,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function deleteWhereIn(string $column, array $values): bool
     {
-        return $this
-            ->query()
-            ->whereIn($column, $values)
-            ->delete();
+        return $this->query()->whereIn($column, $values)->delete();
     }
 
     /**
@@ -716,10 +699,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function deleteWhereNotIn(string $column, array $values): bool
     {
-        return $this
-            ->query()
-            ->whereNotIn($column, $values)
-            ->delete();
+        return $this->query()->whereNotIn($column, $values)->delete();
     }
 
     /**
@@ -727,8 +707,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function forceDelete(int|string $id): bool
     {
-        return $this
-            ->forceDeleteWhere($this->model->getKeyName(), '=', $id);
+        return $this->forceDeleteWhere($this->model->getKeyName(), "=", $id);
     }
 
     /**
@@ -736,8 +715,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function forceDeleteMany(array $ids): bool
     {
-        return $this
-            ->forceDeleteWhereIn($this->model->getKeyName(), $ids);
+        return $this->forceDeleteWhereIn($this->model->getKeyName(), $ids);
     }
 
     /**
@@ -745,20 +723,18 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function forceDeleteBySearch(SearchQuery $search): bool
     {
-        return $this
-            ->searchQuery($search)
-            ->forceDelete();
+        return $this->searchQuery($search)->forceDelete();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forceDeleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool
-    {
-        return $this
-            ->query()
-            ->where($column, $operator, $value)
-            ->forceDelete();
+    public function forceDeleteWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool {
+        return $this->query()->where($column, $operator, $value)->forceDelete();
     }
 
     /**
@@ -766,10 +742,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function forceDeleteWhereIn(string $column, array $values): bool
     {
-        return $this
-            ->query()
-            ->whereIn($column, $values)
-            ->forceDelete();
+        return $this->query()->whereIn($column, $values)->forceDelete();
     }
 
     /**
@@ -777,10 +750,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function forceDeleteWhereNotIn(string $column, array $values): bool
     {
-        return $this
-            ->query()
-            ->whereNotIn($column, $values)
-            ->forceDelete();
+        return $this->query()->whereNotIn($column, $values)->forceDelete();
     }
 
     /**
@@ -788,8 +758,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function restore(int|string $id): bool
     {
-        return $this
-            ->restoreWhere($this->model->getKeyName(), '=', $id);
+        return $this->restoreWhere($this->model->getKeyName(), "=", $id);
     }
 
     /**
@@ -797,8 +766,7 @@ abstract class EloquentRepo implements RepoInterface
      */
     public function restoreMany(array $ids): bool
     {
-        return $this
-            ->restoreWhereIn($this->model->getKeyName(), $ids);
+        return $this->restoreWhereIn($this->model->getKeyName(), $ids);
     }
 
     /**
@@ -807,19 +775,19 @@ abstract class EloquentRepo implements RepoInterface
     public function restoreBySearch(SearchQuery $search): bool
     {
         /** @phpstan-ignore-next-line */
-        return (bool) $this
-            ->searchQuery($search)
-            ->restore();
+        return (bool) $this->searchQuery($search)->restore();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function restoreWhere(string $column, string $operator, int|string|float|bool|null $value): bool
-    {
+    public function restoreWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool {
         /** @phpstan-ignore-next-line */
-        return (bool) $this
-            ->query()
+        return (bool) $this->query()
             ->where($column, $operator, $value)
             ->restore();
     }
@@ -830,10 +798,7 @@ abstract class EloquentRepo implements RepoInterface
     public function restoreWhereIn(string $column, array $values): bool
     {
         /** @phpstan-ignore-next-line */
-        return (bool) $this
-            ->query()
-            ->whereIn($column, $values)
-            ->restore();
+        return (bool) $this->query()->whereIn($column, $values)->restore();
     }
 
     /**
@@ -842,9 +807,6 @@ abstract class EloquentRepo implements RepoInterface
     public function restoreWhereNotIn(string $column, array $values): bool
     {
         /** @phpstan-ignore-next-line */
-        return (bool) $this
-            ->query()
-            ->whereNotIn($column, $values)
-            ->restore();
+        return (bool) $this->query()->whereNotIn($column, $values)->restore();
     }
 }

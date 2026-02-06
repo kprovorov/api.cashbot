@@ -34,10 +34,10 @@ interface RepoInterface
      */
     public function getAll(
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection;
 
     /**
@@ -49,10 +49,10 @@ interface RepoInterface
     public function getBySearch(
         SearchQuery $search,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection;
 
     /**
@@ -66,10 +66,10 @@ interface RepoInterface
         string $operator,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection;
 
     /**
@@ -83,10 +83,10 @@ interface RepoInterface
         string $column,
         array $values,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection;
 
     /**
@@ -100,10 +100,10 @@ interface RepoInterface
         string $column,
         array $values,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): Collection;
 
     /**
@@ -113,13 +113,13 @@ interface RepoInterface
      * @param  string[]  $columns
      */
     public function paginateAll(
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator;
 
     /**
@@ -130,13 +130,13 @@ interface RepoInterface
      */
     public function paginateBySearch(
         SearchQuery $search,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator;
 
     /**
@@ -149,13 +149,13 @@ interface RepoInterface
         string $column,
         string $operator,
         int|string|float|bool|null $value,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator;
 
     /**
@@ -168,13 +168,13 @@ interface RepoInterface
     public function paginateWhereIn(
         string $column,
         array $values,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator;
 
     /**
@@ -187,13 +187,13 @@ interface RepoInterface
     public function paginateWhereNotIn(
         string $column,
         array $values,
-        int $perPage = null,
-        int $page = null,
+        ?int $perPage = null,
+        ?int $page = null,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): LengthAwarePaginator;
 
     /**
@@ -206,10 +206,10 @@ interface RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool;
 
     /**
@@ -223,10 +223,10 @@ interface RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool;
 
     /**
@@ -242,10 +242,10 @@ interface RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool;
 
     /**
@@ -261,10 +261,10 @@ interface RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool;
 
     /**
@@ -280,10 +280,10 @@ interface RepoInterface
         int $count,
         callable $callback,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     ): bool;
 
     /**
@@ -296,10 +296,10 @@ interface RepoInterface
     public function first(
         int|string $id,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     );
 
     /**
@@ -313,10 +313,10 @@ interface RepoInterface
         string $column,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     );
 
     /**
@@ -329,10 +329,10 @@ interface RepoInterface
     public function firstOrFail(
         int|string $id,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     );
 
     /**
@@ -346,10 +346,10 @@ interface RepoInterface
         string $column,
         int|string|float|bool|null $value,
         array $with = [],
-        array $columns = ['*'],
-        string $orderBy = null,
-        string $orderDirection = null,
-        bool $withTrashed = false
+        array $columns = ["*"],
+        ?string $orderBy = null,
+        ?string $orderDirection = null,
+        bool $withTrashed = false,
     );
 
     /**
@@ -379,7 +379,12 @@ interface RepoInterface
      *
      * @param  array<string, int|string|float|bool|null>  $data
      */
-    public function updateWhere(string $column, string $operator, int|string|float|bool|null $value, array $data): bool;
+    public function updateWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+        array $data,
+    ): bool;
 
     /**
      * Mass update Entities where $column match any of $values
@@ -387,7 +392,11 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  array<string, int|string|float|bool|null>  $data
      */
-    public function updateWhereIn(string $column, array $values, array $data): bool;
+    public function updateWhereIn(
+        string $column,
+        array $values,
+        array $data,
+    ): bool;
 
     /**
      * Mass update Entities where $column don't match any of $values
@@ -395,7 +404,11 @@ interface RepoInterface
      * @param  array<int|null>|array<string|null>|array<float|null>|array<bool|null>  $values
      * @param  array<string, int|string|float|bool|null>  $data
      */
-    public function updateWhereNotIn(string $column, array $values, array $data): bool;
+    public function updateWhereNotIn(
+        string $column,
+        array $values,
+        array $data,
+    ): bool;
 
     /**
      * Delete Entity by id
@@ -417,7 +430,11 @@ interface RepoInterface
     /**
      * Mass delete Entities that match condition
      */
-    public function deleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
+    public function deleteWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool;
 
     /**
      * Mass delete Entities where $column match any of $values
@@ -453,7 +470,11 @@ interface RepoInterface
     /**
      * Mass delete Entities that match condition
      */
-    public function forceDeleteWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
+    public function forceDeleteWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool;
 
     /**
      * Mass delete Entities where $column match any of $values
@@ -489,7 +510,11 @@ interface RepoInterface
     /**
      * Mass restore Entities that match condition
      */
-    public function restoreWhere(string $column, string $operator, int|string|float|bool|null $value): bool;
+    public function restoreWhere(
+        string $column,
+        string $operator,
+        int|string|float|bool|null $value,
+    ): bool;
 
     /**
      * Mass restore Entities where $column match any of $values

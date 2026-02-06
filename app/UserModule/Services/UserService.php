@@ -16,31 +16,38 @@ class UserService
     /**
      * UserService constructor.
      */
-    public function __construct(protected UserRepo $userRepo)
-    {
-    }
+    public function __construct(protected UserRepo $userRepo) {}
 
     /**
      * Get all Users
      */
-    public function getAllUsers(array $with = [], array $columns = ['*']): Collection
-    {
+    public function getAllUsers(
+        array $with = [],
+        array $columns = ["*"],
+    ): Collection {
         return $this->userRepo->getAll($with, $columns);
     }
 
     /**
      * Get all Users paginated
      */
-    public function getAllUsersPaginated(int $perPage = null, int $page = null, array $with = [], array $columns = ['*']): LengthAwarePaginator
-    {
+    public function getAllUsersPaginated(
+        ?int $perPage = null,
+        ?int $page = null,
+        array $with = [],
+        array $columns = ["*"],
+    ): LengthAwarePaginator {
         return $this->userRepo->paginateAll($perPage, $page, $with, $columns);
     }
 
     /**
      * Get User by id
      */
-    public function getUser(int $userId, array $with = [], array $columns = ['*']): User
-    {
+    public function getUser(
+        int $userId,
+        array $with = [],
+        array $columns = ["*"],
+    ): User {
         return $this->userRepo->firstOrFail($userId, $with, $columns);
     }
 
@@ -51,7 +58,7 @@ class UserService
     {
         return $this->userRepo->create([
             ...$data->toArray(),
-            'password' => Hash::make($data->password ?? Str::random()),
+            "password" => Hash::make($data->password ?? Str::random()),
         ]);
     }
 
